@@ -103,12 +103,12 @@ In this project, the aim is to develop machine learning models for the **classif
     conda deactivate directml
     ```
 
-5. **Install TensorFlow with DirectML:**
+5. **Install the requirements:**
 
-- Make sure Conda Environment is now activated. Then install TensorFlow:
+- Make sure Conda Environment is now activated. Then install TensorFlow and other packages:
 
     ```bash
-    pip install tensorflow-directml
+    pip install -r requirements.txt
     ```
 
 ## Usage
@@ -142,3 +142,4 @@ Carlos Varela Soult (carvarsou).
 
 Roboflow 100:
 https://universe.roboflow.com/roboflow-100
+
