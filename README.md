@@ -111,6 +111,10 @@ In this project, the aim is to develop machine learning models for the **classif
     pip install -r requirements.txt
     ```
 
+- Install Elasticsearch following these instructions:
+
+    https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html
+
 ## Usage
 
 **TODO**
