@@ -111,9 +111,16 @@ In this project, the aim is to develop machine learning models for the **classif
     pip install -r requirements.txt
     ```
 
-- Install Elasticsearch following these instructions:
+- Install and enable Docker Desktop for WSL following these instructions:
 
-    https://www.elastic.co/guide/en/elasticsearch/reference/current/deb.html
+    https://docs.docker.com/desktop/wsl/
+
+- Create a container for Elasticsearch services:
+
+    ```bash
+    docker pull docker.elastic.co/elasticsearch/elasticsearch:8.12.1
+    docker-compose up
+    ```
 
 ## Usage
 
