@@ -3,10 +3,11 @@ import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import cv2
-from elasticsearch import Elasticsearch
-from dotenv import load_dotenv
-load_dotenv()
+import requests
+from index_vehicles import RoboflowVehiclesIndex, Elasticsearch
 tf.compat.v1.enable_eager_execution()
+INDEX_NAME = RoboflowVehiclesIndex.INDEX_NAME
+INDEX_SETTINGS = RoboflowVehiclesIndex.INDEX_SETTINGS
 
 """Example on detection: /home/carvarsou/Vehicle-Classification/datasets/vehicles/a/train/
 filename,width,height,class,xmin,ymin,xmax,ymax
@@ -19,40 +20,12 @@ Test: 458
 Valid: 966
 """
 
-ELASTIC_USER = os.getenv("ELASTIC_USER")
-ELASTIC_PASS = os.getenv("ELASTIC_PASS")
-INDEX_NAME = 'roboflow-vehicles'
-INDEX_SETTINGS = {
-    "mappings": {
-        "properties": {
-            "filename": {
-                "type": "text"
-            },
-            "size": {
-                "type": "text"
-            },
-            "vehicles": {
-                "type": "text"
-            }
-        }
-    }
-}
-
 # --- Read functions ---
 def read_csv(data_dir: str, csv_file: str):
     return pd.read_csv(os.path.join(data_dir, csv_file))
 
-def collect_filenames(data_dir: str, csv_file: str):
+def read_images(es: Elasticsearch, index_name: str, data_dir: str, csv_file: str):
     df = read_csv(data_dir, csv_file)
-    filenames = set()
-    for i in range(len(df)):
-        filename = os.path.join(data_dir, df['filename'][i])
-        filenames.add(filename)
-    return filenames
-
-def read_images(es: Elasticsearch, data_dir: str, csv_file: str):
-    df = read_csv(data_dir, csv_file)
-    ld = [] # List of images
     d = {} # Image dictionary
     prev_filename = None
 
@@ -60,8 +33,7 @@ def read_images(es: Elasticsearch, data_dir: str, csv_file: str):
         filename = os.path.join(data_dir, df['filename'][i]) # Current filename
         if filename != prev_filename: # New filename in d
             if d:
-                ld.append(d)
-                index_image(es, INDEX_NAME, d)
+                RoboflowVehiclesIndex.index_image(es, index_name, d)
             d = {
                 'filename': filename,
                 'size': (df['width'][i], df['height'][i]),
@@ -70,64 +42,41 @@ def read_images(es: Elasticsearch, data_dir: str, csv_file: str):
         d['vehicles'].append((df['class'][i], df['xmin'][i], df['ymin'][i], df['xmax'][i], df['ymax'][i]))
         prev_filename = filename
 
-    ld.append(es)
-    # Index d in Elasticsearch
-    index_image(es, INDEX_NAME, d)
+    RoboflowVehiclesIndex.index_image(es, index_name, d)
 
-    return ld
+# --- Other functions ---
+def count_index_docs(index_name: str):
+    response = requests.get("http://localhost:9200/"+index_name+"/_stats/docs")
+    data = response.json()
+    count = data['indices'][index_name]['primaries']['docs']['count']
+    print("Total number of docs: " + str(count))
 
-def index_image(es: Elasticsearch, index_name: str, image_dict: dict):
+# TODO - Iterate through all vehicles in img_dict and display all bounding boxes
+def display_image(es: Elasticsearch, index_name: str, data_dir: str, filename: str):
+    # Get image dict from index
+    param = os.path.join(data_dir, filename)
+    query = es.search(index=index_name, body={"query": {"match": {"filename": param}}})
+    img_dict = query['hits']['hits'][0]['_source']
+    bbox_coords = img_dict['vehicles'][0][1:]
 
-    # Index the image dictionary
-    res = es.index(index=index_name, id=image_dict['filename'], document=image_dict)
-
-    # Print the response
-    print(res)
-
-def reset_index(es: Elasticsearch, index_name: str) -> None:
-    if es.indices.exists(index=index_name):
-        es.indices.delete(index=index_name)
-
-    es.indices.create(index=index_name, body=INDEX_SETTINGS)
-
-def display_image(img_dict: dict):
-    img = cv2.imread(img_dict[0]['filename'])
-    bbox_coords = img_dict[0]['vehicles'][0][1:]
+    # Display image with bounding box
+    img = cv2.imread(img_dict['filename'])
     img_bbox = cv2.rectangle(img, (bbox_coords[0], bbox_coords[1]), (bbox_coords[2], bbox_coords[3]), (0, 255, 0), 2)
-    
     img_rgb = cv2.cvtColor(img_bbox, cv2.COLOR_BGR2RGB)
     plt.imshow(img_rgb)
     plt.show()
 
-def write_to_text_file(processed_data, output_file):
-    with open(output_file, 'w') as file:
-        c = 0
-        for d in processed_data:
-            file.write(f"Filename: {d['filename']}\n")
-            file.write(f"Size: {d['size']}\n")
-            file.write("Vehicles:\n")
-            for vehicle in d['vehicles']:
-                file.write(f"\t{vehicle}\n")
-            file.write("\n")
-            c+=1
-        print("Count when writing: " + str(c))
-
 
 # --- Main ---
 def main():
+    es =  Elasticsearch("http://localhost:9200")
     data_dir = 'datasets/vehicles/a/train'
     csv_file = '_annotations.csv'
-    es =  Elasticsearch(
-        hosts=["http://localhost:9200"],
-        basic_auth=(ELASTIC_USER, ELASTIC_PASS),
-    )
-    reset_index(es, INDEX_NAME)
-    img_dict = read_images(es, data_dir, csv_file)
-    print("Size of img_dict: " + str(len(img_dict)))
-    # output_file = 'dict.txt'
-    # write_to_text_file(img_dict, output_file)
+    RoboflowVehiclesIndex.reset_index(es, INDEX_NAME, INDEX_SETTINGS)
+    read_images(es, INDEX_NAME, data_dir, csv_file)
 
-    display_image(img_dict)
+    filename = 'adit_mp4-1843_jpg.rf.00408082bf814686c49908deb2728057.jpg'
+    display_image(es, INDEX_NAME, data_dir, filename)
 
 if __name__ == "__main__":
     main()

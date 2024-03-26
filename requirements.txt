@@ -7,3 +7,4 @@ numpy==1.18.5
 matplotlib==3.5.3
 elasticsearch==8.12.1
 python-dotenv==0.21.1
+requests
