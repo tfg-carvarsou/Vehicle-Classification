@@ -2,7 +2,7 @@ import tensorflow as tf
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
-import cv2
+import matplotlib.patches as patches
 import requests
 from index_vehicles import RoboflowVehiclesIndex, Elasticsearch
 tf.compat.v1.enable_eager_execution()
@@ -51,7 +51,22 @@ def count_index_docs(index_name: str):
     count = data['indices'][index_name]['primaries']['docs']['count']
     print("Total number of docs: " + str(count))
 
-# TODO - Iterate through all vehicles in img_dict and display all bounding boxes
+def dict_classes_colors():
+    return {
+        'big bus': (0, 0, 255),     # Blue
+        'big truck': (255, 255, 0), # Yellow
+        'bus-l-': (0, 255, 0),      # Green
+        'bus-s-': (255, 165, 0),    # Orange
+        'car': (173, 216, 230),     # Light Blue
+        'mid truck': (144, 238, 144), # Light Green
+        'small bus': (72, 191, 145), # Ocean Green
+        'small truck': (0, 0, 139), # Dark Blue
+        'truck-l-': (255, 0, 0),    # Red
+        'truck-m-': (169, 169, 169),# Gray
+        'truck-s-': (128, 0, 128),  # Purple
+        'truck-xl-': (255, 127, 127) # Pink
+    }
+
 def display_image(es: Elasticsearch, index_name: str, data_dir: str, filename: str):
     # Get image dict from index
     param = os.path.join(data_dir, filename)
@@ -63,12 +78,18 @@ def display_image(es: Elasticsearch, index_name: str, data_dir: str, filename: s
         list_bbox_coords.append(v[1:])
 
     # Display image with bounding box
-    img = cv2.imread(img_dict['filename'])
-    for b in list_bbox_coords:
-        img_bbox = cv2.rectangle(img, (b[0], b[1]), (b[2], b[3]), (0, 255, 0), 2)
+    img = plt.imread(img_dict['filename'])
+    _, ax = plt.subplots()
     
-    img_rgb = cv2.cvtColor(img_bbox, cv2.COLOR_BGR2RGB)
-    plt.imshow(img_rgb)
+    classes_colors = dict_classes_colors()
+    for class_index, b in enumerate(list_bbox_coords):
+        class_name = img_dict['vehicles'][class_index][0]  # Get the label and color for the vehicle
+        color = tuple(rgb/255 for rgb in classes_colors.get(class_name, (0, 0, 0)))
+        img_bbox = patches.Rectangle((b[0], b[1]), b[2] - b[0], b[3] - b[1], linewidth=2, edgecolor=color, facecolor='none')
+        ax.add_patch(img_bbox)
+        ax.text(b[0], b[1]-10, class_name, fontsize=12, color=color)
+
+    ax.imshow(img)
     plt.show()
 
 # --- Model ---
@@ -82,7 +103,7 @@ def main():
     RoboflowVehiclesIndex.reset_index(es, INDEX_NAME, INDEX_SETTINGS)
     read_images(es, INDEX_NAME, data_dir, csv_file)
 
-    filename = 'adit_mp4-1843_jpg.rf.00408082bf814686c49908deb2728057.jpg'
+    filename = 'pagi_16112021_mp4-581_jpg.rf.00c56fa5c3ce82f9d92e6e5ff9367430.jpg'
     display_image(es, INDEX_NAME, data_dir, filename)
 
 if __name__ == "__main__":
