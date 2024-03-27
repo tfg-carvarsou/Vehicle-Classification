@@ -44,7 +44,7 @@ def read_images(es: Elasticsearch, index_name: str, data_dir: str, csv_file: str
 
     RoboflowVehiclesIndex.index_image(es, index_name, d)
 
-# --- Other functions ---
+# --- Display functions ---
 def count_index_docs(index_name: str):
     response = requests.get("http://localhost:9200/"+index_name+"/_stats/docs")
     data = response.json()
@@ -57,15 +57,22 @@ def display_image(es: Elasticsearch, index_name: str, data_dir: str, filename: s
     param = os.path.join(data_dir, filename)
     query = es.search(index=index_name, body={"query": {"match": {"filename": param}}})
     img_dict = query['hits']['hits'][0]['_source']
-    bbox_coords = img_dict['vehicles'][0][1:]
+
+    list_bbox_coords = []
+    for v in img_dict['vehicles']:
+        list_bbox_coords.append(v[1:])
 
     # Display image with bounding box
     img = cv2.imread(img_dict['filename'])
-    img_bbox = cv2.rectangle(img, (bbox_coords[0], bbox_coords[1]), (bbox_coords[2], bbox_coords[3]), (0, 255, 0), 2)
+    for b in list_bbox_coords:
+        img_bbox = cv2.rectangle(img, (b[0], b[1]), (b[2], b[3]), (0, 255, 0), 2)
+    
     img_rgb = cv2.cvtColor(img_bbox, cv2.COLOR_BGR2RGB)
     plt.imshow(img_rgb)
     plt.show()
 
+# --- Model ---
+    
 
 # --- Main ---
 def main():
