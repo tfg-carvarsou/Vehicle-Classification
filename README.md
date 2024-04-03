@@ -136,7 +136,7 @@ In this project, the aim is to develop machine learning models for the **classif
 2. **Train the model:**
 
     ```bash
-    python main.py
+    python -m core.detect_vehicles.tensorflow
     ```
 
 ## License

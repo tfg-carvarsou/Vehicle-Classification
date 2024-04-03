@@ -1,15 +1,16 @@
-import tensorflow as tf
+# import tensorflow as tf
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import requests
-from index_vehicles import RoboflowVehiclesIndex, Elasticsearch
-tf.compat.v1.enable_eager_execution()
+from ..indexes.index_vehicles import RoboflowVehiclesIndex, Elasticsearch
+# tf.compat.v1.enable_eager_execution()
+
 INDEX_NAME = RoboflowVehiclesIndex.INDEX_NAME
 INDEX_SETTINGS = RoboflowVehiclesIndex.INDEX_SETTINGS
 
-"""Example on detection: /home/carvarsou/Vehicle-Classification/datasets/vehicles/a/train/
+"""Example on detection: /home/carvarsou/Vehicle-Classification/datasets/vehicles/tensorflow/train/
 filename,width,height,class,xmin,ymin,xmax,ymax
 adit_mp4-2_jpg.rf.fdf2998eb42800e8136ec33eb5724f59.jpg,640,480,bus-l-,322,151,362,193
 adit_mp4-2_jpg.rf.fdf2998eb42800e8136ec33eb5724f59.jpg,640,480,car,294,167,312,182
@@ -98,7 +99,7 @@ def display_image(es: Elasticsearch, index_name: str, data_dir: str, filename: s
 # --- Main ---
 def main():
     es =  Elasticsearch("http://localhost:9200")
-    data_dir = 'datasets/vehicles/a/train'
+    data_dir = 'datasets/vehicles/tensorflow/train'
     csv_file = '_annotations.csv'
     RoboflowVehiclesIndex.reset_index(es, INDEX_NAME, INDEX_SETTINGS)
     read_images(es, INDEX_NAME, data_dir, csv_file)

@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 # Define the target directory
-TARGET_DIR="$SCRIPT_DIR/../datasets/vehicles/a"
+TARGET_DIR="$SCRIPT_DIR/../datasets/vehicles/multilabel"
 
 # Check if the directory exists, if not, create it
 if [ ! -d "$TARGET_DIR" ]; then
@@ -14,12 +14,13 @@ fi
 # Navigate to the datasets/vehicles folder
 cd "$TARGET_DIR" || { echo "Failed to navigate to directory $TARGET_DIR"; exit 1; }
 
-# Download the vehicles dataset
-# Classification dataset
-# curl -L "https://universe.roboflow.com/ds/yMpTPUk83y?key=IdCQYHz9sx" > roboflow.zip
+# Download the vehicles dataset from Roboflow
 
-# Object detection dataset
-curl -L "https://universe.roboflow.com/ds/gV0Icgz9uI?key=VonD89jLsK" > roboflow.zip
+# Tensorflow Object Detection
+# curl -L "https://universe.roboflow.com/ds/gV0Icgz9uI?key=VonD89jLsK" > roboflow.zip
+
+# YoloV5 Pytorch
+# curl -L "https://universe.roboflow.com/ds/ljZpsSgtkK?key=lJfAkMwFxk" > roboflow.zip
 
 # Unzip the dataset
 unzip roboflow.zip
