@@ -78,16 +78,16 @@ In this project, the aim is to develop machine learning models for the **classif
 
 3. **Create a Conda Environment:**
 
-- Make sure you have Python 3.7 installed:
+- Make sure you have Python 3.8 installed:
 
     ```bash
-    conda create --name directml python=3.7
+    conda create --name directml python=3.8
     ```
   Otherwise, downgrade it as so:
     ```bash
     conda create --name directml python=<your_version>
     conda activate directml
-    conda install python=3.7
+    conda install python=3.8
     ```
 
 4. **Activate the Environment:**

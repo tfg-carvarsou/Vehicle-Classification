@@ -94,7 +94,7 @@ def display_image(es: Elasticsearch, index_name: str, data_dir: str, filename: s
     plt.show()
 
 # --- Model ---
-    
+# Faster R-CNN   
 
 # --- Main ---
 def main():
