@@ -79,38 +79,55 @@ def detect_vehicles(model_path, weights, img_size, conf, img):
         "--source", img
     ])
 
+def debug_mode():
+    download = False
+    load = False
+    configure = False
+    train = False
+    evaluate = True
+    detect = True
+    return download, load, configure, train, evaluate, detect
+
 def main():
+    download, load, configure, train, evaluate, detect = debug_mode()
+    model_path = get_model_path()
+    dataset_path = './datasets/vehicles/yolov5_pytorch'
+
     # 1. Download roboflow-vehicles dataset
-    print("\n📥 Downloading dataset...")
-    download_dataset('./scripts/yolov5_vehicles_dataset.sh')
+    if download:
+        print("\n📥 Downloading dataset...")
+        download_dataset('./scripts/yolov5_vehicles_dataset.sh')
 
     # 2. Load pre-trained YoloV5 model 
-    print("\n🔍 Loading YoloV5 model...")
-    load_model()
-    model_path = get_model_path()
-    print("Model loaded from: ", model_path)
+    if load:
+        print("\n🔍 Loading YoloV5 model...")
+        load_model()
+        print("Model loaded from: ", model_path)
 
     # 3. Configure training file (data.yaml)
-    print("\n🤖 Configuring training file...")
-    dataset_path = './datasets/vehicles/yolov5_pytorch'
-    configure_yaml(dataset_path)
-    print("Training file configured.")
+    if configure:
+        print("\n🤖 Configuring training file...")
+        configure_yaml(dataset_path)
+        print("Training file configured.")
 
     # 4. Train model with training file
-    print("\n🚀 Training model...")
-    train(model_path, 320, 10, 5, dataset_path, 'yolov5s.pt')
-    print("Training completed.")
+    if train:
+        print("\n🚀 Training model...")
+        train(model_path, 320, 10, 5, dataset_path, 'yolov5s.pt')
+        print("Training completed.")
 
     # 5. Evaluate new model performance
-    print("\n📊 Evaluating model...")
-    model_source = os.path.join(model_path, 'runs/train/exp')
-    model_dest = './models/detect_vehicles/yolov5_pytorch'
-    get_results(model_source, model_dest)
-    # evaluate()
+    if evaluate:
+        print("\n📊 Evaluating model...")
+        model_source = os.path.join(model_path, 'runs/train/exp')
+        model_dest = './models/detect_vehicles/yolov5_pytorch'
+        get_results(model_source, model_dest)
+        #TODO evaluate()
 
     # 6. Detect vehicles in new image
-    print("\n🚗 Detecting vehicles...")
-    # detect_vehicles()
+    if detect:
+        print("\n🚗 Detecting vehicles...")
+        #TODO detect_vehicles()
 
 if __name__ == "__main__":
     main()
