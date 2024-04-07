@@ -35,8 +35,8 @@ def configure_yaml(dataset_path):
 def train(model_path, img_size, batch, epochs, dataset_path, weights):
     '''
     python /home/carvarsou/.cache/torch/hub/ultralytics_yolov5_master/train.py 
-    --img 640 
-    --batch 16 
+    --img 320 
+    --batch 10 
     --epochs 5 
     --data ./datasets/vehicles/yolov5_pytorch/data.yaml
     --weights yolov5s.pt
@@ -51,33 +51,30 @@ def train(model_path, img_size, batch, epochs, dataset_path, weights):
         "--weights", weights
     ])
 
-def get_results(source, dest):
-    """
-    Recursively copy the contents of a directory from source to destination using subprocess.
-    
-    Parameters:
-        source (str): The path of the source directory to copy.
-        dest (str): The path of the destination directory.
-    """
+def get_train_results(source, dest):
     os.makedirs(dest, exist_ok=True)
     subprocess.run(["cp", "-r", source, dest])
 
 def detect_vehicles(model_path, weights, img_size, conf, img):
     '''
     python /home/carvarsou/.cache/torch/hub/ultralytics_yolov5_master/detect.py 
-    --weights /home/carvarsou/.cache/torch/hub/ultralytics_yolov5_master/runs/train/exp3/weights/best.pt 
+    --weights /home/carvarsou/Vehicle-Classification/models/detect_vehicles/yolov5_pytorch/exp/weights/best.pt 
     --img 640 
     --conf 0.3 
-    --source /home/carvarsou/Vehicle-Classification/datasets/vehicles/yolov5_pytorch/test/images/adit_mp4-5_jpg.rf.bd945716e20cb3f850e2ad36df03d6e3.jpg
+    --source /home/carvarsou/Vehicle-Classification/models/detect_vehicles/yolov5_pytorch/test_images/prueba.jpg
     '''
     subprocess.run([
         "python",
         f"{model_path}/detect.py",
         "--weights", weights,
-        "--img", img_size,
-        "--conf", conf,
+        "--img", str(img_size),
+        "--conf", str(conf),
         "--source", img
     ])
+    
+def get_detect_results(source, dest):
+    os.makedirs(dest, exist_ok=True)
+    subprocess.run(["cp", "-r", source, dest])
 
 def debug_mode():
     download = False
@@ -92,6 +89,12 @@ def main():
     download, load, configure, train, evaluate, detect = debug_mode()
     model_path = get_model_path()
     dataset_path = './datasets/vehicles/yolov5_pytorch'
+    train_results_source = os.path.join(model_path, 'runs/train/exp')
+    train_results_dest = './models/detect_vehicles/yolov5_pytorch'
+    weights = os.path.join(train_results_dest, 'exp/weights/best.pt')
+    detect_img_source = os.path.join(model_path, 'runs/detect/exp')
+    detect_img_dest = './images/detect_vehicles/yolov5_pytorch'
+    img = os.path.join(detect_img_dest, 'prueba.jpg')
 
     # 1. Download roboflow-vehicles dataset
     if download:
@@ -119,15 +122,15 @@ def main():
     # 5. Evaluate new model performance
     if evaluate:
         print("\n📊 Evaluating model...")
-        model_source = os.path.join(model_path, 'runs/train/exp')
-        model_dest = './models/detect_vehicles/yolov5_pytorch'
-        get_results(model_source, model_dest)
+        get_train_results(train_results_source, train_results_dest)
         #TODO evaluate()
 
     # 6. Detect vehicles in new image
     if detect:
         print("\n🚗 Detecting vehicles...")
-        #TODO detect_vehicles()
+        detect_vehicles(model_path, weights, 320, 0.5, img)
+        # TODO show image instead of saving it
+        get_detect_results(detect_img_source, os.path.join(detect_img_dest, 'results'))
 
 if __name__ == "__main__":
     main()
