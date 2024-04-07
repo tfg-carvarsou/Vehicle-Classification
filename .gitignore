@@ -164,3 +164,7 @@ cython_debug/
 
 # Files
 main.py
+
+# Models
+*.pt
+*.zip
