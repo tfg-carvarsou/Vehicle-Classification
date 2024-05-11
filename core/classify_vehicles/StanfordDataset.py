@@ -16,13 +16,10 @@ class StanfordDataset(Dataset):
     def __getitem__(self, idx):
         img_name = self.data.iloc[idx, 0]
         img_path = subprocess.check_output(['find', self.root_dir, '-name', img_name]).decode().strip()
-        print('Path ', img_path.split('/')[-2]) #todel
         image = Image.open(img_path)
         bbox = self.data.iloc[idx, 1:5].values.astype(float)
         class_label = self.data.iloc[idx, 5]
-        metadata = self.get_metadata(img_path.split('/')[-2].split(' '))        
-        print(metadata) #todel
-        print('#'*20) #todel
+        metadata = self.get_metadata(img_path.split('/')[-2].split(' '))
 
         if self.transform:
             image = self.transform(image)
