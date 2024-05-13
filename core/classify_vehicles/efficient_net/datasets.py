@@ -7,13 +7,13 @@ from torch.utils.data import DataLoader
 
 TRAIN_DIR = './datasets/stanford/car_data/car_data/train/'
 TEST_DIR = './datasets/stanford/car_data/car_data/test/'
-IMG_SIZE = 256
-BATCH_SIZE = 32
+IMG_SIZE = 224
+BATCH_SIZE = 16
 NUM_WORKERS = 4
 
 # We are using a subset of the dataset for this project.
-# The Stanford Cars dataset subset contains 3851 images of 48 classes of cars,
-# where 1936 images are used for training and 1915 images are used for testing.
+# The Stanford Cars dataset subset contains 3933 images of 49 classes of cars,
+# where 1977 images are used for training and 1956 images are used for testing.
 # Classes are typically at the level of Make, Model, Year, e.g. 2012 Tesla Model S or 2012 BMW M3 coupe.
 
 def download_dataset(script):
@@ -33,13 +33,14 @@ def crop_dataset():
         new_car = car.split(' ')[0]
         if new_car not in unique_cars:
             unique_cars[new_car] = car.strip()
+    unique_cars["Ram"] = "Ram C-V Cargo Van Minivan 2012"
     unique_car_list = list(unique_cars.values())
     with open('./datasets/stanford/names.csv', 'w') as names:
         for car in unique_car_list:
             names.write(car)
             names.write('\n')
     
-    # Crop train and test folders
+    # # Crop train and test folders
     train_cars = set(os.listdir(TRAIN_DIR))
     test_cars = set(os.listdir(TEST_DIR))
     unique_car_set = set(unique_car_list)
@@ -49,25 +50,29 @@ def crop_dataset():
         subprocess.run(["rm", "-rf", f"{TRAIN_DIR}{car}"])
     for car in test_cars_to_delete:
         subprocess.run(["rm", "-rf", f"{TEST_DIR}{car}"])
-    unique_images_set = set()
+    train_unique_images_set, test_unique_images_set = set(), set()
     for car in unique_car_set:
-        found_images = subprocess.run(["find", f"{TRAIN_DIR}{car}", "-type", "f"], stdout=subprocess.PIPE)
-        for image_path in found_images.stdout.splitlines():
+        train_found_images = subprocess.run(["find", f"{TRAIN_DIR}{car}", "-type", "f"], stdout=subprocess.PIPE)
+        for image_path in train_found_images.stdout.splitlines():
             image_name = os.path.basename(image_path.decode())
-            unique_images_set.add(image_name)
+            train_unique_images_set.add(image_name)
+        test_found_images = subprocess.run(["find", f"{TEST_DIR}{car}", "-type", "f"], stdout=subprocess.PIPE)
+        for image_path in test_found_images.stdout.splitlines():
+            image_name = os.path.basename(image_path.decode())
+            test_unique_images_set.add(image_name)
 
-    # Crop anno_train.csv and anno_test.csv
+    # # Crop anno_train.csv and anno_test.csv
     with open('./datasets/stanford/anno_train.csv', 'r') as file:
         reader = csv.reader(file)
         lines = list(reader)
-    filtered_lines = [line for line in lines if line[0] in unique_images_set]
+    filtered_lines = [line for line in lines if line[0] in train_unique_images_set]
     with open('./datasets/stanford/anno_train.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(filtered_lines)
     with open('./datasets/stanford/anno_test.csv', 'r') as file:
         reader = csv.reader(file)
         lines = list(reader)
-    filtered_lines = [line for line in lines if line[0] in unique_images_set]
+    filtered_lines = [line for line in lines if line[0] in test_unique_images_set]
     with open('./datasets/stanford/anno_test.csv', 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(filtered_lines)

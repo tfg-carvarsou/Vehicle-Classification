@@ -81,11 +81,11 @@ def test_model(model, testloader, criterion, class_names):
     return epoch_loss, epoch_acc
 
 def debug_mode():
-    download = True
-    preprocess = False
-    load = False
-    train = False
-    evaluate = False
+    download = False
+    preprocess = True
+    load = preprocess
+    train = preprocess
+    evaluate = preprocess
     classify = False
     return download, preprocess, load, train, evaluate, classify
 
@@ -95,7 +95,7 @@ def main():
     if download:
         print("\n📥 Downloading dataset...")
         download_dataset('./scripts/stanford_dataset.sh')
-        # crop_dataset()
+        crop_dataset()
 
     if preprocess:
         print("\n🤖 Preprocessing datasets...")
