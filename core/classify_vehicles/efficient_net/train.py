@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 import time
 from tqdm.auto import tqdm
-from model import load_model
+from model import get_model_path, load_model
 from datasets import download_dataset, crop_dataset, get_datasets, get_data_loaders
 from utils import save_model, save_plots
 
@@ -23,8 +23,7 @@ parser.add_argument(
 )
 args = vars(parser.parse_args())
 
-# Training function.
-def train(model, trainloader, optimizer, criterion):
+def train_model(model, trainloader, optimizer, criterion):
     model.train()
     print('Training')
     train_running_loss = 0.0
@@ -54,10 +53,9 @@ def train(model, trainloader, optimizer, criterion):
     epoch_acc = 100. * (train_running_correct / len(trainloader.dataset))
     return epoch_loss, epoch_acc 
 
-# Validation function.
-def validate(model, testloader, criterion, class_names):
+def test_model(model, testloader, criterion, class_names):
     model.eval()
-    print('Validation')
+    print('Testing')
     valid_running_loss = 0.0
     valid_running_correct = 0
     counter = 0
@@ -83,23 +81,35 @@ def validate(model, testloader, criterion, class_names):
     return epoch_loss, epoch_acc
 
 def debug_mode():
-    debug = False
-    return debug
+    download = True
+    preprocess = False
+    load = False
+    train = False
+    evaluate = False
+    classify = False
+    return download, preprocess, load, train, evaluate, classify
 
 def main():
-    debug = debug_mode()
+    download, preprocess, load, train, evaluate, classify = debug_mode()
 
-    download_dataset('./scripts/stanford_dataset.sh')
-    crop_dataset()
+    if download:
+        print("\n📥 Downloading dataset...")
+        download_dataset('./scripts/stanford_dataset.sh')
+        # crop_dataset()
 
-    if debug:
-        # Load the training and validation datasets.
+    if preprocess:
+        print("\n🤖 Preprocessing datasets...")
+        # Load the train and test datasets
         train_ds, test_ds, dataset_classes = get_datasets()
         print(f"[INFO]: Number of training images: {len(train_ds)}")
         print(f"[INFO]: Number of validation images: {len(test_ds)}")
-        # Load the training and validation data loaders.
+        # Load the train and test data loaders
         train_loader, valid_test = get_data_loaders(train_ds, test_ds)
-        # Learning_parameters. 
+        print("Datasets preprocessed succesfully")
+    
+    if load:
+        print("\n🔍 Loading EfficientB1 model...")
+        # Learning_parameters
         lr = args['learning_rate']
         epochs = args['epochs']
         
@@ -112,7 +122,11 @@ def main():
             fine_tune=True, 
             num_classes=len(dataset_classes)
         ).to(DEVICE)
-        
+        model_path = get_model_path()
+        print("Model loaded from: ", model_path)
+    
+    if train:
+        print("\n🚀 Training model...")
         # Total parameters and trainable parameters.
         total_params = sum(p.numel() for p in model.parameters())
         print(f"{total_params:,} total parameters.")
@@ -124,28 +138,32 @@ def main():
         # Loss function.
         criterion = nn.CrossEntropyLoss()
         # Lists to keep track of losses and accuracies.
-        train_loss, valid_loss = [], []
-        train_acc, valid_acc = [], []
+        train_loss, test_loss = [], []
+        train_acc, test_acc = [], []
         # Start the training.
         for epoch in range(epochs):
             print(f"[INFO]: Epoch {epoch+1} of {epochs}")
-            train_epoch_loss, train_epoch_acc = train(model, train_loader, 
+            train_epoch_loss, train_epoch_acc = train_model(model, train_loader, 
                                                     optimizer, criterion)
-            valid_epoch_loss, valid_epoch_acc = validate(model, valid_test,  
+            test_epoch_loss, test_epoch_acc = test_model(model, valid_test,  
                                                         criterion, dataset_classes)
             train_loss.append(train_epoch_loss)
-            valid_loss.append(valid_epoch_loss)
+            test_loss.append(test_epoch_loss)
             train_acc.append(train_epoch_acc)
-            valid_acc.append(valid_epoch_acc)
+            test_acc.append(test_epoch_acc)
             print(f"Training loss: {train_epoch_loss:.3f}, training acc: {train_epoch_acc:.3f}")
-            print(f"Validation loss: {valid_epoch_loss:.3f}, validation acc: {valid_epoch_acc:.3f}")
+            print(f"Validation loss: {test_epoch_loss:.3f}, validation acc: {test_epoch_acc:.3f}")
             print('-'*50)
             time.sleep(2)
+        print("Training completed")
+    
+    if evaluate:
+        print("\n📊 Evaluating model...")
         # Save the trained model weights.
         save_model(epochs, model, optimizer, criterion)
         # Save the loss and accuracy plots.
-        save_plots(train_acc, valid_acc, train_loss, valid_loss)
-        print('TRAINING COMPLETE')
-
+        save_plots(train_acc, test_acc, train_loss, test_loss)
+        print("Evaluating completed")
+        
 if __name__ == '__main__':
     main()

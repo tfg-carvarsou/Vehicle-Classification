@@ -17,7 +17,7 @@ tqdm==4.66.2
 ultralytics==8.1.42
 scikit-learn==1.0.2
 elasticsearch==8.12.1
-kaggle==1.6.11
+kaggle==1.6.12
 tensorflow==2.13.1
 
 # Plot ------------------------------------------------------------------------

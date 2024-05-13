@@ -1,12 +1,18 @@
+import os
 import torch.nn as nn
 from torchvision import models
+
+def get_model_path():
+    pwd = os.getcwd()
+    myuser = os.path.dirname(pwd)
+    return os.path.join(myuser, '.cache/torch/hub/checkpoints')
 
 def load_model(pretrained=True, fine_tune=True, num_classes=10):
     if pretrained:
         print('[INFO]: Loading pre-trained weights')
     else:
         print('[INFO]: Not loading pre-trained weights')
-    model = models.efficientnet_b1(weights=pretrained)
+    model = models.efficientnet_b1(weights=models.EfficientNet_B1_Weights.DEFAULT)
     
     if fine_tune:
         print('[INFO]: Fine-tuning all layers...')
