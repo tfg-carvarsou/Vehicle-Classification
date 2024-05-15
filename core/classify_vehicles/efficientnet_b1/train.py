@@ -10,7 +10,6 @@ from utils import save_model, save_plots
 
 DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
 
-# Construct the argument parser
 parser = argparse.ArgumentParser()
 parser.add_argument(
     '-e', '--epochs', type=int, default=5,
@@ -82,15 +81,14 @@ def test_model(model, testloader, criterion, class_names):
 
 def debug_mode():
     download = False
-    preprocess = True
+    preprocess = False
     load = preprocess
     train = preprocess
     evaluate = preprocess
-    classify = False
-    return download, preprocess, load, train, evaluate, classify
+    return download, preprocess, load, train, evaluate
 
 def main():
-    download, preprocess, load, train, evaluate, classify = debug_mode()
+    download, preprocess, load, train, evaluate = debug_mode()
 
     if download:
         print("\n📥 Downloading dataset...")
