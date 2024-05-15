@@ -16,11 +16,11 @@ def load_model(pretrained=True, fine_tune=True, num_classes=10):
     model = models.efficientnet_b1(weights=models.EfficientNet_B1_Weights.DEFAULT)
     
     if fine_tune:
-        print('[INFO]: Fine-tuning all layers...')
+        print('[INFO]: Fine-tuning all layers...\n')
         for params in model.parameters():
             params.requires_grad = True
     elif not fine_tune:
-        print('[INFO]: Freezing hidden layers...')
+        print('[INFO]: Freezing hidden layers...\n')
         for params in model.parameters():
             params.requires_grad = False
     # Change the final classification head

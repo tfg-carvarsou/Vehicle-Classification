@@ -58,21 +58,43 @@ def return_cam(feature_conv, weight_softmax, class_idx):
         output_cam.append(cv2.resize(cam_img, size_upsample))
     return output_cam
 
-def show_cam(cams, width, height, orig_image, class_idx, all_classes, save_name):
+def show_cam(cams, width, height, orig_image, gt_class, pred_class, save_name):
     for i, cam in enumerate(cams):
         heatmap = cv2.applyColorMap(cv2.resize(cam,(width, height)), cv2.COLORMAP_JET)
         result = heatmap * 0.3 + orig_image * 0.5
-        # put class label text on the result
-        cv2.putText(result, all_classes[class_idx[i]], (20, 40), 
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 2)
-        cv2.imshow('CAM', result/255.)
-        cv2.waitKey(0)
-        cv2.imwrite(os.path.join(IMAGES_PATH, f"results/CAM_{save_name}"), result)
+        # put gt_class label text in blue
+        cv2.putText(img=result, 
+                    text=gt_class, 
+                    org=(20, 40), 
+                    fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                    fontScale=1.5, 
+                    color=(255, 0, 0), 
+                    thickness=3, 
+                    lineType=cv2.LINE_AA)
+        # put pred_class label text in green if correct, red if incorrect
+        if gt_class == pred_class:
+            cv2.putText(img=result, 
+                        text=pred_class+" (correct)", 
+                        org=(20, 80), 
+                        fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                        fontScale=1.5, 
+                        color=(0, 255, 0), 
+                        thickness=3, 
+                        lineType=cv2.LINE_AA)
+        else:
+            cv2.putText(img=result, 
+                        text=pred_class+" (incorrect)", 
+                        org=(20, 80), 
+                        fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+                        fontScale=1.5, 
+                        color=(0, 0, 255), 
+                        thickness=3, 
+                        lineType=cv2.LINE_AA)
+        cv2.imwrite(os.path.join(IMAGES_PATH, f"results/cam_{save_name}"), result)
 
 features_blobs = []
 def hook_feature(module, input, output):
     features_blobs.append(output.data.cpu().numpy())
-    print("AAAA: ", features_blobs)
 
 def get_transforms():
     return transforms.Compose([
@@ -86,31 +108,46 @@ def get_transforms():
     ])
 
 def main():
-    #TODO Inference on vehicle image using EfficientNetB1
     model = load_trained_model()
     model._modules.get('features').register_forward_hook(hook_feature)
-    print("Feature blobs ", features_blobs) #todel
     params = list(model.parameters())
     weight_softmax = np.squeeze(params[-2].data.numpy())
+    
+    image_count = 0
+    correct_count = 0
+    all_images = glob.glob(os.path.join(IMAGES_PATH, '*.jpg'), recursive=True)
+    for image_path in all_images:
+        image_count += 1
+        print(f"Image {image_count}")
+        gt_class = image_path.split('/')[-1].split('.')[0].strip()
+        orig_image, image = load_image(image_path)
+        height, width, _ = orig_image.shape
+        # get transforms
+        transforms = get_transforms()
+        image_tensor = transforms(image)
+        image_tensor = image_tensor.unsqueeze(0)
+        # forward pass through model
+        outputs = model(image_tensor.to(DEVICE))
+        # get softmax probabilities
+        probs = F.softmax(input=outputs, dim=1).data.squeeze()
+        # get class indices of top k probabilitiesç
+        classes = get_classes()
+        class_idx = topk(probs, 1)[1].int()
+        pred_class = classes[int(class_idx)].strip()
+        
+        print(f"Ground truth class: {gt_class}")
+        print(f"Predicted class: {pred_class}\n")
 
-    image_path = os.path.join(IMAGES_PATH, 'prueba.jpg')
-    print(image_path)
-    orig_image, image = load_image(image_path)
-    height, width, _ = orig_image.shape
-    # get transforms
-    transforms = get_transforms()
-    image_tensor = transforms(image)
-    image_tensor = image_tensor.unsqueeze(0)
-    # forward pass through model
-    outputs = model(image_tensor.to(DEVICE))
-    # get softmax probabilities
-    probs = F.softmax(outputs).data.squeeze()
-    # get class indices of top k probabilities
-    class_idx = topk(probs, 1)[1].int()
-    classes = get_classes()
+        if gt_class == pred_class:
+            correct_count += 1
+        
+        cams = return_cam(features_blobs[0], weight_softmax, class_idx)
+        save_name = f"{image_path.split('/')[-1]}"
+        show_cam(cams, width, height, orig_image, gt_class, pred_class, save_name)
 
-    cams = return_cam(features_blobs[0], weight_softmax, class_idx)
-    show_cam(cams, height, width, orig_image, class_idx, classes, 'prueba.jpg')
+    print(f"====================\nTotal number of test images: {len(all_images)}")
+    print(f"Total correct predictions: {correct_count}")
+    print(f"Accuracy: {correct_count/len(all_images)*100:.3f}")
 
 if __name__ == '__main__':
     main()
