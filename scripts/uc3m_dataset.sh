@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 # Define the target directory
-TARGET_DIR="$SCRIPT_DIR/../datasets/stanford"
+TARGET_DIR="$SCRIPT_DIR/../datasets/uc3m"
 
 # Check if the directory exists, if not, create it
 if [ -d "$TARGET_DIR" ]; then
@@ -15,14 +15,14 @@ if [ -d "$TARGET_DIR" ]; then
 else
     mkdir -p "$TARGET_DIR" || { echo "Failed to create directory $TARGET_DIR"; exit 1; }
 fi
-# Navigate to the datasets/stanford folder
+# Navigate to the datasets/uc3m folder
 cd "$TARGET_DIR" || { echo "Failed to navigate to directory $TARGET_DIR"; exit 1; }
 
-# Stanford Car Dataset
-kaggle datasets download -d jutrera/stanford-car-dataset-by-classes-folder
+# UC3M-LP dataset
+gdown https://drive.google.com/uc?id=1UMY-WCRl0tIL_EVMugMH5F7Btl5UE4Wu
 
 # Unzip the dataset
-unzip stanford-car-dataset-by-classes-folder.zip
+unzip UC3M-LP.zip
 
 # Remove the downloaded zip file
-rm stanford-car-dataset-by-classes-folder.zip
+rm UC3M-LP.zip
