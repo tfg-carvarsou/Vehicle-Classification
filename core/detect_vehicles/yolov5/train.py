@@ -32,13 +32,13 @@ def configure_yaml(dataset_path):
     with open(yaml_file, 'w') as y:
         yaml.safe_dump(yaml_data, y)
 
-def train(model_path, img_size, batch, epochs, dataset_path, weights):
+def train_model(model_path, img_size, batch, epochs, dataset_path, weights):
     '''
     python /home/carvarsou/.cache/torch/hub/ultralytics_yolov5_master/train.py 
-    --img 320 
-    --batch 10 
+    --img 224 
+    --batch 16 
     --epochs 5 
-    --data ./datasets/vehicles/yolov5_pytorch/data.yaml
+    --data ./datasets/vehicles/yolov5/data.yaml
     --weights yolov5s.pt
     '''
     subprocess.run([
@@ -58,10 +58,10 @@ def get_train_results(source, dest):
 def detect_vehicles(model_path, weights, img_size, conf, img):
     '''
     python /home/carvarsou/.cache/torch/hub/ultralytics_yolov5_master/detect.py 
-    --weights /home/carvarsou/Vehicle-Classification/models/detect_vehicles/yolov5_pytorch/exp/weights/best.pt 
-    --img 640 
+    --weights /home/carvarsou/Vehicle-Classification/models/detect_vehicles/yolov5/exp/weights/best.pt 
+    --img 224 
     --conf 0.3 
-    --source /home/carvarsou/Vehicle-Classification/models/detect_vehicles/yolov5_pytorch/test_images/prueba.jpg
+    --source /home/carvarsou/Vehicle-Classification/models/detect_vehicles/yolov5/test_images/prueba.jpg
     '''
     subprocess.run([
         "python",
@@ -77,23 +77,23 @@ def get_detect_results(source, dest):
     subprocess.run(["cp", "-r", source, dest])
 
 def debug_mode():
-    download = False
-    load = False
-    configure = False
-    train = False
+    download = True
+    load = True
+    configure = True
+    train = True
     evaluate = True
-    detect = True
+    detect = False
     return download, load, configure, train, evaluate, detect
 
 def main():
     download, load, configure, train, evaluate, detect = debug_mode()
     model_path = get_model_path()
-    dataset_path = './datasets/vehicles/yolov5_pytorch'
+    dataset_path = './datasets/vehicles/yolov5'
     train_results_source = os.path.join(model_path, 'runs/train/exp')
-    train_results_dest = './models/detect_vehicles/yolov5_pytorch'
+    train_results_dest = './models/detect_vehicles/yolov5'
     weights = os.path.join(train_results_dest, 'exp/weights/best.pt')
     detect_img_source = os.path.join(model_path, 'runs/detect/exp')
-    detect_img_dest = './images/detect_vehicles/yolov5_pytorch'
+    detect_img_dest = './images/detect_vehicles/yolov5'
     img = os.path.join(detect_img_dest, 'prueba.jpg')
 
     # 1. Download roboflow-vehicles dataset
@@ -116,7 +116,7 @@ def main():
     # 4. Train model with training file
     if train:
         print("\n🚀 Training model...")
-        train(model_path, 320, 10, 5, dataset_path, 'yolov5s.pt')
+        train(model_path, 224, 16, 5, dataset_path, 'yolov5s.pt')
         print("Training completed.")
 
     # 5. Evaluate new model performance
@@ -128,7 +128,7 @@ def main():
     # 6. Detect vehicles in new image
     if detect:
         print("\n🚗 Detecting vehicles...")
-        detect_vehicles(model_path, weights, 320, 0.5, img)
+        detect_vehicles(model_path, weights, 224, 0.3, img)
         # TODO show image instead of saving it
         get_detect_results(detect_img_source, os.path.join(detect_img_dest, 'results'))
 
