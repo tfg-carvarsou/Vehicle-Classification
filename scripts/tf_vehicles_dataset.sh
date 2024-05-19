@@ -18,7 +18,7 @@ else
 # Navigate to the datasets/vehicles folder
 cd "$TARGET_DIR" || { echo "Failed to navigate to directory $TARGET_DIR"; exit 1; }
 
-# Tensorflow Object Detection
+# Tensorflow Vehicles Dataset
 curl -L "https://universe.roboflow.com/ds/gV0Icgz9uI?key=VonD89jLsK" > tf_vd.zip
 
 # Unzip the dataset

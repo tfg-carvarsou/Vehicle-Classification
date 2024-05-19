@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 # Define the target directory
-TARGET_DIR="$SCRIPT_DIR/../datasets/vehicles/yolov5_pytorch"
+TARGET_DIR="$SCRIPT_DIR/../datasets/vehicles/yolov5"
 
 # Check if the directory exists, if not, create it
 if [ -d "$TARGET_DIR" ]; then
@@ -18,7 +18,7 @@ fi
 # Navigate to the datasets/vehicles folder
 cd "$TARGET_DIR" || { echo "Failed to navigate to directory $TARGET_DIR"; exit 1; }
 
-# YoloV5 Pytorch
+# YoloV5 Vehicles Dataset
 curl -L "https://universe.roboflow.com/ds/ljZpsSgtkK?key=lJfAkMwFxk" > yv5_vd.zip
 
 # Unzip the dataset

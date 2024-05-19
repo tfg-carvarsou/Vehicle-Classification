@@ -18,7 +18,7 @@ fi
 # Navigate to the datasets/uc3m folder
 cd "$TARGET_DIR" || { echo "Failed to navigate to directory $TARGET_DIR"; exit 1; }
 
-# UC3M-LP dataset
+# UC3M-LP Dataset
 gdown https://drive.google.com/uc?id=1UMY-WCRl0tIL_EVMugMH5F7Btl5UE4Wu
 
 # Unzip the dataset
