@@ -25,7 +25,7 @@ def get_latest_directory(source, filename):
                     latest_dir = directory
     return latest_dir
 
-def get_results(source, dest, list_images):
+def get_detect_results(source, dest, list_images):
     dest = os.path.join(dest, 'results')
     os.makedirs(dest, exist_ok=True)
 
@@ -40,3 +40,7 @@ def get_results(source, dest, list_images):
         
         print(f"Copying {img_name} from {s}")
         subprocess.run(['cp', s, dest])
+
+def get_train_results(source, dest):
+    os.makedirs(dest, exist_ok=True)
+    subprocess.run(['cp', '-r', source, dest])

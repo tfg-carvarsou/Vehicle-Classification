@@ -31,8 +31,8 @@ hyp:
   mixup: 0.0
   copy_paste: 0.0
 epochs: 5
-batch_size: 16
-imgsz: 224
+batch_size: 8
+imgsz: 256
 rect: false
 resume: false
 nosave: false
@@ -48,7 +48,7 @@ image_weights: false
 device: ''
 multi_scale: false
 single_cls: false
-optimizer: AdamW
+optimizer: SGD
 sync_bn: false
 workers: 4
 project: ../.cache/torch/hub/ultralytics_yolov5_master/runs/train
