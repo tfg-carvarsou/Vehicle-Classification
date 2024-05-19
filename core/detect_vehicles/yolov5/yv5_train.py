@@ -21,7 +21,7 @@ def train_model(model_path, img_size, batch, num_workers, epochs, optimizer, ds_
     --batch 16 
     --epochs 5 
     --workers 4
-    --optimizer 'AdamW'
+    --optimizer AdamW
     --data ./datasets/vehicles/yolov5/data.yaml
     --weights yolov5s.pt
     """
@@ -38,11 +38,11 @@ def train_model(model_path, img_size, batch, num_workers, epochs, optimizer, ds_
     ])
 
 def debug_mode():
-    download = True
-    load = True
-    configure = True
-    train = True
-    evaluate = True
+    download = False
+    load = False
+    configure = False
+    train = False
+    evaluate = False
     detect = True
     return download, load, configure, train, evaluate, detect
 
@@ -91,7 +91,8 @@ def main():
     # 6. Detect vehicles in new image
     if detect:
         print("\n🚗 Detecting vehicles...")
-        detect_vehicles(model_path, yolov5_weights, IMG_SIZE, CONF_THRESHOLD, list_images)
+        detect_vehicles(model_path, yolov5_weights, IMG_SIZE, CONF_THRESHOLD, 
+                        ds_path, list_images)
         get_results(detect_img_source, detect_img_dest, list_images)
 
 if __name__ == "__main__":
