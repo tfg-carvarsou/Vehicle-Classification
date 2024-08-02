@@ -130,7 +130,7 @@ def main():
         outputs = model(image_tensor.to(DEVICE))
         # get softmax probabilities
         probs = F.softmax(input=outputs, dim=1).data.squeeze()
-        # get class indices of top k probabilitiesç
+        # get class indices of top k probabilities
         classes = get_classes()
         class_idx = topk(probs, 1)[1].int()
         pred_class = classes[int(class_idx)].strip()

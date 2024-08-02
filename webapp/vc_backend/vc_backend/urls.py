@@ -1,4 +1,5 @@
-"""
+from django.urls import include
+'''
 URL configuration for vc_backend project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -13,10 +14,36 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+'''
 from django.contrib import admin
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 
 urlpatterns = [
+    path(
+        'api/v1/doc/openapi.yaml', 
+        SpectacularAPIView.as_view(), 
+        name='schema'),
+    path(
+        'api/v1/doc/swagger/',
+        SpectacularSwaggerView.as_view(url_name='schema'),
+        name='swagger-ui',
+    ),
+    path(
+        'api/v1/doc/redoc/', 
+        SpectacularRedocView.as_view(url_name='schema'), 
+        name='redoc'
+    ),
+    path('', include('vc_backend_app.urls')),
     path('admin/', admin.site.urls),
 ]
+
+urlpatterns = urlpatterns + static(
+    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+)
