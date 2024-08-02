@@ -5,10 +5,9 @@ from .models import VDImage
 from .serializers import VDImageSerializer
 from torchvision import transforms
 from PIL import Image
-from django.http import JsonResponse
-from rest_framework import viewsets, status, mixins
+from rest_framework import viewsets, status
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from core.detect_vehicles.yolov5.model import load_trained_yolov5s_model
 
 # detect_yolov5s_model = load_trained_yolov5s_model()
@@ -17,7 +16,22 @@ class VDImageCreateView(viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
     serializer_class = VDImageSerializer
 
-    @extend_schema(request=VDImageSerializer, responses=VDImageSerializer)
+    @extend_schema(
+        summary='Upload an image to detect vehicles',
+        request=VDImageSerializer,
+        parameters=[
+            OpenApiParameter(name='image', 
+                             type=str,
+                             description='The image to be uploaded', 
+                             required=True)
+        ],
+        responses={
+            201: OpenApiResponse(response=VDImageSerializer, 
+                                 description='The image has been uploaded successfully'),
+            400: OpenApiResponse(response=None,
+                                 description='There has been an incident when uploading the image. Please try again')
+        },
+    )
     def create(self, request, *args, **kwargs):
         form = ImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -32,7 +46,7 @@ class VDImageCreateView(viewsets.GenericViewSet):
             serializer = VDImageSerializer(vd_image)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return JsonResponse(form.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def transform_image(self, image_file):
         image = Image.open(image_file)
@@ -45,12 +59,55 @@ class VDImageCreateView(viewsets.GenericViewSet):
         image_io.seek(0)
         return image_io
 
-class VDImageReadDeleteView(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin):
+class VDImageReadDeleteView(viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
     serializer_class = VDImageSerializer
-    lookup_field = 'code'
 
-    @extend_schema(request=VDImageSerializer, responses=VDImageSerializer)
+    @extend_schema(
+        summary='List all images',
+        responses={
+            200: OpenApiResponse(response=VDImageSerializer(many=True), 
+                                 description='The images has been listed successfully'),
+            400: OpenApiResponse(response=None,
+                                 description='There has been an incident when listing the images. Please try again')
+        },
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+    
+    @extend_schema(
+        summary='Retrieve an image by its code',
+        parameters=[
+            OpenApiParameter(name='code', 
+                             type=str,
+                             description='The image unique identifier', 
+                             required=True)
+        ],
+        responses={
+            200: OpenApiResponse(response=VDImageSerializer, 
+                                 description='The image has been retrieved successfully'),
+            400: OpenApiResponse(response=None,
+                                 description='There has been an incident when retrieving the image. Please try again')
+        },
+    )
+    def retrieve(self, request, *args, **kwargs):
+        return super().retrieve(request, *args, **kwargs)
+    
+    @extend_schema(
+        summary='Delete an image by its code',
+        parameters=[
+            OpenApiParameter(name='code', 
+                             type=str,
+                             description='The image unique identifier', 
+                             required=True)
+        ],
+        responses={
+            204: OpenApiResponse(response=None, 
+                                 description='The image has been deleted successfully'),
+            400: OpenApiResponse(response=None,
+                                 description='There has been an incident when deleting the image. Please try again')
+        },
+    )
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         image_path = instance.image.path

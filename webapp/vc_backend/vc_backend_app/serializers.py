@@ -4,4 +4,7 @@ from .models import VDImage
 class VDImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = VDImage
-        fields = ['id', 'image']
+        fields = ['image']
+        extra_kwargs = {
+            'image': {'help_text': 'The image file'}
+        }
