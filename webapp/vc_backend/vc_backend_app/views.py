@@ -1,4 +1,5 @@
 import sys, os, io
+sys.path.append(os.getcwd())
 from .forms import ImageUploadForm
 from .models import VDImage
 from .serializers import VDImageSerializer
@@ -8,6 +9,10 @@ from django.http import JsonResponse
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
+from core.detect_vehicles.yolov5.model import load_trained_yolov5s_model
+
+detect_yolov5s_model = load_trained_yolov5s_model()
+
 class VDImageViewSet(viewsets.ModelViewSet):
     queryset = VDImage.objects.all()
     serializer_class = VDImageSerializer
@@ -18,8 +23,11 @@ class VDImageViewSet(viewsets.ModelViewSet):
         if form.is_valid():
             image = form.cleaned_data['image']
             transformed_image = self.transform_image(image)
+            predicted_image = transformed_image
+            
             vd_image = VDImage(image=image)
-            vd_image.image.save(f"{image.name.split('.')[0]}_transformed.jpg", transformed_image, save=True)
+            image_to_save = f"{image.name.split('.')[0]}.jpg"
+            vd_image.image.save(image_to_save, predicted_image, save=True)
 
             serializer = VDImageSerializer(vd_image)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
