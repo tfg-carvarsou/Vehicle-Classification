@@ -6,14 +6,14 @@ from .serializers import VDImageSerializer
 from torchvision import transforms
 from PIL import Image
 from django.http import JsonResponse
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, mixins
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema
 from core.detect_vehicles.yolov5.model import load_trained_yolov5s_model
 
-detect_yolov5s_model = load_trained_yolov5s_model()
+# detect_yolov5s_model = load_trained_yolov5s_model()
 
-class VDImageViewSet(viewsets.ModelViewSet):
+class VDImageCreateView(viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
     serializer_class = VDImageSerializer
 
@@ -44,3 +44,21 @@ class VDImageViewSet(viewsets.ModelViewSet):
         transformed_image.save(image_io, format='JPEG')
         image_io.seek(0)
         return image_io
+
+class VDImageReadDeleteView(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.RetrieveModelMixin):
+    queryset = VDImage.objects.all()
+    serializer_class = VDImageSerializer
+    lookup_field = 'code'
+
+    @extend_schema(request=VDImageSerializer, responses=VDImageSerializer)
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        image_path = instance.image.path
+        try:
+            if os.path.exists(image_path):
+                instance.delete()
+                os.remove(image_path)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Exception as e:
+            return Response(e, status=status.HTTP_400_BAD_REQUEST)
+       
