@@ -169,3 +169,6 @@ main.py
 *.zip
 *.pt
 *.pth
+
+# Database
+media
