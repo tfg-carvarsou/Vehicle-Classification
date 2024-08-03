@@ -5,26 +5,35 @@ from .models import VDImage
 from .serializers import VDImageSerializer
 from torchvision import transforms
 from PIL import Image
-from rest_framework import viewsets, status
+from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
 from core.detect_vehicles.yolov5.model import load_trained_yolov5s_model
 
 # detect_yolov5s_model = load_trained_yolov5s_model()
 
-class VDImageCreateView(viewsets.GenericViewSet):
+class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
     serializer_class = VDImageSerializer
 
     @extend_schema(
+        summary='List all images',
+        responses={
+            200: OpenApiResponse(response=VDImageSerializer(many=True), 
+                                 description='The images has been listed successfully'),
+            400: OpenApiResponse(response=None,
+                                 description='There has been an incident when listing the images. Please try again')
+        },
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
+    #TODO: Change application/json to multipart/form-data in create method
+    @extend_schema(
         summary='Upload an image to detect vehicles',
-        request=VDImageSerializer,
-        parameters=[
-            OpenApiParameter(name='image', 
-                             type=str,
-                             description='The image to be uploaded', 
-                             required=True)
-        ],
+        request={
+            'multipart/form-data': VDImageSerializer,
+        },
         responses={
             201: OpenApiResponse(response=VDImageSerializer, 
                                  description='The image has been uploaded successfully'),
@@ -59,30 +68,13 @@ class VDImageCreateView(viewsets.GenericViewSet):
         image_io.seek(0)
         return image_io
 
-class VDImageReadDeleteView(viewsets.GenericViewSet):
+class VDImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
     serializer_class = VDImageSerializer
-
-    @extend_schema(
-        summary='List all images',
-        responses={
-            200: OpenApiResponse(response=VDImageSerializer(many=True), 
-                                 description='The images has been listed successfully'),
-            400: OpenApiResponse(response=None,
-                                 description='There has been an incident when listing the images. Please try again')
-        },
-    )
-    def list(self, request, *args, **kwargs):
-        return super().list(request, *args, **kwargs)
+    lookup_field = 'code'
     
     @extend_schema(
         summary='Retrieve an image by its code',
-        parameters=[
-            OpenApiParameter(name='code', 
-                             type=str,
-                             description='The image unique identifier', 
-                             required=True)
-        ],
         responses={
             200: OpenApiResponse(response=VDImageSerializer, 
                                  description='The image has been retrieved successfully'),
@@ -95,12 +87,6 @@ class VDImageReadDeleteView(viewsets.GenericViewSet):
     
     @extend_schema(
         summary='Delete an image by its code',
-        parameters=[
-            OpenApiParameter(name='code', 
-                             type=str,
-                             description='The image unique identifier', 
-                             required=True)
-        ],
         responses={
             204: OpenApiResponse(response=None, 
                                  description='The image has been deleted successfully'),
