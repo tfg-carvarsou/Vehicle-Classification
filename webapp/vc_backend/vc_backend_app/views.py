@@ -1,8 +1,9 @@
-import sys, os, io, time
+import sys, os, io, time, numpy as np
 sys.path.append(os.getcwd())
 from .forms import VDImageUploadForm
 from .models import VDImage
 from .serializers import VDImageSerializer
+from .enums import VDLabel
 from torchvision import transforms
 from PIL import Image
 from rest_framework import viewsets, mixins, status
@@ -47,13 +48,14 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
             model = form.cleaned_data['model']
             image = form.cleaned_data['image']
             transformed_image = self.transform_image(image)
-            predicted_image, gen_time = self.predict_image(transformed_image)
+            predicted_image, inf_time, arr_labels = self.predict_image(transformed_image)
             
             vd_image = VDImage(image=image)
             vd_image.model = model
+            vd_image.inf_time = inf_time
+            vd_image.label_count_dict = self.build_label_count_dict(arr_labels)
             image_to_save = f"{image.name.split('.')[0]}.jpg"
             vd_image.image.save(image_to_save, predicted_image, save=True)
-            vd_image.gen_time = gen_time
 
             serializer = VDImageSerializer(vd_image)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -74,13 +76,28 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     def predict_image(self, image_file):
         image = Image.open(image_file)
         start = time.process_time()
-        predicted_image = detect_yolov5s_model(image).render()[0]
+        predicted_image = detect_yolov5s_model(image)
         end = time.process_time() - start
-        predicted_image = Image.fromarray(predicted_image.astype('uint8'))
+        arr_labels = predicted_image.xyxyn[0][:, -1].numpy()
+        predicted_image = Image.fromarray(predicted_image.render()[0].astype('uint8'))
         image_io = io.BytesIO()
         predicted_image.save(image_io, format='JPEG')
         image_io.seek(0)
-        return image_io, end
+        return image_io, round(end, 4), arr_labels
+    
+    def build_label_count_dict(self, arr_labels):
+        # Associates the index of the label (0) with the label value (0;big bus)
+        index_label_dict = {
+            int(label.value.split(';')[0]):label.value 
+            for label in VDLabel
+        }
+        # Returns a dict where key is the label value (0;big bus) and value is the count
+        return {
+            index_label_dict[int(index)]:int(count)
+            for index, count in zip(*np.unique(arr_labels, return_counts=True))
+            if index in index_label_dict
+        }
+
 
 class VDImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
