@@ -7,14 +7,15 @@ def get_image_upload_path(instance, filename):
         return f'detect_vehicles/{instance.model}/{filename}'
 
 class VDImage(models.Model):
-    code = models.CharField(max_length=12, unique=True, blank=True)
+    code = models.CharField(max_length=12, unique=True)
     image = models.ImageField(upload_to=get_image_upload_path)
     model = models.TextField(choices=[(model.value, model.name) for model in VDModel],
                              default=VDModel.YOLOV5S.value)
+    gen_time = models.FloatField(default=0.)
 
     def __str__(self):
-        return "Filename: {} | Model: {}".format(
-            self.image.name, self.model
+        return "Filename: {} | Model: {} | Gen. time: {}".format(
+            self.image.name, self.model, self.gen_time
         )
     
     @staticmethod

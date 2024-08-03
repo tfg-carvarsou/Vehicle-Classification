@@ -1,4 +1,4 @@
-import sys, os, io
+import sys, os, io, time
 sys.path.append(os.getcwd())
 from .forms import VDImageUploadForm
 from .models import VDImage
@@ -41,17 +41,19 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
         },
     )
     def create(self, request, *args, **kwargs):
+        
         form = VDImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             model = form.cleaned_data['model']
             image = form.cleaned_data['image']
             transformed_image = self.transform_image(image)
-            predicted_image = self.predict_image(transformed_image)
+            predicted_image, gen_time = self.predict_image(transformed_image)
             
             vd_image = VDImage(image=image)
             vd_image.model = model
             image_to_save = f"{image.name.split('.')[0]}.jpg"
             vd_image.image.save(image_to_save, predicted_image, save=True)
+            vd_image.gen_time = gen_time
 
             serializer = VDImageSerializer(vd_image)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -71,12 +73,14 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     
     def predict_image(self, image_file):
         image = Image.open(image_file)
+        start = time.process_time()
         predicted_image = detect_yolov5s_model(image).render()[0]
+        end = time.process_time() - start
         predicted_image = Image.fromarray(predicted_image.astype('uint8'))
         image_io = io.BytesIO()
         predicted_image.save(image_io, format='JPEG')
         image_io.seek(0)
-        return image_io
+        return image_io, end
 
 class VDImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
@@ -89,7 +93,9 @@ class VDImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewS
             200: OpenApiResponse(response=VDImageSerializer, 
                                  description='The image has been retrieved successfully'),
             400: OpenApiResponse(response=None,
-                                 description='There has been an incident when retrieving the image. Please try again')
+                                 description='There has been an incident when retrieving the image. Please try again'),
+            404: OpenApiResponse(response=None,
+                                 description='The image does not exist')
         },
     )
     def retrieve(self, request, *args, **kwargs):
@@ -101,7 +107,9 @@ class VDImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewS
             204: OpenApiResponse(response=None, 
                                  description='The image has been deleted successfully'),
             400: OpenApiResponse(response=None,
-                                 description='There has been an incident when deleting the image. Please try again')
+                                 description='There has been an incident when deleting the image. Please try again'),
+            404: OpenApiResponse(response=None,
+                                 description='The image does not exist')
         },
     )
     def destroy(self, request, *args, **kwargs):
