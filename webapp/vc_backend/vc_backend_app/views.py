@@ -1,6 +1,6 @@
 import sys, os, io
 sys.path.append(os.getcwd())
-from .forms import ImageUploadForm
+from .forms import VDImageUploadForm
 from .models import VDImage
 from .serializers import VDImageSerializer
 from torchvision import transforms
@@ -41,13 +41,15 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
         },
     )
     def create(self, request, *args, **kwargs):
-        form = ImageUploadForm(request.POST, request.FILES)
+        form = VDImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
+            model = form.cleaned_data['model']
             image = form.cleaned_data['image']
             transformed_image = self.transform_image(image)
             predicted_image = self.predict_image(transformed_image)
             
             vd_image = VDImage(image=image)
+            vd_image.model = model
             image_to_save = f"{image.name.split('.')[0]}.jpg"
             vd_image.image.save(image_to_save, predicted_image, save=True)
 

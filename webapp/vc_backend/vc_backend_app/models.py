@@ -1,13 +1,21 @@
 import secrets, string
 from django.db import models
+from .enums import VDModel, VCModel
 
+def get_image_upload_path(instance, filename):
+        """Function to determine the upload path for the image"""
+        return f'detect_vehicles/{instance.model}/{filename}'
 
 class VDImage(models.Model):
     code = models.CharField(max_length=12, unique=True, blank=True)
-    image = models.ImageField(upload_to='detect_vehicles/yolov5s/')
+    image = models.ImageField(upload_to=get_image_upload_path)
+    model = models.TextField(choices=[(model.value, model.name) for model in VDModel],
+                             default=VDModel.YOLOV5S.value)
 
     def __str__(self):
-        return self.image.name
+        return "Filename: {} | Model: {}".format(
+            self.image.name, self.model
+        )
     
     @staticmethod
     def generate_secure_code(length=12):
