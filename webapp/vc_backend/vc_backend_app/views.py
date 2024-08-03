@@ -7,10 +7,10 @@ from torchvision import transforms
 from PIL import Image
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 from core.detect_vehicles.yolov5.model import load_trained_yolov5s_model
 
-# detect_yolov5s_model = load_trained_yolov5s_model()
+detect_yolov5s_model = load_trained_yolov5s_model()
 
 class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
@@ -27,8 +27,7 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     )
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
-
-    #TODO: Change application/json to multipart/form-data in create method
+    
     @extend_schema(
         summary='Upload an image to detect vehicles',
         request={
@@ -46,7 +45,7 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
         if form.is_valid():
             image = form.cleaned_data['image']
             transformed_image = self.transform_image(image)
-            predicted_image = transformed_image
+            predicted_image = self.predict_image(transformed_image)
             
             vd_image = VDImage(image=image)
             image_to_save = f"{image.name.split('.')[0]}.jpg"
@@ -65,6 +64,15 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
         transformed_image = transform(image)
         image_io = io.BytesIO()
         transformed_image.save(image_io, format='JPEG')
+        image_io.seek(0)
+        return image_io
+    
+    def predict_image(self, image_file):
+        image = Image.open(image_file)
+        predicted_image = detect_yolov5s_model(image).render()[0]
+        predicted_image = Image.fromarray(predicted_image.astype('uint8'))
+        image_io = io.BytesIO()
+        predicted_image.save(image_io, format='JPEG')
         image_io.seek(0)
         return image_io
 
