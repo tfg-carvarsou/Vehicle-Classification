@@ -21,3 +21,6 @@ class VDLabel(Enum):
     TRUCK_M = "9;truck-m-"
     TRUCK_S = "10;truck-s-"
     TRUCK_XL = "11;truck-xl-"
+
+class VCLabel(Enum):
+    pass

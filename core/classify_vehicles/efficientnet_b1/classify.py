@@ -7,7 +7,7 @@ import glob as glob
 from torchvision import transforms
 from torch.nn import functional as F
 from torch import topk
-from model import load_model
+from core.classify_vehicles.efficientnet_b1.model import load_model
 
 DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
 IMAGES_PATH = './images/classify_vehicles/efficientnet_b1/'

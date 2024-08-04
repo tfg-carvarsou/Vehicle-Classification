@@ -80,11 +80,11 @@ def test_model(model, testloader, criterion, class_names):
     return epoch_loss, epoch_acc
 
 def debug_mode():
-    download = False
-    preprocess = False
-    load = preprocess
-    train = preprocess
-    evaluate = preprocess
+    download = True
+    preprocess = True
+    load = True
+    train = True
+    evaluate = True
     return download, preprocess, load, train, evaluate
 
 def main():
@@ -114,7 +114,7 @@ def main():
         print(f"Computation device: {DEVICE}")
         print(f"Learning rate: {lr}")
         print(f"Epochs to train for: {epochs}\n")
-        # Load the model.
+        # Load the model
         model = load_model(
             pretrained=True,
             fine_tune=True, 
@@ -125,20 +125,20 @@ def main():
     
     if train:
         print("\n🚀 Training model...")
-        # Total parameters and trainable parameters.
+        # Total parameters and trainable parameters
         total_params = sum(p.numel() for p in model.parameters())
         print(f"{total_params:,} total parameters.")
         total_trainable_params = sum(
             p.numel() for p in model.parameters() if p.requires_grad)
         print(f"{total_trainable_params:,} training parameters.")
-        # Optimizer.
+        # Optimizer
         optimizer = optim.Adam(model.parameters(), lr=lr)
-        # Loss function.
+        # Loss function
         criterion = nn.CrossEntropyLoss()
-        # Lists to keep track of losses and accuracies.
+        # Lists to keep track of losses and accuracies
         train_loss, test_loss = [], []
         train_acc, test_acc = [], []
-        # Start the training.
+        # Start the training
         for epoch in range(epochs):
             print(f"[INFO]: Epoch {epoch+1} of {epochs}")
             train_epoch_loss, train_epoch_acc = train_model(model, train_loader, 
