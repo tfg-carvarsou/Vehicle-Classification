@@ -10,10 +10,10 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 from core.detect_vehicles.yolov5.model import load_trained_yolov5s_model
-# from core.classify_vehicles.efficientnet_b1.classify import load_trained_model
+from core.classify_vehicles.efficientnet_b1.model import load_trained_effnetb1_model
 
 detect_yolov5s_model = load_trained_yolov5s_model()
-# classify_effnetb1_model = load_trained_model()
+classify_effnetb1_model = load_trained_effnetb1_model()
 
 class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
@@ -175,11 +175,11 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
             model = form.cleaned_data['model']
             image = form.cleaned_data['image']
             transformed_image = self.transform_image(image)
-            predicted_image = transformed_image #Placeholder
+            predicted_image, inf_time = self.predict_image(transformed_image) #Placeholder
 
             vc_image = VCImage(image=image)
             vc_image.model = model
-            vc_image.inf_time = 0.
+            vc_image.inf_time = inf_time
             image_to_save = f"{image.name.split('.')[0]}.jpg"
             vc_image.image.save(image_to_save, predicted_image, save=True)
 
@@ -187,6 +187,27 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+    def transform_image(self, image_file):
+        image = Image.open(image_file)
+        transform = transforms.Compose([
+            transforms.Resize((720, 1280))
+        ])
+        transformed_image = transform(image)
+        image_io = io.BytesIO()
+        transformed_image.save(image_io, format='JPEG')
+        image_io.seek(0)
+        return image_io
+    
+    def predict_image(self, image_file):
+        image = Image.open(image_file)
+        start = time.process_time()
+        predicted_image = classify_effnetb1_model(image)
+        end = time.process_time() - start
+        image_io = io.BytesIO()
+        predicted_image.save(image_io, format='JPEG')
+        image_io.seek(0)
+        return image_io, round(end, 4)
 
 class VCImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = VCImage.objects.all()

@@ -7,36 +7,14 @@ import glob as glob
 from torchvision import transforms
 from torch.nn import functional as F
 from torch import topk
-from core.classify_vehicles.efficientnet_b1.model import load_model
+from model import load_trained_effnetb1_model, get_classes, DEVICE
 
-DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
 IMAGES_PATH = './images/classify_vehicles/efficientnet_b1/'
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-i', '--input', help='path to input image', 
                     default=os.path.join(IMAGES_PATH, 'prueba.jpg'))
 args = vars(parser.parse_args())
-
-def get_trained_weights_path():
-    pwd = os.getcwd()
-    return os.path.join(pwd, 'models/classify_vehicles/efficientnet_b1/model.pth')
-
-def get_classes():
-    with open('./datasets/stanford/names.csv', 'r') as names:
-        car_list = names.readlines()
-    return car_list
-
-def load_trained_model():
-    weights_path = get_trained_weights_path()
-    num_classes = len(get_classes())
-    model = load_model(
-            pretrained=True,
-            fine_tune=True, 
-            num_classes=num_classes
-        ).to(DEVICE)
-    model = model.eval()
-    model.load_state_dict(torch.load(weights_path)['model_state_dict'])
-    return model
 
 def load_image(image_path):
     image = cv2.imread(image_path)
@@ -108,7 +86,7 @@ def get_transforms():
     ])
 
 def main():
-    model = load_trained_model()
+    model = load_trained_effnetb1_model()
     model._modules.get('features').register_forward_hook(hook_feature)
     params = list(model.parameters())
     weight_softmax = np.squeeze(params[-2].data.numpy())

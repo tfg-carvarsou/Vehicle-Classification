@@ -116,7 +116,6 @@ def main():
         print(f"Epochs to train for: {epochs}\n")
         # Load the model
         model = load_model(
-            pretrained=True,
             fine_tune=True, 
             num_classes=len(dataset_classes)
         ).to(DEVICE)
