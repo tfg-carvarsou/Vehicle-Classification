@@ -161,11 +161,11 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
             model = form.cleaned_data['model']
             image = form.cleaned_data['image']
             predicted_image, inf_time, pred_class = self.predict_image(image)
-            print(pred_class)
 
             vc_image = VCImage(image=image)
             vc_image.model = model
             vc_image.inf_time = inf_time
+            vc_image.pred_class = pred_class
             image_to_save = f"{image.name.split('.')[0]}.jpg"
             vc_image.image.save(image_to_save, predicted_image, save=True)
 

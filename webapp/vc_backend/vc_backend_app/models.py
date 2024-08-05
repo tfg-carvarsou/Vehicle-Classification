@@ -46,6 +46,7 @@ class VDImage(BaseImage):
 class VCImage(BaseImage):
     model = models.TextField(choices=[(model.value, model.name) for model in VCModel],
                              default=VCModel.EFFNETB1.value)
+    pred_class = models.TextField(default='None')
 
     def __str__(self):
         return "[VCImage] Filename: {} | Model: {} | Inference time: {}".format(
