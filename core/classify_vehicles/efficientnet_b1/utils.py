@@ -20,7 +20,7 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     """
     Function to save the loss and accuracy plots to disk.
     """
-    # Accuracy plots.
+    # Accuracy plots
     plt.figure(figsize=(10, 7))
     plt.plot(
         train_acc, color='green', linestyle='-', 
@@ -35,7 +35,7 @@ def save_plots(train_acc, valid_acc, train_loss, valid_loss):
     plt.legend()
     plt.savefig(f"./models/classify_vehicles/efficientnet_b1/accuracy.png")
     
-    # Loss plots.
+    # Loss plots
     plt.figure(figsize=(10, 7))
     plt.plot(
         train_loss, color='orange', linestyle='-', 

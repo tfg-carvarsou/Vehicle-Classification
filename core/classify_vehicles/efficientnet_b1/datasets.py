@@ -1,5 +1,4 @@
 import os
-import shutil
 import csv
 import subprocess
 from torchvision import datasets, transforms
@@ -40,7 +39,7 @@ def crop_dataset():
             names.write(car)
             names.write('\n')
     
-    # # Crop train and test folders
+    # Crop train and test folders
     train_cars = set(os.listdir(TRAIN_DIR))
     test_cars = set(os.listdir(TEST_DIR))
     unique_car_set = set(unique_car_list)
@@ -61,7 +60,7 @@ def crop_dataset():
             image_name = os.path.basename(image_path.decode())
             test_unique_images_set.add(image_name)
 
-    # # Crop anno_train.csv and anno_test.csv
+    # Crop anno_train.csv and anno_test.csv
     with open('./datasets/stanford/anno_train.csv', 'r') as file:
         reader = csv.reader(file)
         lines = list(reader)
