@@ -1,28 +1,11 @@
-import torch
-import os
-import argparse
-import numpy as np
-import cv2
-import glob as glob
+import io, time, cv2, numpy as np
 from torchvision import transforms
 from torch.nn import functional as F
 from torch import topk
-from model import load_trained_effnetb1_model, get_classes, DEVICE
+from PIL import Image
+from .model import get_classes, DEVICE
 
-IMAGES_PATH = './images/classify_vehicles/efficientnet_b1/'
-
-parser = argparse.ArgumentParser()
-parser.add_argument('-i', '--input', help='path to input image', 
-                    default=os.path.join(IMAGES_PATH, 'prueba.jpg'))
-args = vars(parser.parse_args())
-
-def load_image(image_path):
-    image = cv2.imread(image_path)
-    orig_image = image.copy()
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-    return orig_image, image
-
-def return_cam(feature_conv, weight_softmax, class_idx):
+def generate_cams(feature_conv, weight_softmax, class_idx):
     # generate the class activation maps upsample to 224x224
     size_upsample = (224, 224)
     bz, nc, h, w = feature_conv.shape
@@ -36,48 +19,35 @@ def return_cam(feature_conv, weight_softmax, class_idx):
         output_cam.append(cv2.resize(cam_img, size_upsample))
     return output_cam
 
-def show_cam(cams, width, height, orig_image, gt_class, pred_class, save_name):
-    for i, cam in enumerate(cams):
+def load_cv2_image(image_file, width, height):
+    image_file.seek(0)
+    image_bytes = image_file.read()
+    image_array = np.frombuffer(image_bytes, np.uint8)
+    image_cv2 = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+    return cv2.resize(image_cv2, (width, height))
+
+def get_cam_image(cams, width, height, image_file, pred_class):
+    image_cv2 = load_cv2_image(image_file, width, height)
+    for _, cam in enumerate(cams):
         heatmap = cv2.applyColorMap(cv2.resize(cam,(width, height)), cv2.COLORMAP_JET)
-        result = heatmap * 0.3 + orig_image * 0.5
-        # put gt_class label text in blue
+        result = heatmap * 0.3 + image_cv2 * 0.5
         cv2.putText(img=result, 
-                    text=gt_class, 
-                    org=(20, 40), 
-                    fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
-                    fontScale=1.5, 
-                    color=(255, 0, 0), 
-                    thickness=3, 
-                    lineType=cv2.LINE_AA)
-        # put pred_class label text in green if correct, red if incorrect
-        if gt_class == pred_class:
-            cv2.putText(img=result, 
-                        text=pred_class+" (correct)", 
-                        org=(20, 80), 
-                        fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
-                        fontScale=1.5, 
-                        color=(0, 255, 0), 
-                        thickness=3, 
-                        lineType=cv2.LINE_AA)
-        else:
-            cv2.putText(img=result, 
-                        text=pred_class+" (incorrect)", 
-                        org=(20, 80), 
-                        fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
-                        fontScale=1.5, 
-                        color=(0, 0, 255), 
-                        thickness=3, 
-                        lineType=cv2.LINE_AA)
-        cv2.imwrite(os.path.join(IMAGES_PATH, f"results/cam_{save_name}"), result)
+            text=pred_class, 
+            org=(20, 80), 
+            fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
+            fontScale=1.5, 
+            color=(255, 0, 0), 
+            thickness=3, 
+            lineType=cv2.LINE_AA)
+    return result
 
 features_blobs = []
 def hook_feature(module, input, output):
     features_blobs.append(output.data.cpu().numpy())
 
-def get_transforms():
+def get_transforms(width, height):
     return transforms.Compose([
-        transforms.ToPILImage(),
-        transforms.Resize((224, 224)),
+        transforms.Resize((width, height)),
         transforms.ToTensor(),
         transforms.Normalize(
             mean=[0.485, 0.456, 0.406],
@@ -85,47 +55,24 @@ def get_transforms():
         )
     ])
 
-def main():
-    model = load_trained_effnetb1_model()
+def classify_image(model, image_file):
+    width = 720; height = 1280
     model._modules.get('features').register_forward_hook(hook_feature)
     params = list(model.parameters())
+    image = Image.open(image_file)
+    image_tensor = get_transforms(width, height)(image).unsqueeze(0)
+    classes = get_classes()
+    print(classes)
+    # forward pass through model
+    start = time.process_time()
+    outputs = model(image_tensor.to(DEVICE))
+    # get softmax probabilities
+    probs = F.softmax(input=outputs, dim=1).data.squeeze()
+    # get class indices of top k probabilities
+    class_idx = topk(probs, 1)[1].int()
+    pred_class = classes[int(class_idx)].strip()
     weight_softmax = np.squeeze(params[-2].data.numpy())
-    
-    image_count = 0
-    correct_count = 0
-    all_images = glob.glob(os.path.join(IMAGES_PATH, '*.jpg'), recursive=True)
-    for image_path in all_images:
-        image_count += 1
-        print(f"Image {image_count}")
-        gt_class = image_path.split('/')[-1].split('.')[0].strip()
-        orig_image, image = load_image(image_path)
-        height, width, _ = orig_image.shape
-        # get transforms
-        transforms = get_transforms()
-        image_tensor = transforms(image)
-        image_tensor = image_tensor.unsqueeze(0)
-        # forward pass through model
-        outputs = model(image_tensor.to(DEVICE))
-        # get softmax probabilities
-        probs = F.softmax(input=outputs, dim=1).data.squeeze()
-        # get class indices of top k probabilities
-        classes = get_classes()
-        class_idx = topk(probs, 1)[1].int()
-        pred_class = classes[int(class_idx)].strip()
-        
-        print(f"Ground truth class: {gt_class}")
-        print(f"Predicted class: {pred_class}\n")
-
-        if gt_class == pred_class:
-            correct_count += 1
-        
-        cams = return_cam(features_blobs[0], weight_softmax, class_idx)
-        save_name = f"{image_path.split('/')[-1]}"
-        show_cam(cams, width, height, orig_image, gt_class, pred_class, save_name)
-
-    print(f"====================\nTotal number of test images: {len(all_images)}")
-    print(f"Total correct predictions: {correct_count}")
-    print(f"Accuracy: {correct_count/len(all_images)*100:.3f}")
-
-if __name__ == '__main__':
-    main()
+    cams = generate_cams(features_blobs[0], weight_softmax, class_idx)
+    predicted_image = get_cam_image(cams, width, height, image_file, pred_class)
+    end = time.process_time() - start
+    return predicted_image, round(end, 4), pred_class

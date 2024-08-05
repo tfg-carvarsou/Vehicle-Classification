@@ -1,16 +1,17 @@
-import sys, os, io, time, numpy as np
+import sys, os, io, numpy as np
 sys.path.append(os.getcwd())
 from .forms import VDImageUploadForm, VCImageUploadForm
 from .models import VDImage, VCImage
 from .serializers import VDImageSerializer, VCImageSerializer
 from .enums import VDLabel, VCLabel
-from torchvision import transforms
 from PIL import Image
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiResponse
 from core.detect_vehicles.yolov5.model import load_trained_yolov5s_model
+from core.detect_vehicles.yolov5.detect import detect_image
 from core.classify_vehicles.efficientnet_b1.model import load_trained_effnetb1_model
+from core.classify_vehicles.efficientnet_b1.classify import classify_image
 
 detect_yolov5s_model = load_trained_yolov5s_model()
 classify_effnetb1_model = load_trained_effnetb1_model()
@@ -49,8 +50,7 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
         if form.is_valid():
             model = form.cleaned_data['model']
             image = form.cleaned_data['image']
-            transformed_image = self.transform_image(image)
-            predicted_image, inf_time, arr_labels = self.predict_image(transformed_image)
+            predicted_image, inf_time, arr_labels = self.predict_image(image)
             
             vd_image = VDImage(image=image)
             vd_image.model = model
@@ -64,28 +64,14 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
         else:
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def transform_image(self, image_file):
-        image = Image.open(image_file)
-        transform = transforms.Compose([
-            transforms.Resize((720, 1280))
-        ])
-        transformed_image = transform(image)
-        image_io = io.BytesIO()
-        transformed_image.save(image_io, format='JPEG')
-        image_io.seek(0)
-        return image_io
-    
     def predict_image(self, image_file):
-        image = Image.open(image_file)
-        start = time.process_time()
-        predicted_image = detect_yolov5s_model(image)
-        end = time.process_time() - start
+        predicted_image, end = detect_image(detect_yolov5s_model, image_file)
         arr_labels = predicted_image.xyxyn[0][:, -1].numpy()
         predicted_image = Image.fromarray(predicted_image.render()[0].astype('uint8'))
         image_io = io.BytesIO()
         predicted_image.save(image_io, format='JPEG')
         image_io.seek(0)
-        return image_io, round(end, 4), arr_labels
+        return image_io, end, arr_labels
     
     def build_label_count_dict(self, arr_labels):
         # Associates the index of the label (0) with the label value (0;big bus)
@@ -174,8 +160,8 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
         if form.is_valid():
             model = form.cleaned_data['model']
             image = form.cleaned_data['image']
-            transformed_image = self.transform_image(image)
-            predicted_image, inf_time = self.predict_image(transformed_image) #Placeholder
+            predicted_image, inf_time, pred_class = self.predict_image(image)
+            print(pred_class)
 
             vc_image = VCImage(image=image)
             vc_image.model = model
@@ -187,27 +173,13 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
-        
-    def transform_image(self, image_file):
-        image = Image.open(image_file)
-        transform = transforms.Compose([
-            transforms.Resize((720, 1280))
-        ])
-        transformed_image = transform(image)
-        image_io = io.BytesIO()
-        transformed_image.save(image_io, format='JPEG')
-        image_io.seek(0)
-        return image_io
     
     def predict_image(self, image_file):
-        image = Image.open(image_file)
-        start = time.process_time()
-        predicted_image = classify_effnetb1_model(image)
-        end = time.process_time() - start
+        predicted_image, end, pred_class = classify_image(classify_effnetb1_model, image_file)
         image_io = io.BytesIO()
         predicted_image.save(image_io, format='JPEG')
         image_io.seek(0)
-        return image_io, round(end, 4)
+        return image_io, end, pred_class
 
 class VCImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = VCImage.objects.all()
