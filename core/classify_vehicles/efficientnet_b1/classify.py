@@ -1,13 +1,13 @@
-import io, time, cv2, numpy as np
+import time, cv2, numpy as np
 from torchvision import transforms
 from torch.nn import functional as F
 from torch import topk
 from PIL import Image
 from .model import get_classes, DEVICE
 
-def generate_cams(feature_conv, weight_softmax, class_idx):
+def generate_cams(feature_conv, weight_softmax, class_idx, width=224, height=224):
     # generate the class activation maps upsample to 224x224
-    size_upsample = (224, 224)
+    size_upsample = (width, height)
     bz, nc, h, w = feature_conv.shape
     output_cam = []
     for idx in class_idx:
@@ -36,7 +36,7 @@ def get_cam_image(cams, width, height, image_file, pred_class):
             org=(20, 80), 
             fontFace=cv2.FONT_HERSHEY_SIMPLEX, 
             fontScale=1.5, 
-            color=(255, 0, 0), 
+            color=(0, 0, 0), 
             thickness=3, 
             lineType=cv2.LINE_AA)
     return result
@@ -45,9 +45,9 @@ features_blobs = []
 def hook_feature(module, input, output):
     features_blobs.append(output.data.cpu().numpy())
 
-def get_transforms(width, height):
+def get_transforms(width=224, height=224):
     return transforms.Compose([
-        transforms.Resize((width, height)),
+        transforms.Resize((height, width)),
         transforms.ToTensor(),
         transforms.Normalize(
             mean=[0.485, 0.456, 0.406],
@@ -56,13 +56,12 @@ def get_transforms(width, height):
     ])
 
 def classify_image(model, image_file):
-    width = 720; height = 1280
+    width = 1280; height = 720
     model._modules.get('features').register_forward_hook(hook_feature)
     params = list(model.parameters())
     image = Image.open(image_file)
-    image_tensor = get_transforms(width, height)(image).unsqueeze(0)
+    image_tensor = get_transforms()(image).unsqueeze(0)
     classes = get_classes()
-    print(classes)
     # forward pass through model
     start = time.process_time()
     outputs = model(image_tensor.to(DEVICE))

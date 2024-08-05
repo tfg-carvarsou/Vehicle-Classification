@@ -176,6 +176,7 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     
     def predict_image(self, image_file):
         predicted_image, end, pred_class = classify_image(classify_effnetb1_model, image_file)
+        predicted_image = Image.fromarray(predicted_image.astype('uint8'))
         image_io = io.BytesIO()
         predicted_image.save(image_io, format='JPEG')
         image_io.seek(0)
