@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 # Define the target directory
-TARGET_DIR="$SCRIPT_DIR/../datasets/vehicles/tensorflow"
+TARGET_DIR="$SCRIPT_DIR/../datasets/vehicles/yolov8"
 
 # Check if the directory exists, if not, create it
 if [ -d "$TARGET_DIR" ]; then
@@ -14,15 +14,15 @@ if [ -d "$TARGET_DIR" ]; then
     exit 1
 else
     mkdir -p "$TARGET_DIR" || { echo "Failed to create directory $TARGET_DIR"; exit 1; }
-
+fi
 # Navigate to the datasets/vehicles folder
 cd "$TARGET_DIR" || { echo "Failed to navigate to directory $TARGET_DIR"; exit 1; }
 
-# Tensorflow Vehicles Dataset
-curl -L "https://universe.roboflow.com/ds/gV0Icgz9uI?key=VonD89jLsK" > tf_vd.zip
+# YoloV5 Vehicles Dataset
+curl -L "https://universe.roboflow.com/ds/0f68pxcoEF?key=ibqpzchYsG" > yv8_vd.zip
 
 # Unzip the dataset
-unzip tf_vd.zip
+unzip yv8_vd.zip
 
 # Remove the downloaded zip file
-rm tf_vd.zip
+rm yv8_vd.zip
