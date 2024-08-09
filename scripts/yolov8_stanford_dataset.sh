@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 # Define the target directory
-TARGET_DIR="$SCRIPT_DIR/../datasets/stanford"
+TARGET_DIR="$SCRIPT_DIR/../datasets/stanford/yolov8"
 
 # Check if the directory exists, if not, create it
 if [ -d "$TARGET_DIR" ]; then
