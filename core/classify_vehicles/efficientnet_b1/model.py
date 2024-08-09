@@ -45,7 +45,7 @@ def get_total_layers(model):
     return total_layers
 
 def get_total_parameters(model):
-    return sum(dict((p.data_ptr(), p.numel()) for p in model.parameters()).values())
+    return sum(x.numel() for x in model.parameters())
 
 def load_trained_effnetb1_model():
     weights_path = get_trained_weights_path()

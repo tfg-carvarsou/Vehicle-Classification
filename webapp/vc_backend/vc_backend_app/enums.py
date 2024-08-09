@@ -2,7 +2,7 @@ from enum import Enum
 
 class VDModel(Enum):
     YOLOV5S = "YOLOv5s"
-    RCNN = "R-CNN"
+    YOLOV8S = "YOLOv8s"
 
 class VCModel(Enum):
     EFFNETB1 = "EfficientNetB1"
@@ -21,6 +21,3 @@ class VDLabel(Enum):
     TRUCK_M = "9;truck-m-"
     TRUCK_S = "10;truck-s-"
     TRUCK_XL = "11;truck-xl-"
-
-class VCLabel(Enum):
-    pass
