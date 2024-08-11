@@ -92,7 +92,7 @@ def main():
 
     if download:
         print("\n📥 Downloading dataset...")
-        download_dataset('./scripts/stanford_dataset.sh')
+        download_dataset('./scripts/effnetb1_stanford_dataset.sh')
         crop_dataset()
 
     if preprocess:

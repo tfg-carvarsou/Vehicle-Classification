@@ -1,23 +1,22 @@
 import os
 import csv
 import subprocess
-from torchvision import datasets, transforms
-from torch.utils.data import DataLoader
+import yaml
 
-BASE_DIR = './datasets/stanford/effnetb1/'
+BASE_DIR = './datasets/stanford/yolov8/'
 TRAIN_DIR = os.path.join(BASE_DIR, 'car_data/car_data/train/')
 TEST_DIR = os.path.join(BASE_DIR, 'car_data/car_data/test/')
 NAMES_CSV = os.path.join(BASE_DIR, 'names.csv')
 ANNO_TRAIN = os.path.join(BASE_DIR, 'anno_train.csv')
 ANNO_TEST = os.path.join(BASE_DIR, 'anno_test.csv')
-IMG_SIZE = 224
-BATCH_SIZE = 16
-NUM_WORKERS = 4
 
 # We are using a subset of the dataset for this project.
 # The Stanford Cars dataset subset contains 3933 images of 49 classes of cars,
 # where 1977 images are used for training and 1956 images are used for testing.
 # Classes are typically at the level of Make, Model, Year, e.g. 2012 Tesla Model S or 2012 BMW M3 coupe.
+
+def get_ds_path():
+    return BASE_DIR
 
 def download_dataset(script):
     subprocess.run(["chmod", "+x", script])
@@ -79,56 +78,3 @@ def crop_dataset():
     with open(ANNO_TEST, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(filtered_lines)
-
-def get_train_transforms(img_size):
-    return transforms.Compose([
-        transforms.Resize((img_size, img_size)),
-        transforms.RandomHorizontalFlip(p=0.5),
-        transforms.RandomRotation(35),
-        transforms.RandomAdjustSharpness(sharpness_factor=2, p=0.5),
-        transforms.RandomGrayscale(p=0.5),
-        transforms.RandomPerspective(distortion_scale=0.5, p=0.5),
-        transforms.RandomPosterize(bits=2, p=0.5),
-        transforms.ToTensor(),
-        transforms.Normalize(
-            mean=[0.485, 0.456, 0.406],
-            std=[0.229, 0.224, 0.225]
-        )
-    ])
-
-def get_test_transforms(img_size):
-    return transforms.Compose([
-        transforms.Resize((img_size, img_size)),
-        transforms.ToTensor(),
-        transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-    ])
-
-def get_datasets():
-    """
-    Function to prepare the datasets.
-    Returns the training and test datasets along with the class names.
-    """
-    train_ds = datasets.ImageFolder(
-        TRAIN_DIR, 
-        transform=(get_train_transforms(IMG_SIZE))
-    )
-    test_ds = datasets.ImageFolder(
-        TEST_DIR, 
-        transform=(get_test_transforms(IMG_SIZE))
-    )
-    return train_ds, test_ds, train_ds.classes
-
-def get_data_loaders(train_ds, test_ds):
-    """
-    Prepares the training and test data loaders.
-    :param train_ds: The training dataset.
-    :param test_ds: The test dataset.
-    Returns the training and test data loaders.
-    """
-    train_loader = DataLoader(
-        train_ds, batch_size=BATCH_SIZE, shuffle=True, num_workers=NUM_WORKERS
-    )
-    test_loader = DataLoader(
-        test_ds, batch_size=BATCH_SIZE, shuffle=False, num_workers=NUM_WORKERS
-    )
-    return train_loader, test_loader 

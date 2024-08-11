@@ -14,10 +14,10 @@ torchaudio==2.1.0
 torch==2.1.0
 efficientnet-pytorch==0.7.1
 tqdm==4.66.2
-ultralytics>=8.2.34
+ultralytics==8.2.75
 scikit-learn==1.0.2
 elasticsearch==8.12.1
-kaggle==1.6.12
+kaggle==1.6.17
 tensorflow==2.13.1
 
 # Backend ------------------------------------------------------------------------
