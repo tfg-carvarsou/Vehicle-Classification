@@ -5,5 +5,5 @@ class VDImageUploadForm(forms.Form):
     image = forms.ImageField()
 
 class VCImageUploadForm(forms.Form):
-    model = forms.ChoiceField(choices=[('EfficientNetB1', 'EFFNETB1'), ('X', 'X')])
+    model = forms.ChoiceField(choices=[('EfficientNetB1', 'EFFNETB1'), ('YOLOv8s-cls', 'YOLOV8SCLS')])
     image = forms.ImageField()

@@ -6,7 +6,7 @@ class VDModel(Enum):
 
 class VCModel(Enum):
     EFFNETB1 = "EfficientNetB1"
-    X = "X"
+    YOLOV8SCLS = "YOLOv8s-cls"
 
 class VDLabel(Enum):
     BIG_BUS = "0;big bus"
