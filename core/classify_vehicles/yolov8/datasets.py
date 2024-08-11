@@ -1,6 +1,7 @@
 import os
 import csv
 import subprocess
+import yaml
 
 BASE_DIR = './datasets/stanford/yolov8/'
 TRAIN_DIR = os.path.join(BASE_DIR, 'car_data/car_data/train/')
