@@ -4,19 +4,19 @@
 
 ## Introduction
 
-In this project, the aim is to develop machine learning models for the **classification of vehicles and license plates**. The project focuses on utilizing computer vision techniques to automatically identify and classify vehicles based on their make, model, and license plate information.
+In this project, the aim is to train machine learning models for **detection and classification of vehicles** and run them in a web application for real-time inference. The project focuses on utilizing computer vision techniques to automatically identify vehicles in a road and classify vehicles based on their make and model.
 
 ## Project Components
-1. **Data Collection**: Gather a diverse dataset of vehicle images and corresponding license plate annotations.
-2. **Data Preprocessing**: Clean and preprocess the dataset to prepare it for training the classification models.
-3. **Model Training**: Train machine learning and deep learning models using state-of-the-art techniques and frameworks such as TensorFlow and OpenCV.
-4. **Evaluation**: Evaluate the trained models on test datasets to measure their accuracy, precision, and recall.
-5. **Deployment**: Integrate the trained models into an application for real-time vehicle and license plate classification.
+1. **Data Collection**: Download the [Roboflow-100 Vehicles Collection](https://universe.roboflow.com/roboflow-100/vehicles-q0x2v) for detection tasks and [Stanford Car Dataset](https://www.kaggle.com/datasets/jutrera/stanford-car-dataset-by-classes-folder) for classification tasks.
+2. **Data Preprocessing**: Clean and preprocess the dataset to prepare it for training the models.
+3. **Model Training**: Train computer vision models using state-of-the-art techniques and frameworks such as PyTorch.
+4. **Evaluation**: Evaluate the trained models on test datasets to measure their accuracy, precision, and other measures.
+5. **Deployment**: Integrate the trained models into an application for real-time vehicle detection and classification.
 
 
-## Installation
+## Installation in Windows/Linux
 
-### Prerequisites
+### Prerequisites (only in Windows)
 
 1. **Prior to installing WSL in Windows**
 - Search in Windows: Control Panel > Programs > Activate or deactive Windows features.
@@ -78,54 +78,63 @@ In this project, the aim is to develop machine learning models for the **classif
 
 3. **Create a Conda Environment:**
 
-- Make sure you have Python 3.7 installed:
+- Install a new environment:
 
     ```bash
-    conda create --name directml python=3.7
+    conda create --name env python=3.10
     ```
-  Otherwise, downgrade it as so:
+  If you already have an environment to use, downgrade the version as so:
     ```bash
-    conda create --name directml python=<your_version>
-    conda activate directml
-    conda install python=3.7
+    conda activate <your_env>
+    conda install python=3.10
     ```
 
 4. **Activate the Environment:**
 
     ```bash
     conda init
-    conda activate directml
+    conda activate env
     ```
 
     To deactivate:
 
     ```bash
-    conda deactivate directml
+    conda deactivate env
     ```
 
-5. **Install TensorFlow with DirectML:**
+5. **Install the requirements:**
 
-- Make sure Conda Environment is now activated. Then install TensorFlow:
+- Make sure Conda Environment is now activated. Then install Torch and other packages:
 
     ```bash
-    pip install tensorflow-directml
+    pip install -r requirements.txt
     ```
 
+- Install npm and node.js:
+
+    ```bash
+    # installs nvm (Node Version Manager)
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+    # download and install Node.js (you may need to restart the terminal)
+    cd ~/.nvm && nvm install 22
+    ```
 ## Usage
 
-**TODO**
-
-1. **Download the datasets:**
-
+### Running the webapp API locally
+- The app uses Swagger as the API framework.
     ```bash
-    chmod +x ./scripts/datasets.sh
-    ./scripts/datasets.sh
+    cd <path_to>/Vehicle-Classification/webapp/vc_backend
+    ./manage.py makemigrations 
+    ./manage.py migrate
+    ./manage.py runserver
     ```
 
-2. **Train the model:**
-
+### Training the models
+- Run the train file of each model in the core folder.
     ```bash
-    python main.py
+    python -m core.detect_vehicles.yolov5.train
+    python -m core.detect_vehicles.yolov8.train
+    ...
     ```
 
 ## License
@@ -140,5 +149,6 @@ Carlos Varela Soult (carvarsou).
 
 **TODO**
 
-Roboflow 100:
-https://universe.roboflow.com/roboflow-100
+[Roboflow 100 Project.](https://universe.roboflow.com/roboflow-100)
+
+[Stanford Car Dataset by J. Utrera.](https://www.kaggle.com/datasets/jutrera/stanford-car-dataset-by-classes-folder)
