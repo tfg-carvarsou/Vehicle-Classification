@@ -124,6 +124,9 @@ In this project, the aim is to train machine learning models for **detection and
 - The app uses Swagger as the API framework.
     ```bash
     cd <path_to>/Vehicle-Classification/webapp/vc_backend
+    # Generates .env file for local settings
+    echo -e "DJANGO_KEY='$(python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')'\nDEBUG=True" > .env
+    # Runs SQLite server
     ./manage.py makemigrations 
     ./manage.py migrate
     ./manage.py runserver
