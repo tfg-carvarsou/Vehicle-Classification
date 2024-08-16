@@ -55,7 +55,7 @@ def get_transforms(width=224, height=224):
         )
     ])
 
-def classify_image(model, image_file):
+def classify_effnetb1_image(model, image_file):
     width = 1280; height = 720
     model._modules.get('features').register_forward_hook(hook_feature)
     params = list(model.parameters())
@@ -74,4 +74,4 @@ def classify_image(model, image_file):
     cams = generate_cams(features_blobs[0], weight_softmax, class_idx)
     predicted_image = get_cam_image(cams, width, height, image_file, pred_class)
     end = time.process_time() - start
-    return predicted_image, round(end, 4), pred_class
+    return Image.fromarray(predicted_image.astype('uint8')), round(end, 4), pred_class

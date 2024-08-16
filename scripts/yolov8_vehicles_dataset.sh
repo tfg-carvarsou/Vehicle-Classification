@@ -4,7 +4,7 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 # Define the target directory
-TARGET_DIR="$SCRIPT_DIR/../datasets/uc3m"
+TARGET_DIR="$SCRIPT_DIR/../datasets/vehicles/yolov8"
 
 # Check if the directory exists, if not, create it
 if [ -d "$TARGET_DIR" ]; then
@@ -15,14 +15,14 @@ if [ -d "$TARGET_DIR" ]; then
 else
     mkdir -p "$TARGET_DIR" || { echo "Failed to create directory $TARGET_DIR"; exit 1; }
 fi
-# Navigate to the datasets/uc3m folder
+# Navigate to the datasets/vehicles folder
 cd "$TARGET_DIR" || { echo "Failed to navigate to directory $TARGET_DIR"; exit 1; }
 
-# UC3M-LP Dataset
-gdown https://drive.google.com/uc?id=1UMY-WCRl0tIL_EVMugMH5F7Btl5UE4Wu
+# YoloV5 Vehicles Dataset
+curl -L "https://universe.roboflow.com/ds/0f68pxcoEF?key=ibqpzchYsG" > yv8_vd.zip
 
 # Unzip the dataset
-unzip UC3M-LP.zip
+unzip yv8_vd.zip
 
 # Remove the downloaded zip file
-rm UC3M-LP.zip
+rm yv8_vd.zip

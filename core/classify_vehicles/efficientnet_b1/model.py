@@ -31,7 +31,7 @@ def get_trained_weights_path():
     return os.path.join(pwd, 'models/classify_vehicles/efficientnet_b1/model.pth')
 
 def get_classes():
-    with open('./datasets/stanford/names.csv', 'r') as names:
+    with open('./datasets/stanford/effnetb1/names.csv', 'r') as names:
         car_list = names.readlines()
     return car_list
 
@@ -45,7 +45,7 @@ def get_total_layers(model):
     return total_layers
 
 def get_total_parameters(model):
-    return sum(dict((p.data_ptr(), p.numel()) for p in model.parameters()).values())
+    return sum(x.numel() for x in model.parameters())
 
 def load_trained_effnetb1_model():
     weights_path = get_trained_weights_path()
