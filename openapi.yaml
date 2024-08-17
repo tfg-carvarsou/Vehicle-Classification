@@ -1,0 +1,296 @@
+openapi: 3.0.3
+info:
+  title: Vehicle Detector and Classifier API
+  version: 4.0.0
+  description: Backend API for detecting and classifying vehicles in images
+paths:
+  /classifier/snapview/{code}/:
+    get:
+      operationId: classifier_snapview_retrieve
+      summary: Retrieve an image by its code
+      parameters:
+      - in: path
+        name: code
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VCImage'
+          description: The image has been retrieved successfully
+        '400':
+          description: There has been an incident when retrieving the image. Please
+            try again
+        '404':
+          description: The image does not exist
+    delete:
+      operationId: classifier_snapview_destroy
+      summary: Delete an image by its code
+      parameters:
+      - in: path
+        name: code
+        schema:
+          type: string
+        required: true
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: The image has been deleted successfully
+        '400':
+          description: There has been an incident when deleting the image. Please
+            try again
+        '404':
+          description: The image does not exist
+  /classifier/snapzone/:
+    get:
+      operationId: classifier_snapzone_list
+      summary: List all images
+      tags:
+      - classifier
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VCImage'
+          description: The images has been listed successfully
+        '400':
+          description: There has been an incident when listing the images. Please
+            try again
+    post:
+      operationId: classifier_snapzone_create
+      summary: Upload an image to classify vehicles
+      tags:
+      - classifier
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VCImageRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VCImage'
+          description: The image has been uploaded successfully
+        '400':
+          description: There has been an incident when uploading the image. Please
+            try again
+  /detector/snapview/{code}/:
+    get:
+      operationId: detector_snapview_retrieve
+      summary: Retrieve an image by its code
+      parameters:
+      - in: path
+        name: code
+        schema:
+          type: string
+        required: true
+      tags:
+      - detector
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VDImage'
+          description: The image has been retrieved successfully
+        '400':
+          description: There has been an incident when retrieving the image. Please
+            try again
+        '404':
+          description: The image does not exist
+    delete:
+      operationId: detector_snapview_destroy
+      summary: Delete an image by its code
+      parameters:
+      - in: path
+        name: code
+        schema:
+          type: string
+        required: true
+      tags:
+      - detector
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: The image has been deleted successfully
+        '400':
+          description: There has been an incident when deleting the image. Please
+            try again
+        '404':
+          description: The image does not exist
+  /detector/snapzone/:
+    get:
+      operationId: detector_snapzone_list
+      summary: List all images
+      tags:
+      - detector
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VDImage'
+          description: The images has been listed successfully
+        '400':
+          description: There has been an incident when listing the images. Please
+            try again
+    post:
+      operationId: detector_snapzone_create
+      summary: Upload an image to detect vehicles
+      tags:
+      - detector
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/VDImageRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VDImage'
+          description: The image has been uploaded successfully
+        '400':
+          description: There has been an incident when uploading the image. Please
+            try again
+components:
+  schemas:
+    VCImage:
+      type: object
+      properties:
+        model:
+          allOf:
+          - $ref: '#/components/schemas/VCImageModelEnum'
+          description: |-
+            The ML model for classifying vehicles
+
+            * `EfficientNetB1` - EFFNETB1
+            * `YOLOv8s-cls` - YOLOV8SCLS
+        image:
+          type: string
+          format: uri
+          description: The image file to be uploaded
+      required:
+      - image
+    VCImageModelEnum:
+      enum:
+      - EfficientNetB1
+      - YOLOv8s-cls
+      type: string
+      description: |-
+        * `EfficientNetB1` - EFFNETB1
+        * `YOLOv8s-cls` - YOLOV8SCLS
+    VCImageRequest:
+      type: object
+      properties:
+        model:
+          allOf:
+          - $ref: '#/components/schemas/VCImageModelEnum'
+          description: |-
+            The ML model for classifying vehicles
+
+            * `EfficientNetB1` - EFFNETB1
+            * `YOLOv8s-cls` - YOLOV8SCLS
+        image:
+          type: string
+          format: binary
+          description: The image file to be uploaded
+      required:
+      - image
+    VDImage:
+      type: object
+      properties:
+        model:
+          allOf:
+          - $ref: '#/components/schemas/VDImageModelEnum'
+          description: |-
+            The ML model for detecting vehicles
+
+            * `YOLOv5s` - YOLOV5S
+            * `YOLOv8s` - YOLOV8S
+        image:
+          type: string
+          format: uri
+          description: The image file to be uploaded
+      required:
+      - image
+    VDImageModelEnum:
+      enum:
+      - YOLOv5s
+      - YOLOv8s
+      type: string
+      description: |-
+        * `YOLOv5s` - YOLOV5S
+        * `YOLOv8s` - YOLOV8S
+    VDImageRequest:
+      type: object
+      properties:
+        model:
+          allOf:
+          - $ref: '#/components/schemas/VDImageModelEnum'
+          description: |-
+            The ML model for detecting vehicles
+
+            * `YOLOv5s` - YOLOV5S
+            * `YOLOv8s` - YOLOV8S
+        image:
+          type: string
+          format: binary
+          description: The image file to be uploaded
+      required:
+      - image
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
