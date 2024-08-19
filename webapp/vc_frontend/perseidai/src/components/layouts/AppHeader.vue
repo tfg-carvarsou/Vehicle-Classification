@@ -12,7 +12,7 @@
     </div>
 
     <!-- Navigation Menu -->
-    <div :class="{'menu-open': isMenuOpen }" class="nav-menu">
+    <div :class="{ 'menu-open': isMenuOpen }" class="nav-menu">
       <nav class="nav-links">
         <ul>
           <li><router-link to="/models">Models</router-link></li>
@@ -37,26 +37,24 @@
     </div>
 
     <!-- Toggle Menu Button -->
-    <div class="toggle-menu" @click="toggleMenu">
-      ☰
-    </div>
+    <div class="toggle-menu" @click="toggleMenu">☰</div>
   </header>
 </template>
 
 <script>
-  export default {
-    name: 'AppHeader',
-    data() {
-      return {
-        isMenuOpen: false,
-      };
-    },
-    methods: {
-      toggleMenu() {
-        this.isMenuOpen = !this.isMenuOpen;
-      },
-    },
-  };
+export default {
+  name: 'AppHeader',
+  data() {
+    return {
+      isMenuOpen: false
+    }
+  },
+  methods: {
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen
+    }
+  }
+}
 </script>
 
 <style scoped>
@@ -68,7 +66,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #DEEDF5;
+  background-color: #deedf5;
   padding: 10px 20px;
   z-index: 1000;
 }
@@ -93,7 +91,7 @@
 }
 
 .logo .title-ai {
-  color: #02AF98;
+  color: #02af98;
 }
 
 .nav-menu {
@@ -139,7 +137,7 @@
 }
 
 .signup-btn {
-  background-color: #02AF98;
+  background-color: #02af98;
   color: white;
   padding: 5px 10px;
   border-radius: 5px;
@@ -158,7 +156,7 @@
     top: 60px;
     left: 0;
     width: 100%;
-    background-color: #F1F5F9;
+    background-color: #f1f5f9;
     flex-direction: column;
     align-items: flex-start;
   }
@@ -169,18 +167,21 @@
     align-items: flex-start;
   }
 
-  .nav-links ul, .auth-links-mobile ul {
+  .nav-links ul,
+  .auth-links-mobile ul {
     flex-direction: column;
     width: 100%;
     display: block;
   }
 
-  .nav-links ul li, .auth-links-mobile ul li {
+  .nav-links ul li,
+  .auth-links-mobile ul li {
     margin: 10px 0;
     width: 100%;
   }
 
-  .nav-links ul li a, .auth-links-mobile ul li a {
+  .nav-links ul li a,
+  .auth-links-mobile ul li a {
     padding: 10px 20px;
     width: 100%;
     display: block;
