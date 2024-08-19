@@ -41,18 +41,20 @@
   </header>
 </template>
 
-<script>
+<script lang="ts">
+import { ref } from 'vue';
+
 export default {
   name: 'AppHeader',
-  data() {
+  setup() {
+    const isMenuOpen = ref(false);
+    const toggleMenu = () => {
+      isMenuOpen.value = !isMenuOpen.value;
+    };
     return {
-      isMenuOpen: false
-    }
-  },
-  methods: {
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen
-    }
+      isMenuOpen,
+      toggleMenu,
+    };
   }
 }
 </script>

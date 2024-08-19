@@ -55,9 +55,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #08080800;
+  background-color: #080808bf;
   padding: 10px 20px;
   z-index: 1000;
+  flex-wrap: wrap; /* Allow wrapping of flex items */
 }
 
 .logo {
@@ -106,7 +107,7 @@
 }
 
 .github-label {
-  display: flex; 
+  display: flex;
   font-size: 0.8rem;
   font-weight: bold;
   opacity: 0.8;
@@ -118,4 +119,38 @@
   opacity: 0.5;
 }
 
+/* Responsive adjustments */
+@media (max-width: 670px) {
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px;
+  }
+
+  .logo,
+  .nav-links,
+  .social-links {
+    margin-bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .logo {
+    justify-content: flex-start;
+  }
+
+  .nav-links ul {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .nav-links ul li {
+    margin: 5px 0;
+  }
+
+  .social-links {
+    justify-content: center;
+  }
+}
 </style>
