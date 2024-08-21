@@ -31,16 +31,17 @@
     </nav>
 
     <!-- Social Links -->
-     <div class="social-links">
+    <div class="social-links">
       <span class="github-label">PERSEID.AI</span>
-      <a href="https://www.github.com/tfg-carvarsou/Vehicle-Classification"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="github-link">
-          <img src="@/assets/icons/github.svg" alt="GitHub" />
+      <a
+        href="https://www.github.com/tfg-carvarsou/Vehicle-Classification"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="github-link"
+      >
+        <img src="@/assets/icons/github.svg" alt="GitHub" />
       </a>
-      
-     </div>
+    </div>
   </footer>
 </template>
 
@@ -58,7 +59,7 @@
   background-color: #080808bf;
   padding: 10px 20px;
   z-index: 1000;
-  flex-wrap: wrap; /* Allow wrapping of flex items */
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -120,11 +121,12 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 670px) {
+@media (max-width: 722px) {
   .footer {
     flex-direction: column;
     align-items: flex-start;
     padding: 20px;
+    max-height: 65vh;
   }
 
   .logo,
@@ -141,12 +143,7 @@
   }
 
   .nav-links ul {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .nav-links ul li {
-    margin: 5px 0;
+    display: none;
   }
 
   .social-links {
