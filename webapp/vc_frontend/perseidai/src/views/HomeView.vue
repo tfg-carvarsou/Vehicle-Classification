@@ -1,114 +1,120 @@
 <template>
-  <div class="main-header">
-    <h1>
-      <div v-if="showLine1" class="typing-effect line-1">
-        <span>Test Real-Time</span>
-        <span class="mh-1"><i> AI</i></span>
-        <span> Vehicle</span>
+  <div class="view-container">
+    <!-- Main Header: Title and Image -->
+    <div class="mh-container">
+      <div class="mh-title">
+        <h1>
+          <div class="mh-line-1">
+            <span>Test Real-Time</span>
+            <span class="mh-text-1"><i> AI</i></span>
+            <span> Vehicle</span>
+          </div>
+          <div class="mh-line-2">
+            <span class="mh-text-2"> Detection</span>
+            <span> and</span>
+            <span class="mh-text-3"> Classification</span>
+          </div>
+          <div class="mh-line-3">
+            <span> Models.</span>
+          </div>
+        </h1>
+          <!-- Subtitle: Try it out and selector -->
+        <div class="sb-container">
+          <h2 class="sb-title">Try it out</h2>
+          <select class="sb-type-selector">
+            <option value="sb-type-detector">Detector</option>
+            <option value="sb-type-classificator">Classificator</option>
+          </select>
+        </div>
       </div>
-      <div v-if="showLine2" class="typing-effect line-2">
-        <span class="mh-2"> Detection</span>
-        <span> and</span>
-        <span class="mh-3"> Classification</span>
+      <div class="mh-img">
+        <img src="@/assets/images/placeholder.png" alt="placeholder" />
       </div>
-      <div v-if="showLine3" class="typing-effect line-3">
-        <span> Models.</span>
-      </div>
-    </h1>
+    </div>
   </div>
 </template>
 
+<!-- 
+TODO: 
+    -> Al seleccionar entre Detector o Classificator,
+       hay un scroll automatico que lleva al selector de modelos
+    -> Al seleccionar entre modelos, 
+       aparece el campo de subida de imagen
+    -> Al subir la imagen, aparece el resultado de la inferencia
+-->
+
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-const showLine1 = ref(false)
-const showLine2 = ref(false)
-const showLine3 = ref(false)
-
-onMounted(() => {
-  setTimeout(() => {
-    showLine1.value = true
-  }, 0)
-
-  setTimeout(() => {
-    showLine2.value = true
-  }, 1900)
-
-  setTimeout(() => {
-    showLine3.value = true
-  }, 3800)
-})
 </script>
 
 <style scoped>
-.main-header {
-  display: inline-block;
-  height: 100vh;
-  padding-top: 100px;
-  font-size: 22px;
+.view-container {
   color: #232323;
 }
 
-.typing-effect {
-  overflow: hidden;
-  white-space: nowrap;
-  font-size: inherit;
-  border-right: 2px solid #232323;
+.mh-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  height: 60vh;
+  width: auto;
+  flex-wrap: wrap;
 }
 
-/* Individual line animations */
-.line-1 {
-  animation:
-    typing 2s steps(30) forwards,
-    blink 1.75s steps(1) forwards;
+.mh-title {
+  flex: 1;
+  display: inline-block;
+  flex-direction: column;
+  align-items: center;
+  font-size: 22px;
+  margin-right: 5vh;
 }
 
-.line-2 {
-  animation:
-    typing 2s steps(30) forwards,
-    blink 1.8s steps(1) forwards;
-}
-
-.line-3 {
-  animation:
-    typing 2s steps(30) forwards,
-    blink 0.55s steps(1) forwards;
-}
-
-.line-1,
-.line-2,
-.line-3 {
-  margin-right: 15vh;
-}
-
-/* Animation for typing effect */
-@keyframes typing {
-  from {
-    width: 0;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-/* Animation to hide the cursor */
-@keyframes blink {
-  from {
-    border-right-color: #232323;
-  }
-  to {
-    border-right-color: transparent;
-  }
-}
-
-.mh-1 {
+.mh-text-1 {
   color: #02af98;
 }
 
-.mh-2 {
+.mh-text-2 {
   color: #00acea;
 }
 
-.mh-3 {
+.mh-text-3 {
   color: #083863;
+}
+
+.mh-img img {
+  flex: 1;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.sb-container {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  margin-top: 20px;
+  color: #083863;
+}
+
+h1 {
+  line-height: 1.3;
+  font-size: 2.8rem;
+}
+
+@media (max-width: 1024px) {
+  .mh-container {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .mh-title {
+    height: auto;
+    padding-top: 50px;
+  }
+
+  .mh-img img {
+    width: 100%;
+  }
 }
 </style>
