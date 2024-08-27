@@ -130,10 +130,20 @@ const toggleMenu = () => {
 }
 
 .signup-btn {
-  background-color: #02af98;
-  color: white;
   padding: 5px 10px;
-  border-radius: 5px;
+  color: #ffffff;
+  background-color: #02af98;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
+}
+
+.signup-btn:hover {
+  background-color: #027666;
+  transform: translateY(-2px);
 }
 
 .toggle-menu {

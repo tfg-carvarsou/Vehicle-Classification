@@ -18,32 +18,48 @@
             <span> Models.</span>
           </div>
         </h1>
-          <!-- Subtitle: Try it out and selector -->
-        <div class="sb-container">
-          <h2 class="sb-title">Try it out</h2>
-          <select class="sb-type-selector">
-            <option value="sb-type-detector">Detector</option>
-            <option value="sb-type-classificator">Classificator</option>
-          </select>
-        </div>
+        <!-- Model type selector -->
+        <SelectorModelType 
+          @select-model-type="handleModelTypeSelection" />
       </div>
       <div class="mh-img">
         <img src="@/assets/images/placeholder.png" alt="placeholder" />
       </div>
     </div>
+    <!-- Model selector -->
+    <SelectorModelSeries 
+      @select-model-series="handleModelSeriesSelection" 
+      v-if="isModelTypeSelected" :selectedModelType="selectedModelType" />
+    <!-- Upload file form -->
+    <UploadFileForm 
+      v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
   </div>
 </template>
 
-<!-- 
-TODO: 
-    -> Al seleccionar entre Detector o Classificator,
-       hay un scroll automatico que lleva al selector de modelos
-    -> Al seleccionar entre modelos, 
-       aparece el campo de subida de imagen
-    -> Al subir la imagen, aparece el resultado de la inferencia
--->
+# TODO: Hover effect on model type and model series selection
+# TODO: Fix UploadFileForm CSS
 
 <script setup lang="ts">
+import { ref } from 'vue'
+import SelectorModelType from '@/components/SelectorModelType.vue'
+import SelectorModelSeries from '@/components/SelectorModelSeries.vue'
+import UploadFileForm from '@/components/UploadFileForm.vue'
+
+const isModelTypeSelected = ref(false)
+const selectedModelType = ref('') // detector or classificator
+const handleModelTypeSelection = (modelType: string) => {
+  isModelTypeSelected.value = true
+  selectedModelType.value = modelType
+  isModelSeriesSelected.value = false
+}
+
+const isModelSeriesSelected = ref(false)
+const selectedModelSeries = ref('') // yolov5, yolov8, effnet, yolov8cls
+const handleModelSeriesSelection = (modelSeries: string) => {
+  isModelSeriesSelected.value = true
+  selectedModelSeries.value = modelSeries
+  console.log(selectedModelSeries.value)
+}
 </script>
 
 <style scoped>
@@ -87,14 +103,6 @@ TODO:
   max-width: 100%;
   height: auto;
   object-fit: cover;
-}
-
-.sb-container {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  margin-top: 20px;
-  color: #083863;
 }
 
 h1 {
