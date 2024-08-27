@@ -1,128 +1,124 @@
 <template>
   <div class="view-container">
-    <!-- Main Header: Title and Image -->
-    <div class="mh-container">
-      <div class="mh-title">
-        <h1>
-          <div class="mh-line-1">
-            <span>Test Real-Time</span>
-            <span class="mh-text-1"><i> AI</i></span>
-            <span> Vehicle</span>
-          </div>
-          <div class="mh-line-2">
-            <span class="mh-text-2"> Detection</span>
-            <span> and</span>
-            <span class="mh-text-3"> Classification</span>
-          </div>
-          <div class="mh-line-3">
-            <span> Models.</span>
-          </div>
-        </h1>
-        <!-- Model type selector -->
-        <SelectorModelType 
-          @select-model-type="handleModelTypeSelection" />
+    <!-- Main title -->
+    <MainTitleHome />
+    <!-- Model type selector -->
+    <SelectorModelType @select-model-type="handleModelTypeSelection" />
+    <!-- Models and upload container -->
+    <div class="model-and-upload-container">
+      <!-- Model series selector -->
+      <div
+        ref="modelSelector"
+        class="model-selector"
+        :class="{ 'scroll-into-models': isModelTypeSelected }"
+      >
+        <SelectorModelSeries
+          v-if="isModelTypeSelected"
+          :selectedModelType="selectedModelType"
+          @select-model-series="handleModelSeriesSelection"
+        />
       </div>
-      <div class="mh-img">
-        <img src="@/assets/images/placeholder.png" alt="placeholder" />
+      <!-- Upload file form -->
+      <div
+        ref="uploadFileForm"
+        class="upload-file-form"
+        :class="{ 'scroll-into-upload': isModelSeriesSelected }"
+      >
+        <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
       </div>
     </div>
-    <!-- Model selector -->
-    <SelectorModelSeries 
-      @select-model-series="handleModelSeriesSelection" 
-      v-if="isModelTypeSelected" :selectedModelType="selectedModelType" />
-    <!-- Upload file form -->
-    <UploadFileForm 
-      v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
   </div>
 </template>
 
-# TODO: Hover effect on model type and model series selection
-# TODO: Fix UploadFileForm CSS
-
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, nextTick } from 'vue'
+import MainTitleHome from '@/components/MainTitleHome.vue'
 import SelectorModelType from '@/components/SelectorModelType.vue'
 import SelectorModelSeries from '@/components/SelectorModelSeries.vue'
 import UploadFileForm from '@/components/UploadFileForm.vue'
 
 const isModelTypeSelected = ref(false)
 const selectedModelType = ref('') // detector or classificator
+const isModelSeriesSelected = ref(false)
+const selectedModelSeries = ref('') // yolov5, yolov8, effnet, yolov8cls
+const modelSelector = ref<HTMLElement | null>(null)
+const uploadFileForm = ref<HTMLElement | null>(null)
+
 const handleModelTypeSelection = (modelType: string) => {
   isModelTypeSelected.value = true
   selectedModelType.value = modelType
   isModelSeriesSelected.value = false
 }
 
-const isModelSeriesSelected = ref(false)
-const selectedModelSeries = ref('') // yolov5, yolov8, effnet, yolov8cls
 const handleModelSeriesSelection = (modelSeries: string) => {
   isModelSeriesSelected.value = true
   selectedModelSeries.value = modelSeries
-  console.log(selectedModelSeries.value)
 }
+
+watch(isModelTypeSelected, async (newValue) => {
+  if (newValue) {
+    await nextTick()
+    modelSelector.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+})
+
+watch(isModelSeriesSelected, async (newValue) => {
+  if (newValue) {
+    await nextTick()
+    uploadFileForm.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+})
 </script>
 
 <style scoped>
 .view-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
   color: #232323;
 }
 
-.mh-container {
+.model-and-upload-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  height: 60vh;
-  width: auto;
-  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 100px;
+  justify-content: left;
+  margin-top: 20px;
 }
 
-.mh-title {
+.model-selector,
+.upload-file-form {
   flex: 1;
-  display: inline-block;
-  flex-direction: column;
-  align-items: center;
-  font-size: 22px;
-  margin-right: 5vh;
 }
 
-.mh-text-1 {
-  color: #02af98;
+.scroll-into-models {
+  transform: translateY(50px);
 }
 
-.mh-text-2 {
-  color: #00acea;
-}
-
-.mh-text-3 {
-  color: #083863;
-}
-
-.mh-img img {
-  flex: 1;
-  max-width: 100%;
-  height: auto;
-  object-fit: cover;
-}
-
-h1 {
-  line-height: 1.3;
-  font-size: 2.8rem;
+.scroll-into-upload {
+  margin-top: 50px;
+  transform: translateX(50px);
 }
 
 @media (max-width: 1024px) {
-  .mh-container {
-    flex-direction: row;
+  .model-and-upload-container {
+    flex-direction: column;
     align-items: center;
   }
 
-  .mh-title {
-    height: auto;
-    padding-top: 50px;
+  .model-selector,
+  .upload-file-form {
+    max-width: 100%;
   }
 
-  .mh-img img {
-    width: 100%;
+  .scroll-into-models {
+    margin-left: 0;
+    transform: translateY(-50px);
+  }
+
+  .scroll-into-upload {
+    margin-left: 0;
+    transform: translate(-140px, -140px);
   }
 }
 </style>

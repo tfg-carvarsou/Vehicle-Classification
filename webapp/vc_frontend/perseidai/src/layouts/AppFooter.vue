@@ -125,7 +125,6 @@
   .footer {
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px;
     max-height: 65vh;
   }
 

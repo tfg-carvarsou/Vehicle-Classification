@@ -1,18 +1,23 @@
 <template>
-  <div v-bind="api.getRootProps()">
-    <div v-bind="api.getDropzoneProps()">
-      <input v-bind="api.getHiddenInputProps()" />
-      Drag and drop an image here
+  <div class="upload-file-form">
+    <h2 class="uff-title">Upload your image</h2>
+    <div v-bind="api.getRootProps()">
+      <div v-bind="api.getDropzoneProps()">
+        <input v-bind="api.getHiddenInputProps()" />
+        Drag and drop an image here
+      </div>
+
+      <button v-bind="api.getTriggerProps()">Browse image</button>
+
+      <ul v-bind="api.getItemGroupProps()">
+        <li v-for="file in api.acceptedFiles" :key="file.name" v-bind="api.getItemProps({ file })">
+          <div v-bind="api.getItemNameProps({ file })">
+            {{ file.name }}
+          </div>
+          <button v-bind="api.getItemDeleteTriggerProps({ file })">Delete</button>
+        </li>
+      </ul>
     </div>
-
-    <button v-bind="api.getTriggerProps()">Browse image</button>
-
-    <ul v-bind="api.getItemGroupProps()">
-      <li v-for="file in api.acceptedFiles" :key="file.name" v-bind="api.getItemProps({ file })">
-        <div v-bind="api.getItemNameProps({ file })">{{ file.name }}</div>
-        <button v-bind="api.getItemDeleteTriggerProps({ file })">Delete</button>
-      </li>
-    </ul>
   </div>
 </template>
 
@@ -46,6 +51,23 @@ const api = computed(() => fileUpload.connect(state.value, send, normalizeProps)
 </script>
 
 <style scoped>
+.upload-file-form {
+  display: flex;
+  width: 300%;
+  flex-direction: column;
+  align-items: left;
+  margin-top: -30px;
+  text-align: center;
+  color: #083863;
+}
+
+.uff-title {
+  display: flex;
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 17px;
+}
+
 [data-part='root'] {
   display: flex;
   flex-direction: column;
@@ -138,5 +160,15 @@ li button {
 
 li button:hover {
   background-color: #c0392b;
+}
+
+@media (max-width: 1024px) {
+  .upload-file-form {
+    margin-left: 0;
+  }
+
+  .uff-title {
+    margin-left: 0;
+  }
 }
 </style>
