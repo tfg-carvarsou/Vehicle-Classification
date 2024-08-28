@@ -45,6 +45,10 @@
   font-size: 2.8rem;
 }
 
+.home-title span {
+  font-weight: 500;
+}
+
 .text-ai {
   color: #02af98;
 }

@@ -27,15 +27,17 @@
         <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
       </div>
     </div>
+    <!-- Results of others uploads -->
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
-import MainTitleHome from '@/components/MainTitleHome.vue'
-import SelectorModelType from '@/components/SelectorModelType.vue'
-import SelectorModelSeries from '@/components/SelectorModelSeries.vue'
-import UploadFileForm from '@/components/UploadFileForm.vue'
+import MainTitleHome from '@/components/templates/MainTitleHome.vue'
+import SelectorModelType from '@/components/molecules/SelectorModelType.vue'
+import SelectorModelSeries from '@/components/molecules/SelectorModelSeries.vue'
+import UploadFileForm from '@/components/organisms/UploadFileForm.vue'
+import ResultsOthers from '@/components/templates/ResultsOthers.vue'
 
 const isModelTypeSelected = ref(false)
 const selectedModelType = ref('') // detector or classificator

@@ -34,7 +34,7 @@ import { normalizeProps, useMachine } from '@zag-js/vue'
 import { ref, computed } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import UploadFileAlertDialog from './UploadFileAlertDialog.vue'
+import UploadFileAlertDialog from '@/components/molecules/UploadFileAlertDialog.vue'
 
 const [state, send] = useMachine(
   fileUpload.machine({
