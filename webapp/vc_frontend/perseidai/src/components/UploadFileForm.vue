@@ -4,17 +4,24 @@
     <div v-bind="api.getRootProps()">
       <div v-bind="api.getDropzoneProps()">
         <input v-bind="api.getHiddenInputProps()" />
-        Drag and drop an image here
+        Drag and drop an image here, or
+        <div class="browse">
+          <FontAwesomeIcon :icon="fas.faSearch" />
+          <i> Browse</i>
+        </div>
       </div>
-
-      <button v-bind="api.getTriggerProps()">Browse image</button>
 
       <ul v-bind="api.getItemGroupProps()">
         <li v-for="file in api.acceptedFiles" :key="file.name" v-bind="api.getItemProps({ file })">
           <div v-bind="api.getItemNameProps({ file })">
             {{ file.name }}
           </div>
-          <button v-bind="api.getItemDeleteTriggerProps({ file })">Delete</button>
+          <UploadFileAlertDialog :image="uploadedImage as string" />
+          <div class="delete-trigger">
+            <button v-bind="api.getItemDeleteTriggerProps({ file })">
+              <FontAwesomeIcon :icon="fas.faDeleteLeft" /> Delete
+            </button>
+          </div>
         </li>
       </ul>
     </div>
@@ -24,7 +31,10 @@
 <script setup lang="ts">
 import * as fileUpload from '@zag-js/file-upload'
 import { normalizeProps, useMachine } from '@zag-js/vue'
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import UploadFileAlertDialog from './UploadFileAlertDialog.vue'
 
 const [state, send] = useMachine(
   fileUpload.machine({
@@ -40,7 +50,7 @@ const [state, send] = useMachine(
     onFileChange(details) {
       const reader = new FileReader()
       reader.onload = (event) => {
-        event.target ? event.target.result : null
+        uploadedImage.value = event.target ? event.target.result : null
       }
       reader.readAsDataURL(details.acceptedFiles[0])
     }
@@ -48,12 +58,13 @@ const [state, send] = useMachine(
 )
 
 const api = computed(() => fileUpload.connect(state.value, send, normalizeProps))
+const uploadedImage = ref<string | ArrayBuffer | null>(null)
 </script>
 
 <style scoped>
 .upload-file-form {
   display: flex;
-  width: 300%;
+  width: 400%;
   flex-direction: column;
   align-items: left;
   margin-top: -30px;
@@ -68,11 +79,16 @@ const api = computed(() => fileUpload.connect(state.value, send, normalizeProps)
   margin-bottom: 17px;
 }
 
+.browse i {
+  font-weight: bold;
+}
+
 [data-part='root'] {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px;
+  padding: 10px;
+  width: 180%;
   border: 2px dashed #cccccc;
   border-radius: 8px;
   background-color: #f9f9f9;
@@ -101,12 +117,12 @@ const api = computed(() => fileUpload.connect(state.value, send, normalizeProps)
 }
 
 button {
-  margin-top: 16px;
   padding: 8px 16px;
   font-size: 14px;
   color: #ffffff;
   background-color: #02af98;
   border: none;
+  height: 40px;
   border-radius: 4px;
   cursor: pointer;
   transition:
@@ -128,8 +144,9 @@ ul {
 
 li {
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
+  gap: 10px;
   padding: 8px 12px;
   margin-bottom: 8px;
   border-radius: 4px;
@@ -149,7 +166,7 @@ li > div {
 
 li button {
   padding: 4px 8px;
-  font-size: 12px;
+  font-size: 14px;
   color: #ffffff;
   background-color: #ef4444;
   border: none;
@@ -169,6 +186,10 @@ li button:hover {
 
   .uff-title {
     margin-left: 0;
+  }
+
+  [data-part='root'] {
+    width: 180%;
   }
 }
 </style>

@@ -76,6 +76,8 @@ watch(isModelSeriesSelected, async (newValue) => {
   flex-direction: column;
   width: 100%;
   color: #232323;
+  margin-top: 120px;
+  margin-bottom: 160px;
 }
 
 .model-and-upload-container {
@@ -84,6 +86,11 @@ watch(isModelSeriesSelected, async (newValue) => {
   gap: 100px;
   justify-content: left;
   margin-top: 20px;
+  max-width: 25vh;
+}
+
+.upload-file-form {
+  max-width: 40vh;
 }
 
 .model-selector,
