@@ -2,18 +2,18 @@
   <div class="vd-card">
     <div class="vdcard-header">
       <div class="vdcard-type">
-        <img :src="props.type" />
+        <img :src="type" alt="Card type" />
       </div>
       <div class="vdcard-info">
-        <div class="filename">{props.filename}</div>
-        <div class="username">Anonymous</div>
+        <div class="filename">{{ filename }}</div>
+        <div class="username">{{ username }}</div>
       </div>
       <div class="vdcard-model">
-        <img src="@/assets/images/yolov5.webp" />
+        <img :src="model" alt="Card model" />
       </div>
     </div>
     <div class="vdcard-image">
-      <span>Placeholder</span>
+      <img :src="image" alt="Uploaded image" />
     </div>
     <div class="vdcard-footer">
       <div class="detections">
@@ -22,34 +22,43 @@
             {{ detection.count }}
           </div>
           <div class="label">{{ detection.label }}</div>
+          
         </div>
       </div>
-      <div class="inf-time">0.983ms</div>
+      <div class="inf-time">{{ infTime }}ms</div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: 'DetectorCard',
-  data() {
-    return {
-      detections: [
-        { count: 12, label: 'car', color: '#f44336' },
-        { count: 1, label: 'big truck', color: '#4caf50' },
-        { count: 3, label: 'small bus', color: '#2196f3' }
-      ]
-    }
-  }
+<script setup lang="ts">
+import { reactive } from 'vue'
+
+interface Props {
+  type: string
+  filename: string
+  username: string
+  model: string
+  image: string
+  infTime: number
 }
 
-props = defineProps<{
-  type: string,
-  filename: string, 
-  username: string,
-  model: string,
-  image: string
-}>
+defineProps<Props>()
+
+const detections = reactive([
+  {
+    count: 12,
+    label: 'car',
+    color: '#f44336'
+  },
+  { count: 1, 
+    label: 'big truck', 
+    color: '#4caf50'
+  },
+  { count: 3, 
+    label: 'small bus', 
+    color: '#2196f3'
+  }
+])
 </script>
 
 <style scoped>
@@ -83,7 +92,9 @@ props = defineProps<{
 .vdcard-model img {
   width: 156px;
   height: auto;
-  margin-left: auto;
+  max-height: 100px;
+  margin-left: 45px;
+  border-radius: 8px;
 }
 
 .vdcard-info {
@@ -105,11 +116,24 @@ props = defineProps<{
 }
 
 .vdcard-image {
+  width: 100%;
   height: 200px;
   background-color: #f2f2f2;
   border-radius: 8px;
   margin-bottom: 16px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.vdcard-image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 
 .vdcard-footer {
   display: flex;

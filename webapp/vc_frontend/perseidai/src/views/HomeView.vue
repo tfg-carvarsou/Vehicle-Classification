@@ -28,6 +28,7 @@
       </div>
     </div>
     <!-- Results of others uploads -->
+    <ResultsOthers />
   </div>
 </template>
 
