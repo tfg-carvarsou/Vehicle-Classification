@@ -26,7 +26,7 @@ import DetectorCard from '@/components/atoms/DetectorCard.vue';
 import detectorTypeImage from '@/assets/icons/detector-type.webp';
 import yolov5ModelImage from '@/assets/images/yolov5.webp';
 import yolov8ModelImage from '@/assets/images/yolov8.webp';
-import placeholderImage from '@/assets/images/coches.jpg';
+import placeholderImage from '@/assets/images/placeholder.png';
 
 const cards = reactive([
   {
