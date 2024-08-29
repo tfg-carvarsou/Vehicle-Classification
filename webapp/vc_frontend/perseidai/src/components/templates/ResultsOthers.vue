@@ -3,7 +3,6 @@
     <div class="results-others-title">
       <h1>See results of others uploads</h1>
     </div>
-    <!-- Size three array of results -->
     <div class="results-others-cards">
       <DetectorCard
         v-for="(card, index) in cards"
@@ -21,7 +20,6 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue';
-// @ts-ignore
 import DetectorCard from '@/components/atoms/DetectorCard.vue';
 import detectorTypeImage from '@/assets/icons/detector-type.webp';
 import yolov5ModelImage from '@/assets/images/yolov5.webp';
@@ -55,7 +53,6 @@ const cards = reactive([
   }
 ]);
 </script>
-
 
 <style scoped>
 .results-others-container {

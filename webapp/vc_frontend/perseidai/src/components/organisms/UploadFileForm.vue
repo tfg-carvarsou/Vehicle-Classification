@@ -16,7 +16,7 @@
           <div v-bind="api.getItemNameProps({ file })">
             {{ file.name }}
           </div>
-          <UploadFileAlertDialog :image="uploadedImage as string" />
+          <UploadFileAlertDialog alt="Image to upload" :image="imageToUpload as string" />
           <div class="delete-trigger">
             <button v-bind="api.getItemDeleteTriggerProps({ file })">
               <FontAwesomeIcon :icon="fas.faDeleteLeft" /> Delete
@@ -50,7 +50,7 @@ const [state, send] = useMachine(
     onFileChange(details) {
       const reader = new FileReader()
       reader.onload = (event) => {
-        uploadedImage.value = event.target ? event.target.result : null
+        imageToUpload.value = event.target ? event.target.result : null
       }
       reader.readAsDataURL(details.acceptedFiles[0])
     }
@@ -58,7 +58,7 @@ const [state, send] = useMachine(
 )
 
 const api = computed(() => fileUpload.connect(state.value, send, normalizeProps))
-const uploadedImage = ref<string | ArrayBuffer | null>(null)
+const imageToUpload = ref<string | ArrayBuffer | null>(null)
 </script>
 
 <style scoped>
