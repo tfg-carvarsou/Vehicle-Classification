@@ -89,7 +89,7 @@ button {
 .alert-dialog-title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   color: #083863;
 }
 
@@ -99,6 +99,7 @@ button {
   align-items: center;
   max-width: 100%;
   max-height: 49vh;
+  margin-bottom: 8px;
   overflow: hidden;
 }
 

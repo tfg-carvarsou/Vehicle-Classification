@@ -19,12 +19,12 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
-import DetectorCard from '@/components/atoms/DetectorCard.vue';
-import detectorTypeImage from '@/assets/icons/detector-type.webp';
-import yolov5ModelImage from '@/assets/images/yolov5.webp';
-import yolov8ModelImage from '@/assets/images/yolov8.webp';
-import placeholderImage from '@/assets/images/placeholder.png';
+import { reactive } from 'vue'
+import DetectorCard from '@/components/organisms/DetectorCard.vue'
+import detectorTypeImage from '@/assets/icons/detector-type.webp'
+import yolov5ModelImage from '@/assets/images/yolov5.webp'
+import yolov8ModelImage from '@/assets/images/yolov8.webp'
+import placeholderImage from '@/assets/images/placeholder.png'
 
 const cards = reactive([
   {
@@ -51,7 +51,7 @@ const cards = reactive([
     image: placeholderImage,
     infTime: 0.534
   }
-]);
+])
 </script>
 
 <style scoped>
@@ -83,5 +83,4 @@ const cards = reactive([
   box-sizing: border-box;
   margin-bottom: 16px;
 }
-
 </style>

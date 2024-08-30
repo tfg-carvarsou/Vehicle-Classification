@@ -1,6 +1,6 @@
 # Vehicle-Classification
 
-*Vehicle and license classification project (2024)*
+*Vehicle detection and classification project (2024)*
 
 ## Introduction
 

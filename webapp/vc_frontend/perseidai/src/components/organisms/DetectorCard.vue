@@ -13,7 +13,9 @@
       </div>
     </div>
     <div class="vdcard-image">
-      <CardDialog alt="Uploaded image" :image="image" />
+      <CardDialog alt="Uploaded image" 
+        :filename="filename"
+        :image="image" />
     </div>
     <div class="vdcard-footer">
       <div class="detections">
@@ -22,7 +24,6 @@
             {{ detection.count }}
           </div>
           <div class="label">{{ detection.label }}</div>
-          
         </div>
       </div>
       <div class="inf-time">{{ infTime }}ms</div>
@@ -31,8 +32,8 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue';
-import CardDialog from '@/components/molecules/CardDialog.vue';
+import { reactive } from 'vue'
+import CardDialog from '@/components/molecules/CardDialog.vue'
 
 interface Props {
   type: string
@@ -51,14 +52,8 @@ const detections = reactive([
     label: 'car',
     color: '#f44336'
   },
-  { count: 1, 
-    label: 'big truck', 
-    color: '#4caf50'
-  },
-  { count: 3, 
-    label: 'small bus', 
-    color: '#2196f3'
-  }
+  { count: 1, label: 'big truck', color: '#4caf50' },
+  { count: 3, label: 'small bus', color: '#2196f3' }
 ])
 </script>
 

@@ -1,22 +1,30 @@
 <template>
   <DialogRoot>
-    <DialogTrigger>
-      <img :src="image" class="dialog-trigger-image" alt="Open Image" />
+    <DialogTrigger class="dialog-trigger">
+      <img :src="image" alt="Open Image" />
     </DialogTrigger>
     <DialogPortal>
       <DialogOverlay class="dialog-overlay" />
       <DialogContent class="dialog-content">
-        <DialogTitle class="dialog-title">Image Preview</DialogTitle>
+        <div class="dialog-header">
+          <DialogTitle class="dialog-title">
+            {{ filename }}
+          </DialogTitle>
+          <DialogClose class="close-button">
+            <FontAwesomeIcon class="close-button-icon" :icon="fas.faClose" />
+          </DialogClose>
+        </div>
         <div class="dialog-image">
           <img :src="image" alt="Image preview" />
         </div>
-        <DialogClose class="close-button">Close</DialogClose>
       </DialogContent>
     </DialogPortal>
   </DialogRoot>
 </template>
 
 <script setup lang="ts">
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
 import {
   DialogClose,
   DialogContent,
@@ -25,15 +33,19 @@ import {
   DialogRoot,
   DialogTitle,
   DialogTrigger
-} from 'radix-vue';
+} from 'radix-vue'
 
 defineProps<{
-  image: string;
-}>();
+  filename: string
+  image: string
+}>()
 </script>
 
 <style scoped>
-.dialog-trigger-image {
+.dialog-trigger {
+  border: none;
+}
+.dialog-trigger img {
   cursor: pointer;
   max-width: 100%;
   height: auto;
@@ -41,8 +53,8 @@ defineProps<{
   transition: transform 0.3s ease;
 }
 
-.dialog-trigger-image:hover {
-  transform: scale(1.05);
+.dialog-trigger img:hover {
+  transform: scale(1.1);
 }
 
 .dialog-overlay {
@@ -69,11 +81,43 @@ defineProps<{
   color: #083863;
 }
 
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 16px;
+}
+
 .dialog-title {
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 16px;
   color: #083863;
+}
+
+.close-button {
+  all: unset;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 95%;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: transparent;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.close-button:hover {
+  background-color: rgba(8, 56, 99, 0.1);
+  transform: scale(1.1);
+}
+
+.close-button-icon {
+  font-size: 16px;
+  transition: color 0.3s ease;
 }
 
 .dialog-image {
@@ -81,23 +125,13 @@ defineProps<{
   justify-content: center;
   align-items: center;
   max-width: 100%;
-  max-height: 49vh;
+  max-height: 100%;
   overflow: hidden;
 }
 
 .dialog-image img {
   max-width: 100%;
   height: auto;
-}
-
-.close-button {
-  all: unset;
-  cursor: pointer;
-  padding: 4px 8px;
-  font-size: 14px;
-  border-radius: 4px;
-  height: 32px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 @keyframes overlayShow {
