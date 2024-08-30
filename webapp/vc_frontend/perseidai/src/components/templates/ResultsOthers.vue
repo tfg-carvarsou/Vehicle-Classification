@@ -5,14 +5,24 @@
     </div>
     <div class="results-others-cards">
       <DetectorCard
-        v-for="(card, index) in cards"
+        v-for="(vdcard, index) in vdcards"
         :key="index"
-        :type="card.type"
-        :filename="card.filename"
-        :username="card.username"
-        :model="card.model"
-        :image="card.image"
-        :infTime="card.infTime"
+        :type="vdcard.type"
+        :filename="vdcard.filename"
+        :username="vdcard.username"
+        :model="vdcard.model"
+        :image="vdcard.image"
+        :infTime="vdcard.infTime"
+      />
+      <ClassificatorCard
+        v-for="(vccard, index) in vccards"
+        :key="index"
+        :type="vccard.type"
+        :filename="vccard.filename"
+        :username="vccard.username"
+        :model="vccard.model"
+        :image="vccard.image"
+        :infTime="vccard.infTime"
       />
     </div>
   </div>
@@ -21,16 +31,19 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import DetectorCard from '@/components/organisms/DetectorCard.vue'
+import ClassificatorCard from '@/components/organisms/ClassificatorCard.vue'
 import detectorTypeImage from '@/assets/icons/detector-type.webp'
+import classificatorTypeImage from '@/assets/icons/classificator-type.webp'
 import yolov5ModelImage from '@/assets/images/yolov5.webp'
+import effnetModelImage from '@/assets/images/effnet.webp'
 import yolov8ModelImage from '@/assets/images/yolov8.webp'
 import placeholderImage from '@/assets/images/placeholder.png'
 
-const cards = reactive([
+const vdcards = reactive([
   {
     type: detectorTypeImage,
     filename: 'filename1',
-    username: 'Anonymous1',
+    username: 'Anonymous',
     model: yolov5ModelImage,
     image: placeholderImage,
     infTime: 0.983
@@ -38,18 +51,45 @@ const cards = reactive([
   {
     type: detectorTypeImage,
     filename: 'filename2',
-    username: 'Anonymous2',
+    username: 'Anonymous',
     model: yolov5ModelImage,
     image: placeholderImage,
-    infTime: 0.634
+    infTime: 0.835
   },
   {
     type: detectorTypeImage,
     filename: 'filename3',
-    username: 'Anonymous3',
+    username: 'Anonymous',
     model: yolov8ModelImage,
     image: placeholderImage,
     infTime: 0.534
+  }
+])
+
+const vccards = reactive([
+  {
+    type: classificatorTypeImage,
+    filename: 'filename4',
+    username: 'Anonymous',
+    model: effnetModelImage,
+    image: placeholderImage,
+    infTime: 0.981
+  },
+  {
+    type: classificatorTypeImage,
+    filename: 'filename5',
+    username: 'Anonymous',
+    model: yolov8ModelImage,
+    image: placeholderImage,
+    infTime: 1.134
+  },
+  {
+    type: classificatorTypeImage,
+    filename: 'filename6',
+    username: 'Anonymous',
+    model: effnetModelImage,
+    image: placeholderImage,
+    infTime: 0.823
   }
 ])
 </script>
@@ -59,7 +99,7 @@ const cards = reactive([
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-top: 100px;
+  margin-top: 200px;
   width: 200%;
 }
 
@@ -78,7 +118,7 @@ const cards = reactive([
   max-width: 1200px;
 }
 
-.vd-card {
+.vdcard {
   width: calc(33.333% - 11px);
   box-sizing: border-box;
   margin-bottom: 16px;

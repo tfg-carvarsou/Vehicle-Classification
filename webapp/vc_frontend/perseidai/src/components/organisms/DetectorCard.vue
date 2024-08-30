@@ -1,5 +1,5 @@
 <template>
-  <div class="vd-card">
+  <div class="vdcard">
     <div class="vdcard-header">
       <div class="vdcard-type">
         <img :src="type" alt="Card type" />
@@ -13,9 +13,7 @@
       </div>
     </div>
     <div class="vdcard-image">
-      <CardDialog alt="Uploaded image" 
-        :filename="filename"
-        :image="image" />
+      <CardDialog alt="Uploaded image" :filename="filename" :image="image" />
     </div>
     <div class="vdcard-footer">
       <div class="detections">
@@ -58,13 +56,13 @@ const detections = reactive([
 </script>
 
 <style scoped>
-.vd-card {
+.vdcard {
   margin-top: 32px;
   background-color: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   padding: 16px;
-  width: 500px;
+  width: 33%;
 }
 
 .vdcard-header {
@@ -166,5 +164,6 @@ const detections = reactive([
 .inf-time {
   font-size: 14px;
   color: #777;
+  margin-bottom: 100px;
 }
 </style>

@@ -45,6 +45,7 @@ defineProps<{
 .dialog-trigger {
   border: none;
 }
+
 .dialog-trigger img {
   cursor: pointer;
   max-width: 100%;
@@ -107,7 +108,9 @@ defineProps<{
   height: 32px;
   border-radius: 50%;
   background-color: transparent;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+  transition:
+    background-color 0.3s ease,
+    transform 0.2s ease;
 }
 
 .close-button:hover {

@@ -46,6 +46,7 @@ const isModelSeriesSelected = ref(false)
 const selectedModelSeries = ref('') // yolov5, yolov8, effnet, yolov8cls
 const modelSelector = ref<HTMLElement | null>(null)
 const uploadFileForm = ref<HTMLElement | null>(null)
+const scrollOffset = 370
 
 const handleModelTypeSelection = (modelType: string) => {
   isModelTypeSelected.value = true
@@ -58,17 +59,27 @@ const handleModelSeriesSelection = (modelSeries: string) => {
   selectedModelSeries.value = modelSeries
 }
 
+const scrollToElement = (element: HTMLElement | null, offset: number) => {
+  if (element) {
+    const rect = element.getBoundingClientRect()
+    window.scrollTo({
+      top: window.scrollY + rect.top - offset,
+      behavior: 'smooth'
+    })
+  }
+}
+
 watch(isModelTypeSelected, async (newValue) => {
   if (newValue) {
     await nextTick()
-    modelSelector.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    scrollToElement(modelSelector.value, scrollOffset)
   }
 })
 
 watch(isModelSeriesSelected, async (newValue) => {
   if (newValue) {
     await nextTick()
-    uploadFileForm.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    scrollToElement(uploadFileForm.value, scrollOffset)
   }
 })
 </script>
