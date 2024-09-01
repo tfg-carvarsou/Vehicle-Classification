@@ -47,13 +47,13 @@ const selectModelType = (modelType: string) => {
   align-items: left;
   margin-top: 20px;
   text-align: center;
-  color: #083863;
 }
 
 .mt-title {
   display: flex;
   font-size: 30px;
   font-weight: bold;
+  color: #083863;
 }
 
 .mt-options {

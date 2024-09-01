@@ -69,7 +69,6 @@ const imageToUpload = ref<string | ArrayBuffer | null>(null)
   align-items: left;
   margin-top: -30px;
   text-align: center;
-  color: #083863;
 }
 
 .uff-title {
@@ -77,6 +76,7 @@ const imageToUpload = ref<string | ArrayBuffer | null>(null)
   font-size: 30px;
   font-weight: bold;
   margin-bottom: 17px;
+  color: #083863;
 }
 
 .browse i {

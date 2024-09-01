@@ -1,8 +1,8 @@
 <template>
   <div class="ms-container">
     <!-- Show detector models if 'detector' is selected -->
+    <h2 class="ms-title">{{ modelSeriesTitle }}</h2>
     <div v-if="selectedModelType === 'detector'" class="ms-container-detector">
-      <h2 class="ms-title">Choose a detection model</h2>
       <div class="ms-options">
         <div
           class="ms-opt"
@@ -29,7 +29,6 @@
 
     <!-- Show classificator models if 'classificator' is selected -->
     <div v-if="selectedModelType === 'classificator'" class="ms-container-classificator">
-      <h2 class="ms-title">Choose a classification model</h2>
       <div class="ms-options">
         <div
           class="ms-opt"
@@ -69,6 +68,7 @@ const selectModelSeries = (modelSeries: string) => {
 
 defineProps<{
   selectedModelType: string
+  modelSeriesTitle: string
 }>()
 </script>
 
@@ -79,13 +79,13 @@ defineProps<{
   align-items: left;
   margin-top: -30px;
   text-align: center;
-  color: #083863;
 }
 
 .ms-title {
   display: flex;
   font-size: 30px;
   font-weight: bold;
+  color: #083863;
 }
 
 .ms-options {

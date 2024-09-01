@@ -4,7 +4,9 @@
       <h1>See results of others uploads</h1>
     </div>
     <div class="results-others-cards">
-      <DetectorCard
+      <div class="detector-card-list"
+        v-if="isDetectorCardListShown">
+        <DetectorCard
         v-for="(vdcard, index) in vdcards"
         :key="index"
         :type="vdcard.type"
@@ -13,8 +15,11 @@
         :model="vdcard.model"
         :image="vdcard.image"
         :infTime="vdcard.infTime"
-      />
-      <ClassificatorCard
+        />
+      </div>
+      <div class="classificator-card-list"
+        v-if="isClassificatorCardListShown">
+        <ClassificatorCard
         v-for="(vccard, index) in vccards"
         :key="index"
         :type="vccard.type"
@@ -23,7 +28,8 @@
         :model="vccard.model"
         :image="vccard.image"
         :infTime="vccard.infTime"
-      />
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -92,6 +98,11 @@ const vccards = reactive([
     infTime: 0.823
   }
 ])
+
+defineProps<{
+  isDetectorCardListShown: boolean
+  isClassificatorCardListShown: boolean
+}>()
 </script>
 
 <style scoped>
@@ -100,6 +111,7 @@ const vccards = reactive([
   align-items: center;
   flex-direction: column;
   margin-top: 200px;
+  margin-bottom: 130px;
   width: 200%;
 }
 
@@ -118,9 +130,15 @@ const vccards = reactive([
   max-width: 1200px;
 }
 
-.vdcard {
+.detector-card-list,
+.classificator-card-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.vdcard, .vccard {
   width: calc(33.333% - 11px);
   box-sizing: border-box;
-  margin-bottom: 16px;
 }
 </style>

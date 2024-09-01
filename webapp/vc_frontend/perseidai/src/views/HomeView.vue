@@ -1,5 +1,5 @@
 <template>
-  <div class="view-container">
+  <div class="home-view-container">
     <!-- Main title -->
     <MainTitleHome />
     <!-- Model type selector -->
@@ -15,6 +15,7 @@
         <SelectorModelSeries
           v-if="isModelTypeSelected"
           :selectedModelType="selectedModelType"
+          :modelSeriesTitle="modelSeriesTitle"
           @select-model-series="handleModelSeriesSelection"
         />
       </div>
@@ -28,18 +29,23 @@
       </div>
     </div>
     <!-- Results of others uploads -->
-    <ResultsOthers />
+    <ResultsOthers 
+        :isDetectorCardListShown="isDetectorCardListShown"
+        :isClassificatorCardListShown="isClassificatorCardListShown"/>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
-import MainTitleHome from '@/components/templates/MainTitleHome.vue'
+import MainTitleHome from '@/components/templates/HeaderHome.vue'
 import SelectorModelType from '@/components/molecules/SelectorModelType.vue'
 import SelectorModelSeries from '@/components/molecules/SelectorModelSeries.vue'
 import UploadFileForm from '@/components/organisms/UploadFileForm.vue'
 import ResultsOthers from '@/components/templates/ResultsOthers.vue'
 
+const isDetectorCardListShown = ref(true)
+const isClassificatorCardListShown = ref(true)
+const modelSeriesTitle = ref('Choose your model')
 const isModelTypeSelected = ref(false)
 const selectedModelType = ref('') // detector or classificator
 const isModelSeriesSelected = ref(false)
@@ -52,6 +58,8 @@ const handleModelTypeSelection = (modelType: string) => {
   isModelTypeSelected.value = true
   selectedModelType.value = modelType
   isModelSeriesSelected.value = false
+  modelSeriesTitle.value = modelType === 'detector' ? 
+  'Choose your detection model' : 'Choose your classification model'
 }
 
 const handleModelSeriesSelection = (modelSeries: string) => {
@@ -85,13 +93,12 @@ watch(isModelSeriesSelected, async (newValue) => {
 </script>
 
 <style scoped>
-.view-container {
+.home-view-container {
   display: flex;
   flex-direction: column;
   width: 100%;
   color: #232323;
   margin-top: 120px;
-  margin-bottom: 160px;
 }
 
 .model-and-upload-container {
@@ -105,11 +112,6 @@ watch(isModelSeriesSelected, async (newValue) => {
 
 .upload-file-form {
   max-width: 40vh;
-}
-
-.model-selector,
-.upload-file-form {
-  flex: 1;
 }
 
 .scroll-into-models {
