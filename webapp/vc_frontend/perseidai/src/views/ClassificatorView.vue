@@ -1,28 +1,28 @@
 <template>
   <Suspense>
-  <div class="classifier-view-container">
-    <HeaderClassificator />
-    <div class="model-selector">
-      <SelectorModelSeries
-        :selectedModelType="'classifier'"
-        :modelSeriesTitle="modelSeriesTitle"
-        @select-model-series="handleModelSeriesSelection"
+    <div class="classifier-view-container">
+      <HeaderClassificator />
+      <div class="model-selector">
+        <SelectorModelSeries
+          :selectedModelType="'classifier'"
+          :modelSeriesTitle="modelSeriesTitle"
+          @select-model-series="handleModelSeriesSelection"
+        />
+      </div>
+      <div
+        ref="uploadFileForm"
+        class="upload-file-form"
+        :class="{ 'scroll-into-upload': isModelSeriesSelected }"
+      >
+        <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
+      </div>
+      <ResultsOthers
+        :isHomeView="isHomeView"
+        :isDetectorCardListShown="isDetectorCardListShown"
+        :isClassificatorCardListShown="isClassificatorCardListShown"
       />
     </div>
-    <div
-      ref="uploadFileForm"
-      class="upload-file-form"
-      :class="{ 'scroll-into-upload': isModelSeriesSelected }"
-    >
-      <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
-    </div>
-    <ResultsOthers
-      :isHomeView="isHomeView"
-      :isDetectorCardListShown="isDetectorCardListShown"
-      :isClassificatorCardListShown="isClassificatorCardListShown"
-    />
-  </div>
-</Suspense>
+  </Suspense>
 </template>
 
 <script setup lang="ts">

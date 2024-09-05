@@ -1,42 +1,42 @@
 <template>
   <Suspense>
-  <div class="home-view-container">
-    <!-- Main title -->
-    <MainTitleHome />
-    <!-- Model type selector -->
-    <SelectorModelType @select-model-type="handleModelTypeSelection" />
-    <!-- Models and upload container -->
-    <div class="model-and-upload-container">
-      <!-- Model series selector -->
-      <div
-        ref="modelSelector"
-        class="model-selector"
-        :class="{ 'scroll-into-models': isModelTypeSelected }"
-      >
-        <SelectorModelSeries
-          v-if="isModelTypeSelected"
-          :selectedModelType="selectedModelType"
-          :modelSeriesTitle="modelSeriesTitle"
-          @select-model-series="handleModelSeriesSelection"
-        />
+    <div class="home-view-container">
+      <!-- Main title -->
+      <MainTitleHome />
+      <!-- Model type selector -->
+      <SelectorModelType @select-model-type="handleModelTypeSelection" />
+      <!-- Models and upload container -->
+      <div class="model-and-upload-container">
+        <!-- Model series selector -->
+        <div
+          ref="modelSelector"
+          class="model-selector"
+          :class="{ 'scroll-into-models': isModelTypeSelected }"
+        >
+          <SelectorModelSeries
+            v-if="isModelTypeSelected"
+            :selectedModelType="selectedModelType"
+            :modelSeriesTitle="modelSeriesTitle"
+            @select-model-series="handleModelSeriesSelection"
+          />
+        </div>
+        <!-- Upload file form -->
+        <div
+          ref="uploadFileForm"
+          class="upload-file-form"
+          :class="{ 'scroll-into-upload': isModelSeriesSelected }"
+        >
+          <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
+        </div>
       </div>
-      <!-- Upload file form -->
-      <div
-        ref="uploadFileForm"
-        class="upload-file-form"
-        :class="{ 'scroll-into-upload': isModelSeriesSelected }"
-      >
-        <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
-      </div>
+      <!-- Results of others uploads -->
+      <ResultsOthers
+        :isHomeView="isHomeView"
+        :isDetectorCardListShown="isDetectorCardListShown"
+        :isClassificatorCardListShown="isClassificatorCardListShown"
+      />
     </div>
-    <!-- Results of others uploads -->
-    <ResultsOthers
-      :isHomeView="isHomeView"
-      :isDetectorCardListShown="isDetectorCardListShown"
-      :isClassificatorCardListShown="isClassificatorCardListShown"
-    />
-  </div>
-</Suspense>
+  </Suspense>
 </template>
 
 <script setup lang="ts">

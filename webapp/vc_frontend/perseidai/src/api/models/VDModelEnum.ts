@@ -6,7 +6,7 @@
  * * `YOLOv5s` - YOLOV5S
  * * `YOLOv8s` - YOLOV8S
  */
-export enum VDImageModelEnum {
+export enum VDModelEnum {
     YOLOV5S = 'YOLOv5s',
     YOLOV8S = 'YOLOv8s',
 }

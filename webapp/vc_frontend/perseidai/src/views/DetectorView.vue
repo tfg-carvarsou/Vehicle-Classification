@@ -1,27 +1,27 @@
 <template>
   <Suspense>
     <div class="detector-view-container">
-    <HeaderDetector />
-    <div class="model-selector">
-      <SelectorModelSeries
-        :selectedModelType="'detector'"
-        :modelSeriesTitle="modelSeriesTitle"
-        @select-model-series="handleModelSeriesSelection"
+      <HeaderDetector />
+      <div class="model-selector">
+        <SelectorModelSeries
+          :selectedModelType="'detector'"
+          :modelSeriesTitle="modelSeriesTitle"
+          @select-model-series="handleModelSeriesSelection"
+        />
+      </div>
+      <div
+        ref="uploadFileForm"
+        class="upload-file-form"
+        :class="{ 'scroll-into-upload': isModelSeriesSelected }"
+      >
+        <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
+      </div>
+      <ResultsOthers
+        :isHomeView="isHomeView"
+        :isDetectorCardListShown="isDetectorCardListShown"
+        :isClassificatorCardListShown="isClassificatorCardListShown"
       />
     </div>
-    <div
-      ref="uploadFileForm"
-      class="upload-file-form"
-      :class="{ 'scroll-into-upload': isModelSeriesSelected }"
-    >
-      <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
-    </div>
-    <ResultsOthers
-      :isHomeView="isHomeView"
-      :isDetectorCardListShown="isDetectorCardListShown"
-      :isClassificatorCardListShown="isClassificatorCardListShown"
-    />
-  </div>
   </Suspense>
 </template>
 

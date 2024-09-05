@@ -2,8 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VDImage } from '../models/VDImage';
-import type { VDImageRequest } from '../models/VDImageRequest';
+import type { VDImageGet } from '../models/VDImageGet';
+import type { VDImagePost } from '../models/VDImagePost';
+import type { VDImagePostRequest } from '../models/VDImagePostRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -11,12 +12,12 @@ export class DetectorService {
     /**
      * Retrieve an image by its code
      * @param code
-     * @returns VDImage The image has been retrieved successfully
+     * @returns VDImageGet The image has been retrieved successfully
      * @throws ApiError
      */
     public static detectorSnapviewRetrieve(
         code: string,
-    ): CancelablePromise<VDImage> {
+    ): CancelablePromise<VDImageGet> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/detector/snapview/{code}/',
@@ -52,10 +53,10 @@ export class DetectorService {
     }
     /**
      * List all images
-     * @returns VDImage The images has been listed successfully
+     * @returns VDImageGet The images has been listed successfully
      * @throws ApiError
      */
-    public static detectorSnapzoneList(): CancelablePromise<Array<VDImage>> {
+    public static detectorSnapzoneList(): CancelablePromise<Array<VDImageGet>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/detector/snapzone/',
@@ -67,12 +68,12 @@ export class DetectorService {
     /**
      * Upload an image to detect vehicles
      * @param formData
-     * @returns VDImage The image has been uploaded successfully
+     * @returns VDImagePost The image has been uploaded successfully
      * @throws ApiError
      */
     public static detectorSnapzoneCreate(
-        formData: VDImageRequest,
-    ): CancelablePromise<VDImage> {
+        formData: VDImagePostRequest,
+    ): CancelablePromise<VDImagePost> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/detector/snapzone/',

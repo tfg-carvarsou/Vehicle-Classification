@@ -202,22 +202,6 @@ paths:
             try again
 components:
   schemas:
-    Model1ffEnum:
-      enum:
-      - YOLOv5s
-      - YOLOv8s
-      type: string
-      description: |-
-        * `YOLOv5s` - YOLOV5S
-        * `YOLOv8s` - YOLOV8S
-    Model2caEnum:
-      enum:
-      - EfficientNetB1
-      - YOLOv8s-cls
-      type: string
-      description: |-
-        * `EfficientNetB1` - EFFNETB1
-        * `YOLOv8s-cls` - YOLOV8SCLS
     VCImageGet:
       type: object
       properties:
@@ -227,7 +211,7 @@ components:
           maxLength: 12
         model:
           allOf:
-          - $ref: '#/components/schemas/Model2caEnum'
+          - $ref: '#/components/schemas/VCModelEnum'
           description: |-
             The ML model for classifying vehicles
 
@@ -252,7 +236,7 @@ components:
       properties:
         model:
           allOf:
-          - $ref: '#/components/schemas/Model2caEnum'
+          - $ref: '#/components/schemas/VCModelEnum'
           description: |-
             The ML model for classifying vehicles
 
@@ -269,7 +253,7 @@ components:
       properties:
         model:
           allOf:
-          - $ref: '#/components/schemas/Model2caEnum'
+          - $ref: '#/components/schemas/VCModelEnum'
           description: |-
             The ML model for classifying vehicles
 
@@ -281,6 +265,14 @@ components:
           description: The image file to be uploaded
       required:
       - image
+    VCModelEnum:
+      enum:
+      - EfficientNetB1
+      - YOLOv8s-cls
+      type: string
+      description: |-
+        * `EfficientNetB1` - EFFNETB1
+        * `YOLOv8s-cls` - YOLOV8SCLS
     VDImageGet:
       type: object
       properties:
@@ -290,7 +282,7 @@ components:
           maxLength: 12
         model:
           allOf:
-          - $ref: '#/components/schemas/Model1ffEnum'
+          - $ref: '#/components/schemas/VDModelEnum'
           description: |-
             The ML model for detecting vehicles
 
@@ -314,7 +306,7 @@ components:
       properties:
         model:
           allOf:
-          - $ref: '#/components/schemas/Model1ffEnum'
+          - $ref: '#/components/schemas/VDModelEnum'
           description: |-
             The ML model for detecting vehicles
 
@@ -331,7 +323,7 @@ components:
       properties:
         model:
           allOf:
-          - $ref: '#/components/schemas/Model1ffEnum'
+          - $ref: '#/components/schemas/VDModelEnum'
           description: |-
             The ML model for detecting vehicles
 
@@ -343,6 +335,14 @@ components:
           description: The image file to be uploaded
       required:
       - image
+    VDModelEnum:
+      enum:
+      - YOLOv5s
+      - YOLOv8s
+      type: string
+      description: |-
+        * `YOLOv5s` - YOLOV5S
+        * `YOLOv8s` - YOLOV8S
   securitySchemes:
     basicAuth:
       type: http

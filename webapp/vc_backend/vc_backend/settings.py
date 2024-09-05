@@ -62,8 +62,16 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Vehicle Detector and Classifier API',
     'DESCRIPTION': 'Backend API for detecting and classifying vehicles in images',
     'VERSION': '4.0.0',
+    'SERVERS': [
+        {'url': 'http://localhost:8000',
+         'description': 'Local server'}
+    ],
     'SERVE_INCLUDE_SCHEMA': False,
-    'COMPONENT_SPLIT_REQUEST': True
+    'COMPONENT_SPLIT_REQUEST': True,
+    'ENUM_NAME_OVERRIDES': {
+        'VDModelEnum': 'vc_backend_app.enums.VDModel',
+        'VCModelEnum': 'vc_backend_app.enums.VCModel',
+    }
 }
 
 MIDDLEWARE = [

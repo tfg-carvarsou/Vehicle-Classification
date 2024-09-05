@@ -2,15 +2,15 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VCImageModelEnum } from './VCImageModelEnum';
-export type VCImage = {
+import type { VDModelEnum } from './VDModelEnum';
+export type VDImagePost = {
     /**
-     * The ML model for classifying vehicles
+     * The ML model for detecting vehicles
      *
-     * * `EfficientNetB1` - EFFNETB1
-     * * `YOLOv8s-cls` - YOLOV8SCLS
+     * * `YOLOv5s` - YOLOV5S
+     * * `YOLOv8s` - YOLOV8S
      */
-    model?: VCImageModelEnum;
+    model?: VDModelEnum;
     /**
      * The image file to be uploaded
      */

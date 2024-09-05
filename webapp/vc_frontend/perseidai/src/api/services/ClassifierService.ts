@@ -2,8 +2,9 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VCImage } from '../models/VCImage';
-import type { VCImageRequest } from '../models/VCImageRequest';
+import type { VCImageGet } from '../models/VCImageGet';
+import type { VCImagePost } from '../models/VCImagePost';
+import type { VCImagePostRequest } from '../models/VCImagePostRequest';
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
 import { request as __request } from '../core/request';
@@ -11,12 +12,12 @@ export class ClassifierService {
     /**
      * Retrieve an image by its code
      * @param code
-     * @returns VCImage The image has been retrieved successfully
+     * @returns VCImageGet The image has been retrieved successfully
      * @throws ApiError
      */
     public static classifierSnapviewRetrieve(
         code: string,
-    ): CancelablePromise<VCImage> {
+    ): CancelablePromise<VCImageGet> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/classifier/snapview/{code}/',
@@ -52,10 +53,10 @@ export class ClassifierService {
     }
     /**
      * List all images
-     * @returns VCImage The images has been listed successfully
+     * @returns VCImageGet The images has been listed successfully
      * @throws ApiError
      */
-    public static classifierSnapzoneList(): CancelablePromise<Array<VCImage>> {
+    public static classifierSnapzoneList(): CancelablePromise<Array<VCImageGet>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/classifier/snapzone/',
@@ -67,12 +68,12 @@ export class ClassifierService {
     /**
      * Upload an image to classify vehicles
      * @param formData
-     * @returns VCImage The image has been uploaded successfully
+     * @returns VCImagePost The image has been uploaded successfully
      * @throws ApiError
      */
     public static classifierSnapzoneCreate(
-        formData: VCImageRequest,
-    ): CancelablePromise<VCImage> {
+        formData: VCImagePostRequest,
+    ): CancelablePromise<VCImagePost> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/classifier/snapzone/',

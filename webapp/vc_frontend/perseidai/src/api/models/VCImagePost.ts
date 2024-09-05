@@ -2,18 +2,18 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VCImageModelEnum } from './VCImageModelEnum';
-export type VCImageRequest = {
+import type { VCModelEnum } from './VCModelEnum';
+export type VCImagePost = {
     /**
      * The ML model for classifying vehicles
      *
      * * `EfficientNetB1` - EFFNETB1
      * * `YOLOv8s-cls` - YOLOV8SCLS
      */
-    model?: VCImageModelEnum;
+    model?: VCModelEnum;
     /**
      * The image file to be uploaded
      */
-    image: Blob;
+    image: string;
 };
 

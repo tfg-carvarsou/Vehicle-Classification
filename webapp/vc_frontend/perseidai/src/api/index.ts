@@ -7,12 +7,14 @@ export { CancelablePromise, CancelError } from './core/CancelablePromise';
 export { OpenAPI } from './core/OpenAPI';
 export type { OpenAPIConfig } from './core/OpenAPI';
 
-export type { VCImage } from './models/VCImage';
-export { VCImageModelEnum } from './models/VCImageModelEnum';
-export type { VCImageRequest } from './models/VCImageRequest';
-export type { VDImage } from './models/VDImage';
-export { VDImageModelEnum } from './models/VDImageModelEnum';
-export type { VDImageRequest } from './models/VDImageRequest';
+export type { VCImageGet } from './models/VCImageGet';
+export type { VCImagePost } from './models/VCImagePost';
+export type { VCImagePostRequest } from './models/VCImagePostRequest';
+export { VCModelEnum } from './models/VCModelEnum';
+export type { VDImageGet } from './models/VDImageGet';
+export type { VDImagePost } from './models/VDImagePost';
+export type { VDImagePostRequest } from './models/VDImagePostRequest';
+export { VDModelEnum } from './models/VDModelEnum';
 
 export { ClassifierService } from './services/ClassifierService';
 export { DetectorService } from './services/DetectorService';
