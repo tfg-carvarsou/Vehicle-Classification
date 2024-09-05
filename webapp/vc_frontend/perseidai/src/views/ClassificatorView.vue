@@ -1,9 +1,10 @@
 <template>
-  <div class="classificator-view-container">
+  <Suspense>
+  <div class="classifier-view-container">
     <HeaderClassificator />
     <div class="model-selector">
       <SelectorModelSeries
-        :selectedModelType="'classificator'"
+        :selectedModelType="'classifier'"
         :modelSeriesTitle="modelSeriesTitle"
         @select-model-series="handleModelSeriesSelection"
       />
@@ -21,6 +22,7 @@
       :isClassificatorCardListShown="isClassificatorCardListShown"
     />
   </div>
+</Suspense>
 </template>
 
 <script setup lang="ts">
@@ -93,7 +95,7 @@ watch(isModelSeriesSelected, async (newValue) => {
   margin-left: 300px;
 }
 
-.classificator-view-container {
+.classifier-view-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;

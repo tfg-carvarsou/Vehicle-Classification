@@ -1,9 +1,9 @@
 <template>
-  <div class="header-classificator-container">
-    <div class="header-classificator-icon">
-      <img src="@/assets/icons/classificator-type.webp" alt="Classificator logo" />
+  <div class="header-classifier-container">
+    <div class="header-classifier-icon">
+      <img src="@/assets/icons/classifier-type.webp" alt="Classifier logo" />
     </div>
-    <h1 class="header-classificator-title">
+    <h1 class="header-classifier-title">
       Available
       <span>&nbsp;Classification&nbsp;</span>
       Models
@@ -14,7 +14,7 @@
 <script setup lang="ts"></script>
 
 <style scoped>
-.header-classificator-container {
+.header-classifier-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,12 +24,12 @@
   width: 100%;
 }
 
-.header-classificator-icon img {
+.header-classifier-icon img {
   height: 90px;
   width: auto;
 }
 
-.header-classificator-title {
+.header-classifier-title {
   display: flex;
   flex-wrap: wrap;
   line-height: 1.3;
@@ -39,7 +39,7 @@
   text-align: center;
 }
 
-.header-classificator-title span {
+.header-classifier-title span {
   font-weight: inherit;
   color: #083863;
 }

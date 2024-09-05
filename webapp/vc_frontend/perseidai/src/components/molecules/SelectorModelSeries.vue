@@ -27,27 +27,27 @@
       </div>
     </div>
 
-    <!-- Show classificator models if 'classificator' is selected -->
-    <div v-if="selectedModelType === 'classificator'" class="ms-container-classificator">
+    <!-- Show classifier models if 'classifier' is selected -->
+    <div v-if="selectedModelType === 'classifier'" class="ms-container-classifier">
       <div class="ms-options">
         <div
           class="ms-opt"
-          id="ms-opt-classificator-effnet"
+          id="ms-opt-classifier-effnet"
           :class="{ active: selectedModelSeries === 'effnet' }"
           @click="selectModelSeries('effnet')"
         >
-          <div class="ms-img ms-img-classificator-effnet">
-            <img src="@/assets/images/effnet.webp" alt="EfficientNet classificator image" />
+          <div class="ms-img ms-img-classifier-effnet">
+            <img src="@/assets/images/effnet.webp" alt="EfficientNet classifier image" />
           </div>
         </div>
         <div
           class="ms-opt"
-          id="ms-opt-classificator-yolov8cls"
+          id="ms-opt-classifier-yolov8cls"
           :class="{ active: selectedModelSeries === 'yolov8cls' }"
           @click="selectModelSeries('yolov8cls')"
         >
-          <div class="ms-img ms-img-classificator-yolov8cls">
-            <img src="@/assets/images/yolov8.webp" alt="YOLOV8 classificator image" />
+          <div class="ms-img ms-img-classifier-yolov8cls">
+            <img src="@/assets/images/yolov8.webp" alt="YOLOV8 classifier image" />
           </div>
         </div>
       </div>
@@ -126,12 +126,12 @@ defineProps<{
   background-color: rgba(8, 56, 99, 0.1);
 }
 
-#ms-opt-classificator-effnet.active {
+#ms-opt-classifier-effnet.active {
   border: 2px solid #083863;
   background-color: rgba(0, 172, 234, 0.1);
 }
 
-#ms-opt-classificator-yolov8cls.active {
+#ms-opt-classifier-yolov8cls.active {
   border: 2px solid #083863;
   background-color: rgba(8, 56, 99, 0.1);
 }

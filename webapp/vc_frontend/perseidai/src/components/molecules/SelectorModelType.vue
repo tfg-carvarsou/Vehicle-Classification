@@ -15,14 +15,14 @@
       </div>
       <div
         class="mt-opt"
-        id="mt-opt-classificator"
-        :class="{ active: selectedModelType === 'classificator' }"
-        @click="selectModelType('classificator')"
+        id="mt-opt-classifier"
+        :class="{ active: selectedModelType === 'classifier' }"
+        @click="selectModelType('classifier')"
       >
-        <div class="mt-icon mt-icon-classificator">
-          <img src="@/assets/icons/classificator-type.webp" alt="Classificator icon" />
+        <div class="mt-icon mt-icon-classifier">
+          <img src="@/assets/icons/classifier-type.webp" alt="Classifier icon" />
         </div>
-        <span class="mt-icon-classificator-text">Classificator</span>
+        <span class="mt-icon-classifier-text">Classifier</span>
       </div>
     </div>
   </div>
@@ -85,7 +85,7 @@ const selectModelType = (modelType: string) => {
   background-color: rgba(0, 172, 234, 0.1);
 }
 
-#mt-opt-classificator.active {
+#mt-opt-classifier.active {
   border: 2px solid #083863;
   background-color: rgba(8, 56, 99, 0.1);
 }
@@ -110,7 +110,7 @@ const selectModelType = (modelType: string) => {
   color: #00acea;
 }
 
-.mt-icon-classificator-text {
+.mt-icon-classifier-text {
   color: #083863;
 }
 
@@ -118,7 +118,7 @@ const selectModelType = (modelType: string) => {
   color: #00acea;
 }
 
-.mt-opt.active .mt-icon-classificator-text {
+.mt-opt.active .mt-icon-classifier-text {
   color: #083863;
 }
 

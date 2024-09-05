@@ -16,8 +16,8 @@
       <nav class="nav-links">
         <ul>
           <li><router-link to="/models">Models</router-link></li>
-          <li><router-link to="/detector">Detector</router-link></li>
-          <li><router-link to="/classificator">Classificator</router-link></li>
+          <li><router-link to="/detector/snapzone">Detector</router-link></li>
+          <li><router-link to="/classifier/snapzone">Classifier</router-link></li>
           <li><router-link to="/faq">FAQ</router-link></li>
         </ul>
       </nav>

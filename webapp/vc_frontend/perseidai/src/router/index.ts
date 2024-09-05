@@ -12,13 +12,13 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/detector',
+      path: '/detector/snapzone',
       name: 'detector',
       component: DetectorView
     },
     {
-      path: '/classificator',
-      name: 'classificator',
+      path: '/classifier/snapzone',
+      name: 'classifier',
       component: ClassificatorView
     }
   ]

@@ -1,5 +1,6 @@
 <template>
-  <div class="detector-view-container">
+  <Suspense>
+    <div class="detector-view-container">
     <HeaderDetector />
     <div class="model-selector">
       <SelectorModelSeries
@@ -21,6 +22,7 @@
       :isClassificatorCardListShown="isClassificatorCardListShown"
     />
   </div>
+  </Suspense>
 </template>
 
 <script setup lang="ts">

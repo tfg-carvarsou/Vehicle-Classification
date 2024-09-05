@@ -23,11 +23,11 @@
           :infTime="vdcard.infTime"
         />
       </div>
-      <div class="classificator-card-list" v-if="isClassificatorCardListShown">
+      <div class="classifier-card-list" v-if="isClassificatorCardListShown">
         <div class="results-others-title" v-if="!isHomeView">
           <h1>
             See results of
-            <span class="classificator-title">&nbsp;Classificator&nbsp;</span>
+            <span class="classifier-title">&nbsp;Classifier&nbsp;</span>
             uploads
           </h1>
         </div>
@@ -48,41 +48,34 @@
 
 <script setup lang="ts">
 import { reactive } from 'vue'
+import { 
+  DetectorService, 
+  ClassifierService, 
+  VDImageModelEnum } from '@/api/index'
 import DetectorCard from '@/components/organisms/DetectorCard.vue'
 import ClassificatorCard from '@/components/organisms/ClassificatorCard.vue'
 import detectorTypeImage from '@/assets/icons/detector-type.webp'
-import classificatorTypeImage from '@/assets/icons/classificator-type.webp'
+import classificatorTypeImage from '@/assets/icons/classifier-type.webp'
 import yolov5ModelImage from '@/assets/images/yolov5.webp'
 import effnetModelImage from '@/assets/images/effnet.webp'
 import yolov8ModelImage from '@/assets/images/yolov8.webp'
 import placeholderImage from '@/assets/images/placeholder.png'
 
-const vdcards = reactive([
-  {
-    type: detectorTypeImage,
-    filename: 'filename1',
-    username: 'Anonymous',
-    model: yolov5ModelImage,
-    image: placeholderImage,
-    infTime: 0.983
-  },
-  {
-    type: detectorTypeImage,
-    filename: 'filename2',
-    username: 'Anonymous',
-    model: yolov5ModelImage,
-    image: placeholderImage,
-    infTime: 0.835
-  },
-  {
-    type: detectorTypeImage,
-    filename: 'filename3',
-    username: 'Anonymous',
-    model: yolov8ModelImage,
-    image: placeholderImage,
-    infTime: 0.534
-  }
-])
+const detectorListAll = await DetectorService.detectorSnapzoneList()
+const oneImage = detectorListAll[0]
+const filename = oneImage.image.split('/')[6].split('.')[0]
+const model = yolov5ModelImage ? oneImage.model == VDImageModelEnum.YOLOV5S : yolov8ModelImage
+console.log(oneImage)
+
+const vdcards = reactive([{
+  type: detectorTypeImage,
+  filename: filename,
+  username: 'Anonymous',
+  model: model,
+  image: oneImage.image,
+  infTime: 0.001
+
+}])
 
 const vccards = reactive([
   {
@@ -141,7 +134,7 @@ defineProps<{
   color: #00acea;
 }
 
-.classificator-title {
+.classifier-title {
   font-weight: inherit;
   color: #083863;
 }
@@ -155,7 +148,7 @@ defineProps<{
 }
 
 .detector-card-list,
-.classificator-card-list {
+.classifier-card-list {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;

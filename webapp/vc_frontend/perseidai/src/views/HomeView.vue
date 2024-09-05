@@ -1,4 +1,5 @@
 <template>
+  <Suspense>
   <div class="home-view-container">
     <!-- Main title -->
     <MainTitleHome />
@@ -35,6 +36,7 @@
       :isClassificatorCardListShown="isClassificatorCardListShown"
     />
   </div>
+</Suspense>
 </template>
 
 <script setup lang="ts">
@@ -50,7 +52,7 @@ const isDetectorCardListShown = ref(true)
 const isClassificatorCardListShown = ref(true)
 const modelSeriesTitle = ref('Choose your model')
 const isModelTypeSelected = ref(false)
-const selectedModelType = ref('') // detector or classificator
+const selectedModelType = ref('') // detector or classifier
 const isModelSeriesSelected = ref(false)
 const selectedModelSeries = ref('') // yolov5, yolov8, effnet, yolov8cls
 const modelSelector = ref<HTMLElement | null>(null)

@@ -22,9 +22,9 @@
       <ul>
         <li><router-link to="/models">Information about ML Models</router-link></li>
         <span class="separator">⋆</span>
-        <li><router-link to="/detector">Try Vehicle Detector</router-link></li>
+        <li><router-link to="/detector/snapzone">Try Vehicle Detector</router-link></li>
         <span class="separator">⋆</span>
-        <li><router-link to="/classificator">Try Vehicle Classificator</router-link></li>
+        <li><router-link to="/classifier/snapzone">Try Vehicle Classifier</router-link></li>
         <span class="separator">⋆</span>
         <li><router-link to="/faq">FAQ</router-link></li>
       </ul>
