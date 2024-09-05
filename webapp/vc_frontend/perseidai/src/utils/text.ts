@@ -1,8 +1,8 @@
 export function updateText(selectedClass: string, newText: string): void {
-  const element = document.querySelector(selectedClass);
+  const element = document.querySelector(selectedClass)
   if (element) {
-    element.textContent = newText;
+    element.textContent = newText
   } else {
-    console.warn(`Element with class "${selectedClass}" not found`);
+    console.warn(`Element with class "${selectedClass}" not found`)
   }
 }

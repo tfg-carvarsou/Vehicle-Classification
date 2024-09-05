@@ -1,9 +1,9 @@
 <template>
-  <div class="detector-view-container">
-    <HeaderDetector />
+  <div class="classificator-view-container">
+    <HeaderClassificator />
     <div class="model-selector">
       <SelectorModelSeries
-        :selectedModelType="'detector'"
+        :selectedModelType="'classificator'"
         :modelSeriesTitle="modelSeriesTitle"
         @select-model-series="handleModelSeriesSelection"
       />
@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
 import { updateText } from '@/utils/text'
-import HeaderDetector from '@/components/templates/HeaderDetector.vue'
+import HeaderClassificator from '@/components/templates/HeaderClassificator.vue'
 import SelectorModelSeries from '@/components/molecules/SelectorModelSeries.vue'
 import UploadFileForm from '@/components/organisms/UploadFileForm.vue'
 import ResultsOthers from '@/components/templates/ResultsOthers.vue'
@@ -35,8 +35,8 @@ const modelSeriesTitle = ref('Choose your model')
 updateText('.ms-title', modelSeriesTitle.value)
 
 const isHomeView = ref(false)
-const isDetectorCardListShown = ref(true)
-const isClassificatorCardListShown = ref(false)
+const isDetectorCardListShown = ref(false)
+const isClassificatorCardListShown = ref(true)
 const isModelSeriesSelected = ref(false)
 const selectedModelSeries = ref('')
 const uploadFileForm = ref<HTMLElement | null>(null)
@@ -93,7 +93,7 @@ watch(isModelSeriesSelected, async (newValue) => {
   margin-left: 300px;
 }
 
-.detector-view-container {
+.classificator-view-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;

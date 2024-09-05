@@ -29,9 +29,11 @@
       </div>
     </div>
     <!-- Results of others uploads -->
-    <ResultsOthers 
-        :isDetectorCardListShown="isDetectorCardListShown"
-        :isClassificatorCardListShown="isClassificatorCardListShown"/>
+    <ResultsOthers
+      :isHomeView="isHomeView"
+      :isDetectorCardListShown="isDetectorCardListShown"
+      :isClassificatorCardListShown="isClassificatorCardListShown"
+    />
   </div>
 </template>
 
@@ -43,6 +45,7 @@ import SelectorModelSeries from '@/components/molecules/SelectorModelSeries.vue'
 import UploadFileForm from '@/components/organisms/UploadFileForm.vue'
 import ResultsOthers from '@/components/templates/ResultsOthers.vue'
 
+const isHomeView = ref(true)
 const isDetectorCardListShown = ref(true)
 const isClassificatorCardListShown = ref(true)
 const modelSeriesTitle = ref('Choose your model')
@@ -58,8 +61,8 @@ const handleModelTypeSelection = (modelType: string) => {
   isModelTypeSelected.value = true
   selectedModelType.value = modelType
   isModelSeriesSelected.value = false
-  modelSeriesTitle.value = modelType === 'detector' ? 
-  'Choose your detection model' : 'Choose your classification model'
+  modelSeriesTitle.value =
+    modelType === 'detector' ? 'Choose your detection model' : 'Choose your classification model'
 }
 
 const handleModelSeriesSelection = (modelSeries: string) => {

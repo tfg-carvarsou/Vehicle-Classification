@@ -1,33 +1,45 @@
 <template>
   <div class="results-others-container">
-    <div class="results-others-title">
+    <div class="results-others-title" v-if="isHomeView">
       <h1>See results of others uploads</h1>
     </div>
     <div class="results-others-cards">
-      <div class="detector-card-list"
-        v-if="isDetectorCardListShown">
+      <div class="detector-card-list" v-if="isDetectorCardListShown">
+        <div class="results-others-title" v-if="!isHomeView">
+          <h1>
+            See results of
+            <span class="detector-title">&nbsp;Detector&nbsp;</span>
+            uploads
+          </h1>
+        </div>
         <DetectorCard
-        v-for="(vdcard, index) in vdcards"
-        :key="index"
-        :type="vdcard.type"
-        :filename="vdcard.filename"
-        :username="vdcard.username"
-        :model="vdcard.model"
-        :image="vdcard.image"
-        :infTime="vdcard.infTime"
+          v-for="(vdcard, index) in vdcards"
+          :key="index"
+          :type="vdcard.type"
+          :filename="vdcard.filename"
+          :username="vdcard.username"
+          :model="vdcard.model"
+          :image="vdcard.image"
+          :infTime="vdcard.infTime"
         />
       </div>
-      <div class="classificator-card-list"
-        v-if="isClassificatorCardListShown">
+      <div class="classificator-card-list" v-if="isClassificatorCardListShown">
+        <div class="results-others-title" v-if="!isHomeView">
+          <h1>
+            See results of
+            <span class="classificator-title">&nbsp;Classificator&nbsp;</span>
+            uploads
+          </h1>
+        </div>
         <ClassificatorCard
-        v-for="(vccard, index) in vccards"
-        :key="index"
-        :type="vccard.type"
-        :filename="vccard.filename"
-        :username="vccard.username"
-        :model="vccard.model"
-        :image="vccard.image"
-        :infTime="vccard.infTime"
+          v-for="(vccard, index) in vccards"
+          :key="index"
+          :type="vccard.type"
+          :filename="vccard.filename"
+          :username="vccard.username"
+          :model="vccard.model"
+          :image="vccard.image"
+          :infTime="vccard.infTime"
         />
       </div>
     </div>
@@ -100,6 +112,7 @@ const vccards = reactive([
 ])
 
 defineProps<{
+  isHomeView: boolean
   isDetectorCardListShown: boolean
   isClassificatorCardListShown: boolean
 }>()
@@ -120,6 +133,17 @@ defineProps<{
   line-height: 1.3;
   font-size: 2.8rem;
   font-weight: 500;
+  margin-bottom: 32px;
+}
+
+.detector-title {
+  font-weight: inherit;
+  color: #00acea;
+}
+
+.classificator-title {
+  font-weight: inherit;
+  color: #083863;
 }
 
 .results-others-cards {
@@ -137,7 +161,8 @@ defineProps<{
   gap: 16px;
 }
 
-.vdcard, .vccard {
+.vdcard,
+.vccard {
   width: calc(33.333% - 11px);
   box-sizing: border-box;
 }
