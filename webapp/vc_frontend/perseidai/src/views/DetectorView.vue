@@ -19,7 +19,7 @@
       <ResultsOthers
         :isHomeView="isHomeView"
         :isDetectorCardListShown="isDetectorCardListShown"
-        :isClassificatorCardListShown="isClassificatorCardListShown"
+        :isClassifierCardListShown="isClassifierCardListShown"
       />
     </div>
   </Suspense>
@@ -38,7 +38,7 @@ updateText('.ms-title', modelSeriesTitle.value)
 
 const isHomeView = ref(false)
 const isDetectorCardListShown = ref(true)
-const isClassificatorCardListShown = ref(false)
+const isClassifierCardListShown = ref(false)
 const isModelSeriesSelected = ref(false)
 const selectedModelSeries = ref('')
 const uploadFileForm = ref<HTMLElement | null>(null)

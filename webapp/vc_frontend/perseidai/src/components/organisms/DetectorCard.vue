@@ -18,7 +18,8 @@
     <div class="vdcard-footer">
       <div class="detections">
         <div class="detection" v-for="(detection, index) in detections" :key="index">
-          <div class="count" :style="{ backgroundColor: detection.color }">
+          <div class="count" 
+            :style="{ backgroundColor: detection.bgColor, color: detection.color }">
             {{ detection.count }}
           </div>
           <div class="label">{{ detection.label }}</div>
@@ -30,7 +31,6 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
 import CardDialog from '@/components/molecules/CardDialog.vue'
 
 interface Props {
@@ -40,19 +40,34 @@ interface Props {
   model: string
   image: string
   infTime: number
+  labelCountDict: Record<string, number>
 }
 
-defineProps<Props>()
+const props = defineProps<Props>()
+let detections: any[] = []
+const colorList = ['#111f64', '#cced00', '#02f33f', '#c100ff']
 
-const detections = reactive([
-  {
-    count: 12,
-    label: 'car',
-    color: '#f44336'
-  },
-  { count: 1, label: 'big truck', color: '#4caf50' },
-  { count: 3, label: 'small bus', color: '#2196f3' }
-])
+function isLightColor(color: string): boolean {
+  const hex = color.replace('#', '')
+  const r = parseInt(hex.slice(0, 2), 16)
+  const g = parseInt(hex.slice(2, 4), 16)
+  const b = parseInt(hex.slice(4, 6), 16)
+  const brightness = (r * 299 + g * 587 + b * 114) / 1000
+  return brightness > 128
+}
+function getTextColor(backgroundColor: string): string {
+  return isLightColor(backgroundColor) ? 'black' : 'white'
+}
+
+for (const [label, count] of Object.entries(props.labelCountDict)) {
+  const bgColor = colorList[detections.length % colorList.length]
+  detections.push({
+    count,
+    label: label.split(';')[1],
+    bgColor,
+    color: getTextColor(bgColor)
+  })
+}
 </script>
 
 <style scoped>
@@ -153,6 +168,7 @@ const detections = reactive([
   height: 30px;
   border-radius: 50%;
   font-size: 14px;
+  font-weight: bold;
   margin-right: 8px;
 }
 

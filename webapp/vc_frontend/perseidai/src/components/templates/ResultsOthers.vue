@@ -21,9 +21,10 @@
           :model="vdcard.model"
           :image="vdcard.image"
           :infTime="vdcard.infTime"
+          :labelCountDict="vdcard.labelCountDict"
         />
       </div>
-      <div class="classifier-card-list" v-if="isClassificatorCardListShown">
+      <div class="classifier-card-list" v-if="isClassifierCardListShown">
         <div class="results-others-title" v-if="!isHomeView">
           <h1>
             See results of
@@ -31,7 +32,7 @@
             uploads
           </h1>
         </div>
-        <ClassificatorCard
+        <ClassifierCard
           v-for="(vccard, index) in classifierCards"
           :key="index"
           :type="vccard.type"
@@ -40,6 +41,7 @@
           :model="vccard.model"
           :image="vccard.image"
           :infTime="vccard.infTime"
+          :predClass="vccard.predClass"
         />
       </div>
     </div>
@@ -51,9 +53,9 @@ import { ref, onMounted } from 'vue'
 import { DetectorService, ClassifierService } from '@/api/index'
 import type { VDImageGet, VCImageGet } from '@/api/index'
 import DetectorCard from '@/components/organisms/DetectorCard.vue'
-import ClassificatorCard from '@/components/organisms/ClassificatorCard.vue'
+import ClassifierCard from '@/components/organisms/ClassifierCard.vue'
 import detectorTypeImage from '@/assets/icons/detector-type.webp'
-import classificatorTypeImage from '@/assets/icons/classifier-type.webp'
+import classifierTypeImage from '@/assets/icons/classifier-type.webp'
 import yolov5ModelImage from '@/assets/images/yolov5.webp'
 import yolov8ModelImage from '@/assets/images/yolov8.webp'
 import effnetModelImage from '@/assets/images/effnet.webp'
@@ -62,56 +64,50 @@ const detectorCards = ref<any[]>([])
 const classifierCards = ref<any[]>([])
 
 async function generateCards(service: any): Promise<any[]> {
-  let cards: any[] = [];
-  //TODO: Iterate over their correspondant images in each service
-  
-  if (service == DetectorService) {
-    const detectorListAll: VDImageGet[] = await service.detectorSnapzoneList();
-    const oneImage = detectorListAll[0];
-    cards = [
-      {
+  let cards: any[] = []
+  if (service === DetectorService) {
+    const detectorListAll: VDImageGet[] = await service.detectorSnapzoneList()
+    for (let card of detectorListAll.slice(0,9)) {
+      cards.push({
         type: detectorTypeImage,
-        filename: oneImage.image.split('/')[6].split('.')[0],
+        filename: card.image.split('/')[6].split('.')[0].slice(0,8)?.split('_')[0],
         username: 'Anonymous',
-        model: oneImage.model === 'YOLOv5s' ? yolov5ModelImage : yolov8ModelImage,
-        image: oneImage.image,
-        infTime: oneImage.inf_time
-        // TODO: Add label_count_dict
-      }
-    ];
+        model: card.model === 'YOLOv5s' ? yolov5ModelImage : yolov8ModelImage,
+        image: card.image,
+        infTime: card.inf_time,
+        labelCountDict: card.label_count_dict
+      })
+    } 
   }
-  
-  if (service == ClassifierService) {
-    const classifierListAll: VCImageGet[] = await service.classifierSnapzoneList();
-    const oneImage = classifierListAll[0];
-    cards = [
-      {
-        type: classificatorTypeImage,
-        filename: oneImage.image.split('/')[6].split('.')[0],
+  if (service === ClassifierService) {
+    const classifierListAll: VCImageGet[] = await service.classifierSnapzoneList()
+    for (let card of classifierListAll.slice(0,9)) {
+      cards.push({
+        type: classifierTypeImage,
+        filename: card.image.split('/')[6].split('.')[0].slice(0,8)?.split('_')[0],
         username: 'Anonymous',
-        model: oneImage.model === 'EfficientNetB1' ? effnetModelImage : yolov8ModelImage,
-        image: oneImage.image,
-        infTime: oneImage.inf_time
-        // TODO: Add pred_class
-      }
-    ];
+        model: card.model === 'EfficientNetB1' ? effnetModelImage : yolov8ModelImage,
+        image: card.image,
+        infTime: card.inf_time,
+        predClass: card.pred_class
+      })
+    } 
   }
-  
-  return cards;
+  return cards
 }
 
 const props = defineProps<{
   isHomeView: boolean
   isDetectorCardListShown: boolean
-  isClassificatorCardListShown: boolean
+  isClassifierCardListShown: boolean
 }>()
 
 onMounted(async () => {
   if (props.isDetectorCardListShown) {
-    detectorCards.value = await generateCards(DetectorService);
+    detectorCards.value = await generateCards(DetectorService)
   }
-  if (props.isClassificatorCardListShown) {
-    classifierCards.value = await generateCards(ClassifierService);
+  if (props.isClassifierCardListShown) {
+    classifierCards.value = await generateCards(ClassifierService)
   }
 })
 </script>

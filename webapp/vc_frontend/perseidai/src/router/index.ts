@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import DetectorView from '@/views/DetectorView.vue'
-import ClassificatorView from '@/views/ClassificatorView.vue'
+import ClassifierView from '@/views/ClassifierView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,7 +19,7 @@ const router = createRouter({
     {
       path: '/classifier/snapzone',
       name: 'classifier',
-      component: ClassificatorView
+      component: ClassifierView
     }
   ]
 })

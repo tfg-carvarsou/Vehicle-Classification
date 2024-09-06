@@ -33,7 +33,7 @@
       <ResultsOthers
         :isHomeView="isHomeView"
         :isDetectorCardListShown="isDetectorCardListShown"
-        :isClassificatorCardListShown="isClassificatorCardListShown"
+        :isClassifierCardListShown="isClassifierCardListShown"
       />
     </div>
   </Suspense>
@@ -49,7 +49,7 @@ import ResultsOthers from '@/components/templates/ResultsOthers.vue'
 
 const isHomeView = ref(true)
 const isDetectorCardListShown = ref(true)
-const isClassificatorCardListShown = ref(true)
+const isClassifierCardListShown = ref(true)
 const modelSeriesTitle = ref('Choose your model')
 const isModelTypeSelected = ref(false)
 const selectedModelType = ref('') // detector or classifier

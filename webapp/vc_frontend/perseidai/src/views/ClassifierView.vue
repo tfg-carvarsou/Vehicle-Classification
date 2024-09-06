@@ -1,7 +1,7 @@
 <template>
   <Suspense>
     <div class="classifier-view-container">
-      <HeaderClassificator />
+      <HeaderClassifier />
       <div class="model-selector">
         <SelectorModelSeries
           :selectedModelType="'classifier'"
@@ -19,7 +19,7 @@
       <ResultsOthers
         :isHomeView="isHomeView"
         :isDetectorCardListShown="isDetectorCardListShown"
-        :isClassificatorCardListShown="isClassificatorCardListShown"
+        :isClassifierCardListShown="isClassifierCardListShown"
       />
     </div>
   </Suspense>
@@ -28,7 +28,7 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue'
 import { updateText } from '@/utils/text'
-import HeaderClassificator from '@/components/templates/HeaderClassificator.vue'
+import HeaderClassifier from '@/components/templates/HeaderClassifier.vue'
 import SelectorModelSeries from '@/components/molecules/SelectorModelSeries.vue'
 import UploadFileForm from '@/components/organisms/UploadFileForm.vue'
 import ResultsOthers from '@/components/templates/ResultsOthers.vue'
@@ -38,7 +38,7 @@ updateText('.ms-title', modelSeriesTitle.value)
 
 const isHomeView = ref(false)
 const isDetectorCardListShown = ref(false)
-const isClassificatorCardListShown = ref(true)
+const isClassifierCardListShown = ref(true)
 const isModelSeriesSelected = ref(false)
 const selectedModelSeries = ref('')
 const uploadFileForm = ref<HTMLElement | null>(null)

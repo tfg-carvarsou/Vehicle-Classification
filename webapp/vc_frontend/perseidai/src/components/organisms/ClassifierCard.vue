@@ -16,19 +16,13 @@
       <CardDialog alt="Uploaded image" :filename="filename" :image="image" />
     </div>
     <div class="vccard-footer">
-      <div class="prediction" v-for="(p, index) in prediction" :key="index">
-        <div class="label">
-          <i>{{ p.label }}</i>
-        </div>
-        <div class="confidence">Confidence: {{ p.confidence }}%</div>
-      </div>
+      <div class="prediction label"><i>{{ predClass }}</i></div>
       <div class="inf-time">{{ infTime }}ms</div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
 import CardDialog from '@/components/molecules/CardDialog.vue'
 
 interface Props {
@@ -38,16 +32,10 @@ interface Props {
   model: string
   image: string
   infTime: number
+  predClass: string
 }
 
 defineProps<Props>()
-
-const prediction = reactive([
-  {
-    label: 'Ram C-V Cargo Van Minivan 2012',
-    confidence: 89.3
-  }
-])
 </script>
 
 <style scoped>
@@ -139,15 +127,8 @@ const prediction = reactive([
   font-size: 16px;
 }
 
-.confidence {
-  font-size: 14px;
-  color: #777;
-  margin-bottom: 50px;
-}
-
 .inf-time {
   font-size: 14px;
   color: #777;
-  margin-bottom: 76px;
 }
 </style>

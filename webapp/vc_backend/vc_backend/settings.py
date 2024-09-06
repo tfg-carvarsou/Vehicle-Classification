@@ -63,7 +63,7 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Backend API for detecting and classifying vehicles in images',
     'VERSION': '4.0.0',
     'SERVERS': [
-        {'url': 'http://localhost:8000',
+        {'url': 'http://127.0.0.1:8000',
          'description': 'Local server'}
     ],
     'SERVE_INCLUDE_SCHEMA': False,
