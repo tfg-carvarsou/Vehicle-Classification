@@ -16,7 +16,9 @@
       <CardDialog alt="Uploaded image" :filename="filename" :image="image" />
     </div>
     <div class="vccard-footer">
-      <div class="prediction label"><i>{{ predClass }}</i></div>
+      <div class="prediction label">
+        <i>{{ predClass }}</i>
+      </div>
       <div class="inf-time">{{ infTime }}ms</div>
     </div>
   </div>

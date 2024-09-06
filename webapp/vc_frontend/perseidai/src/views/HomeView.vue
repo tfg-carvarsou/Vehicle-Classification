@@ -22,11 +22,11 @@
         </div>
         <!-- Upload file form -->
         <div
-          ref="uploadFileForm"
-          class="upload-file-form"
+          ref="uploadImageForm"
+          class="upload-image-form"
           :class="{ 'scroll-into-upload': isModelSeriesSelected }"
         >
-          <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
+          <UploadImageForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
         </div>
       </div>
       <!-- Results of others uploads -->
@@ -44,7 +44,7 @@ import { ref, watch, nextTick } from 'vue'
 import MainTitleHome from '@/components/templates/HeaderHome.vue'
 import SelectorModelType from '@/components/molecules/SelectorModelType.vue'
 import SelectorModelSeries from '@/components/molecules/SelectorModelSeries.vue'
-import UploadFileForm from '@/components/organisms/UploadFileForm.vue'
+import UploadImageForm from '@/components/organisms/UploadImageForm.vue'
 import ResultsOthers from '@/components/templates/ResultsOthers.vue'
 
 const isHomeView = ref(true)
@@ -56,7 +56,7 @@ const selectedModelType = ref('') // detector or classifier
 const isModelSeriesSelected = ref(false)
 const selectedModelSeries = ref('') // yolov5, yolov8, effnet, yolov8cls
 const modelSelector = ref<HTMLElement | null>(null)
-const uploadFileForm = ref<HTMLElement | null>(null)
+const uploadImageForm = ref<HTMLElement | null>(null)
 const scrollOffset = 370
 
 const handleModelTypeSelection = (modelType: string) => {
@@ -92,7 +92,7 @@ watch(isModelTypeSelected, async (newValue) => {
 watch(isModelSeriesSelected, async (newValue) => {
   if (newValue) {
     await nextTick()
-    scrollToElement(uploadFileForm.value, scrollOffset)
+    scrollToElement(uploadImageForm.value, scrollOffset)
   }
 })
 </script>
@@ -115,7 +115,7 @@ watch(isModelSeriesSelected, async (newValue) => {
   max-width: 25vh;
 }
 
-.upload-file-form {
+.upload-image-form {
   max-width: 40vh;
 }
 
@@ -135,7 +135,7 @@ watch(isModelSeriesSelected, async (newValue) => {
   }
 
   .model-selector,
-  .upload-file-form {
+  .upload-image-form {
     max-width: 100%;
   }
 

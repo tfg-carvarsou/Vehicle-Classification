@@ -7,6 +7,6 @@
  * * `YOLOv8s-cls` - YOLOV8SCLS
  */
 export enum VCModelEnum {
-    EFFICIENT_NET_B1 = 'EfficientNetB1',
-    YOLOV8S_CLS = 'YOLOv8s-cls',
+  EFFICIENT_NET_B1 = 'EfficientNetB1',
+  YOLOV8S_CLS = 'YOLOv8s-cls'
 }

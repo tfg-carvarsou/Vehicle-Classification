@@ -2,18 +2,17 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VDModelEnum } from './VDModelEnum';
+import type { VDModelEnum } from './VDModelEnum'
 export type VDImagePostRequest = {
-    /**
-     * The ML model for detecting vehicles
-     *
-     * * `YOLOv5s` - YOLOV5S
-     * * `YOLOv8s` - YOLOV8S
-     */
-    model?: VDModelEnum;
-    /**
-     * The image file to be uploaded
-     */
-    image: Blob;
-};
-
+  /**
+   * The ML model for detecting vehicles
+   *
+   * * `YOLOv5s` - YOLOV5S
+   * * `YOLOv8s` - YOLOV8S
+   */
+  model?: VDModelEnum
+  /**
+   * The image file to be uploaded
+   */
+  image: Blob
+}

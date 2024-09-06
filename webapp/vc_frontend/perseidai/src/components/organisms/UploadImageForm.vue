@@ -1,5 +1,5 @@
 <template>
-  <div class="upload-file-form">
+  <div class="upload-image-form">
     <h2 class="uff-title">Upload your image</h2>
     <div v-bind="api.getRootProps()">
       <div v-bind="api.getDropzoneProps()">
@@ -16,7 +16,10 @@
           <div v-bind="api.getItemNameProps({ file })">
             {{ file.name }}
           </div>
-          <UploadFileAlertDialog alt="Image to upload" :image="imageToUpload as string" />
+          <UploadImageAlertDialog alt="Image to upload" 
+            :modelType="selectedModelType"
+            :modelSeries="selectedModelSeries"
+            :image="imageToUpload as string" />
           <div class="delete-trigger">
             <button v-bind="api.getItemDeleteTriggerProps({ file })">
               <FontAwesomeIcon :icon="fas.faDeleteLeft" /> Delete
@@ -34,7 +37,7 @@ import { normalizeProps, useMachine } from '@zag-js/vue'
 import { ref, computed } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import UploadFileAlertDialog from '@/components/molecules/UploadFileAlertDialog.vue'
+import UploadImageAlertDialog from '@/components/molecules/UploadImageAlertDialog.vue'
 
 const [state, send] = useMachine(
   fileUpload.machine({
@@ -57,12 +60,17 @@ const [state, send] = useMachine(
   })
 )
 
+defineProps<{
+  selectedModelType: string
+  selectedModelSeries: string
+}>()
+
 const api = computed(() => fileUpload.connect(state.value, send, normalizeProps))
 const imageToUpload = ref<string | ArrayBuffer | null>(null)
 </script>
 
 <style scoped>
-.upload-file-form {
+.upload-image-form {
   display: flex;
   width: 400%;
   flex-direction: column;
@@ -180,7 +188,7 @@ li button:hover {
 }
 
 @media (max-width: 1024px) {
-  .upload-file-form {
+  .upload-image-form {
     margin-left: 0;
   }
 

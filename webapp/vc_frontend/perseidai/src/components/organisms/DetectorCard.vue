@@ -18,8 +18,10 @@
     <div class="vdcard-footer">
       <div class="detections">
         <div class="detection" v-for="(detection, index) in detections" :key="index">
-          <div class="count" 
-            :style="{ backgroundColor: detection.bgColor, color: detection.color }">
+          <div
+            class="count"
+            :style="{ backgroundColor: detection.bgColor, color: detection.color }"
+          >
             {{ detection.count }}
           </div>
           <div class="label">{{ detection.label }}</div>

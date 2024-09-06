@@ -10,11 +10,13 @@
         />
       </div>
       <div
-        ref="uploadFileForm"
-        class="upload-file-form"
+        ref="uploadImageForm"
+        class="upload-image-form"
         :class="{ 'scroll-into-upload': isModelSeriesSelected }"
       >
-        <UploadFileForm v-if="isModelSeriesSelected" :selectedModelSeries="selectedModelSeries" />
+        <UploadImageForm v-if="isModelSeriesSelected"
+          :selectedModelType="'detector'"
+          :selectedModelSeries="selectedModelSeries" />
       </div>
       <ResultsOthers
         :isHomeView="isHomeView"
@@ -30,7 +32,7 @@ import { ref, watch, nextTick } from 'vue'
 import { updateText } from '@/utils/text'
 import HeaderDetector from '@/components/templates/HeaderDetector.vue'
 import SelectorModelSeries from '@/components/molecules/SelectorModelSeries.vue'
-import UploadFileForm from '@/components/organisms/UploadFileForm.vue'
+import UploadImageForm from '@/components/organisms/UploadImageForm.vue'
 import ResultsOthers from '@/components/templates/ResultsOthers.vue'
 
 const modelSeriesTitle = ref('Choose your model')
@@ -41,7 +43,7 @@ const isDetectorCardListShown = ref(true)
 const isClassifierCardListShown = ref(false)
 const isModelSeriesSelected = ref(false)
 const selectedModelSeries = ref('')
-const uploadFileForm = ref<HTMLElement | null>(null)
+const uploadImageForm = ref<HTMLElement | null>(null)
 const scrollOffset = 370
 
 const handleModelSeriesSelection = (modelSeries: string) => {
@@ -62,14 +64,14 @@ const scrollToElement = (element: HTMLElement | null, offset: number) => {
 watch(isModelSeriesSelected, async (newValue) => {
   if (newValue) {
     await nextTick()
-    scrollToElement(uploadFileForm.value, scrollOffset)
+    scrollToElement(uploadImageForm.value, scrollOffset)
   }
 })
 </script>
 
 <style scoped>
 :deep(.ms-container),
-:deep(.upload-file-form) {
+:deep(.upload-image-form) {
   all: unset;
   display: flex;
   flex-direction: column;

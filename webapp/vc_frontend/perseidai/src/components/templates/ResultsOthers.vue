@@ -67,31 +67,31 @@ async function generateCards(service: any): Promise<any[]> {
   let cards: any[] = []
   if (service === DetectorService) {
     const detectorListAll: VDImageGet[] = await service.detectorSnapzoneList()
-    for (let card of detectorListAll.slice(0,9)) {
+    for (let card of detectorListAll.slice(0, 9)) {
       cards.push({
         type: detectorTypeImage,
-        filename: card.image.split('/')[6].split('.')[0].slice(0,8)?.split('_')[0],
+        filename: card.image.split('/')[6].split('.')[0].slice(0, 10)?.split('_')[0],
         username: 'Anonymous',
         model: card.model === 'YOLOv5s' ? yolov5ModelImage : yolov8ModelImage,
         image: card.image,
         infTime: card.inf_time,
         labelCountDict: card.label_count_dict
       })
-    } 
+    }
   }
   if (service === ClassifierService) {
     const classifierListAll: VCImageGet[] = await service.classifierSnapzoneList()
-    for (let card of classifierListAll.slice(0,9)) {
+    for (let card of classifierListAll.slice(0, 9)) {
       cards.push({
         type: classifierTypeImage,
-        filename: card.image.split('/')[6].split('.')[0].slice(0,8)?.split('_')[0],
+        filename: card.image.split('/')[6].split('.')[0].slice(0, 10)?.split('_')[0],
         username: 'Anonymous',
         model: card.model === 'EfficientNetB1' ? effnetModelImage : yolov8ModelImage,
         image: card.image,
         infTime: card.inf_time,
         predClass: card.pred_class
       })
-    } 
+    }
   }
   return cards
 }
