@@ -28,21 +28,10 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import { 
-  DetectorService, 
-  ClassifierService, 
-  VDModelEnum, 
-  VCModelEnum 
-} from '@/api/index'
-import type { 
-  VDImagePostRequest, 
-  VDImagePost,
-  VCImagePostRequest, 
-  VCImagePost 
-} from '@/api/index'
+import { DetectorService, VDModelEnum, VCModelEnum } from '@/api/index'
+import type { VDImagePostRequest } from '@/api/index'
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -58,25 +47,16 @@ import {
 const props = defineProps<{
   modelType: string
   modelSeries: string
-  image: string | undefined
+  image: string | null
 }>()
 
-// modelType: 'detector' | 'classifier'
-// modelSeries: 'yolov5' | 'yolov8' | 'effnet' | 'yolov8cls'
-
-async function getBlobImage() {
-  return await fetch(props.image as string).then(res=>res.blob())
+async function getBlobImage(): Promise<Blob> {
+  return await fetch(props.image as string).then((res) => res.blob())
 }
 
-function uploadImage() {
-  let image: Blob = new Blob()
-  getBlobImage().then((imageBlob) => {
-    if (imageBlob) {
-      image = imageBlob
-    }
-  }).catch((error) => {
-    console.error('Error handling the image blob:', error)
-  });
+async function uploadImage() {
+  let image: Blob = await getBlobImage()
+  const file = new File([image], 'upload.jpg', { type: image.type })
 
   if (props.modelType === 'detector') {
     let model: VDModelEnum | undefined = undefined
@@ -90,16 +70,18 @@ function uploadImage() {
       default:
         console.error('Invalid detection model series selected')
     }
-    const formData: VDImagePostRequest = {model: model, image: image}
-    console.log(formData)
+
+    const formData: VDImagePostRequest = {
+      model: model,
+      image: file
+    }
     DetectorService.detectorSnapzoneCreate(formData)
       .then((response) => {
-        console.log(response)
+        console.log(response) //todel
       })
       .catch((error) => {
         console.error('Error handling the upload request:', error)
       })
-
   } else if (props.modelType === 'classifier') {
     let model: VCModelEnum
     switch (props.modelSeries) {

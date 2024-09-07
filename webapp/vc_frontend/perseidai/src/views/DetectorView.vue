@@ -14,9 +14,11 @@
         class="upload-image-form"
         :class="{ 'scroll-into-upload': isModelSeriesSelected }"
       >
-        <UploadImageForm v-if="isModelSeriesSelected"
+        <UploadImageForm
+          v-if="isModelSeriesSelected"
           :selectedModelType="'detector'"
-          :selectedModelSeries="selectedModelSeries" />
+          :selectedModelSeries="selectedModelSeries"
+        />
       </div>
       <ResultsOthers
         :isHomeView="isHomeView"

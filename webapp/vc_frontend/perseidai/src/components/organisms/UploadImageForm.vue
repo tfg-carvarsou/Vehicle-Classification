@@ -16,10 +16,13 @@
           <div v-bind="api.getItemNameProps({ file })">
             {{ file.name }}
           </div>
-          <UploadImageAlertDialog alt="Image to upload" 
+          <UploadImageAlertDialog
+            v-if="showImageAlertDialog"
+            alt="Image to upload"
             :modelType="selectedModelType"
             :modelSeries="selectedModelSeries"
-            :image="imageToUpload as string" />
+            :image="imageToUpload"
+          />
           <div class="delete-trigger">
             <button v-bind="api.getItemDeleteTriggerProps({ file })">
               <FontAwesomeIcon :icon="fas.faDeleteLeft" /> Delete
@@ -34,10 +37,14 @@
 <script setup lang="ts">
 import * as fileUpload from '@zag-js/file-upload'
 import { normalizeProps, useMachine } from '@zag-js/vue'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import UploadImageAlertDialog from '@/components/molecules/UploadImageAlertDialog.vue'
+
+const imageLoaded = ref<string | ArrayBuffer | null>(null)
+const imageToUpload = ref<string | null>(null)
+const showImageAlertDialog = ref(false)
 
 const [state, send] = useMachine(
   fileUpload.machine({
@@ -53,20 +60,28 @@ const [state, send] = useMachine(
     onFileChange(details) {
       const reader = new FileReader()
       reader.onload = (event) => {
-        imageToUpload.value = event.target ? event.target.result : null
+        imageLoaded.value = event.target ? event.target.result : null
       }
       reader.readAsDataURL(details.acceptedFiles[0])
     }
   })
 )
 
+const api = computed(() => fileUpload.connect(state.value, send, normalizeProps))
+
+watch(imageLoaded, (newValue) => {
+  if (typeof newValue === 'string') {
+    imageToUpload.value = newValue
+    showImageAlertDialog.value = true
+  } else {
+    console.error('Loaded image is not a string')
+  }
+})
+
 defineProps<{
   selectedModelType: string
   selectedModelSeries: string
 }>()
-
-const api = computed(() => fileUpload.connect(state.value, send, normalizeProps))
-const imageToUpload = ref<string | ArrayBuffer | null>(null)
 </script>
 
 <style scoped>
