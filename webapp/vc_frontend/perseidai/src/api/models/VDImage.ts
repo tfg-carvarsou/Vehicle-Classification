@@ -2,19 +2,19 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VCModelEnum } from './VCModelEnum'
-export type VCImageGet = {
+import type { VDModelEnum } from './VDModelEnum'
+export type VDImage = {
   /**
    * The unique code for the image
    */
   code: string
   /**
-   * The ML model for classifying vehicles
+   * The ML model for detecting vehicles
    *
-   * * `EfficientNetB1` - EFFNETB1
-   * * `YOLOv8s-cls` - YOLOV8SCLS
+   * * `YOLOv5s` - YOLOV5S
+   * * `YOLOv8s` - YOLOV8S
    */
-  model?: VCModelEnum
+  model?: VDModelEnum
   /**
    * The uploaded image
    */
@@ -24,7 +24,7 @@ export type VCImageGet = {
    */
   inf_time?: number
   /**
-   * The predicted class for the image
+   * The dictionary containing the count of each label
    */
-  pred_class?: string
+  label_count_dict?: any
 }

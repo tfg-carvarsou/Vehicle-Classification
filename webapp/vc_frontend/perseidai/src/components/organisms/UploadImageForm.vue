@@ -18,10 +18,10 @@
           </div>
           <UploadImageAlertDialog
             v-if="showImageAlertDialog"
-            alt="Image to upload"
             :modelType="selectedModelType"
             :modelSeries="selectedModelSeries"
             :image="imageToUpload"
+            :imageName="file.name"
           />
           <div class="delete-trigger">
             <button v-bind="api.getItemDeleteTriggerProps({ file })">

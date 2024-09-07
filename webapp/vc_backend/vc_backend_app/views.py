@@ -2,9 +2,8 @@ import sys, os, io, numpy as np
 sys.path.append(os.getcwd())
 from .forms import VDImageUploadForm, VCImageUploadForm
 from .models import VDImage, VCImage
-from .serializers import VDImageGetSerializer, VDImagePostSerializer, VCImageGetSerializer, VCImagePostSerializer
+from .serializers import VDImageSerializer, VDImagePostSerializer, VCImageSerializer, VCImagePostSerializer
 from .enums import VDLabel
-from PIL import Image
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiResponse
@@ -24,11 +23,11 @@ classify_yolov8s_model = load_trained_yolov8scls_model()
 
 class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
-    serializer_class = VDImageGetSerializer
+    serializer_class = VDImageSerializer
     @extend_schema(
         summary='List all images',
         responses={
-            200: OpenApiResponse(response=VDImageGetSerializer(many=True), 
+            200: OpenApiResponse(response=VDImageSerializer(many=True), 
                                  description='The images has been listed successfully'),
             400: OpenApiResponse(response=None,
                                  description='There has been an incident when listing the images. Please try again')
@@ -43,7 +42,7 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
             'multipart/form-data': VDImagePostSerializer,
         },
         responses={
-            201: OpenApiResponse(response=VDImagePostSerializer, 
+            201: OpenApiResponse(response=VDImageSerializer, 
                                  description='The image has been uploaded successfully'),
             400: OpenApiResponse(response=None,
                                  description='There has been an incident when uploading the image. Please try again')
@@ -64,7 +63,7 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
             image_to_save = f"{image.name.split('.')[0]}.jpg"
             vd_image.image.save(image_to_save, predicted_image, save=True)
 
-            serializer = VDImagePostSerializer(vd_image)
+            serializer = VDImageSerializer(vd_image)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -97,13 +96,13 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 class VDImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
-    serializer_class = VDImageGetSerializer
+    serializer_class = VDImageSerializer
     lookup_field = 'code'
     
     @extend_schema(
         summary='Retrieve an image by its code',
         responses={
-            200: OpenApiResponse(response=VDImageGetSerializer, 
+            200: OpenApiResponse(response=VDImageSerializer, 
                                  description='The image has been retrieved successfully'),
             400: OpenApiResponse(response=None,
                                  description='There has been an incident when retrieving the image. Please try again'),
@@ -138,11 +137,11 @@ class VDImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewS
         
 class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = VCImage.objects.all()
-    serializer_class = VCImageGetSerializer
+    serializer_class = VCImageSerializer
     @extend_schema(
         summary='List all images',
         responses={
-            200: OpenApiResponse(response=VCImageGetSerializer(many=True), 
+            200: OpenApiResponse(response=VCImageSerializer(many=True), 
                                  description='The images has been listed successfully'),
             400: OpenApiResponse(response=None,
                                  description='There has been an incident when listing the images. Please try again')
@@ -157,7 +156,7 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
             'multipart/form-data': VCImagePostSerializer,
         },
         responses={
-            201: OpenApiResponse(response=VCImagePostSerializer, 
+            201: OpenApiResponse(response=VCImageSerializer, 
                                  description='The image has been uploaded successfully'),
             400: OpenApiResponse(response=None,
                                  description='There has been an incident when uploading the image. Please try again')
@@ -177,7 +176,7 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
             image_to_save = f"{image.name.split('.')[0]}.jpg"
             vc_image.image.save(image_to_save, predicted_image, save=True)
 
-            serializer = VCImagePostSerializer(vc_image)
+            serializer = VCImageSerializer(vc_image)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -197,13 +196,13 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 class VCImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = VCImage.objects.all()
-    serializer_class = VCImageGetSerializer
+    serializer_class = VCImageSerializer
     lookup_field = 'code'
     
     @extend_schema(
         summary='Retrieve an image by its code',
         responses={
-            200: OpenApiResponse(response=VCImageGetSerializer, 
+            200: OpenApiResponse(response=VCImageSerializer, 
                                  description='The image has been retrieved successfully'),
             400: OpenApiResponse(response=None,
                                  description='There has been an incident when retrieving the image. Please try again'),

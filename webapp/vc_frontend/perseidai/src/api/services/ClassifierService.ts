@@ -2,8 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VCImageGet } from '../models/VCImageGet'
-import type { VCImagePost } from '../models/VCImagePost'
+import type { VCImage } from '../models/VCImage'
 import type { VCImagePostRequest } from '../models/VCImagePostRequest'
 import type { CancelablePromise } from '../core/CancelablePromise'
 import { OpenAPI } from '../core/OpenAPI'
@@ -12,10 +11,10 @@ export class ClassifierService {
   /**
    * Retrieve an image by its code
    * @param code
-   * @returns VCImageGet The image has been retrieved successfully
+   * @returns VCImage The image has been retrieved successfully
    * @throws ApiError
    */
-  public static classifierSnapviewRetrieve(code: string): CancelablePromise<VCImageGet> {
+  public static classifierSnapviewRetrieve(code: string): CancelablePromise<VCImage> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/classifier/snapview/{code}/',
@@ -49,10 +48,10 @@ export class ClassifierService {
   }
   /**
    * List all images
-   * @returns VCImageGet The images has been listed successfully
+   * @returns VCImage The images has been listed successfully
    * @throws ApiError
    */
-  public static classifierSnapzoneList(): CancelablePromise<Array<VCImageGet>> {
+  public static classifierSnapzoneList(): CancelablePromise<Array<VCImage>> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/classifier/snapzone/',
@@ -64,12 +63,10 @@ export class ClassifierService {
   /**
    * Upload an image to classify vehicles
    * @param formData
-   * @returns VCImagePost The image has been uploaded successfully
+   * @returns VCImage The image has been uploaded successfully
    * @throws ApiError
    */
-  public static classifierSnapzoneCreate(
-    formData: VCImagePostRequest
-  ): CancelablePromise<VCImagePost> {
+  public static classifierSnapzoneCreate(formData: VCImagePostRequest): CancelablePromise<VCImage> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/classifier/snapzone/',

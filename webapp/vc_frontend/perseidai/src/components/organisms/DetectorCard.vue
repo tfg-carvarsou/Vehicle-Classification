@@ -9,11 +9,11 @@
         <div class="username">{{ username }}</div>
       </div>
       <div class="vdcard-model">
-        <img :src="model" alt="Card model" />
+        <img :src="model" />
       </div>
     </div>
     <div class="vdcard-image">
-      <CardDialog alt="Uploaded image" :filename="filename" :image="image" />
+      <ImageDialog :filename="filename" :image="image" />
     </div>
     <div class="vdcard-footer">
       <div class="detections">
@@ -33,9 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import CardDialog from '@/components/molecules/CardDialog.vue'
+import ImageDialog from '@/components/molecules/ImageDialog.vue'
 
-interface Props {
+const props = defineProps<{
   type: string
   filename: string
   username: string
@@ -43,9 +43,8 @@ interface Props {
   image: string
   infTime: number
   labelCountDict: Record<string, number>
-}
+}>()
 
-const props = defineProps<Props>()
 let detections: any[] = []
 const colorList = ['#111f64', '#cced00', '#02f33f', '#c100ff']
 

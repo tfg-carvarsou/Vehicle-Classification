@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="vccard-image">
-      <CardDialog alt="Uploaded image" :filename="filename" :image="image" />
+      <ImageDialog :filename="filename" :image="image" />
     </div>
     <div class="vccard-footer">
       <div class="prediction label">
@@ -25,9 +25,9 @@
 </template>
 
 <script setup lang="ts">
-import CardDialog from '@/components/molecules/CardDialog.vue'
+import ImageDialog from '@/components/molecules/ImageDialog.vue'
 
-interface Props {
+defineProps<{
   type: string
   filename: string
   username: string
@@ -35,9 +35,7 @@ interface Props {
   image: string
   infTime: number
   predClass: string
-}
-
-defineProps<Props>()
+}>()
 </script>
 
 <style scoped>

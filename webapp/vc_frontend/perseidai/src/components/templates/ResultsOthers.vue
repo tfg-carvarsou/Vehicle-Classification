@@ -51,7 +51,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { DetectorService, ClassifierService } from '@/api/index'
-import type { VDImageGet, VCImageGet } from '@/api/index'
+import type { VDImage, VCImage } from '@/api/index'
 import DetectorCard from '@/components/organisms/DetectorCard.vue'
 import ClassifierCard from '@/components/organisms/ClassifierCard.vue'
 import detectorTypeImage from '@/assets/icons/detector-type.webp'
@@ -66,7 +66,7 @@ const classifierCards = ref<any[]>([])
 async function generateCards(service: any): Promise<any[]> {
   let cards: any[] = []
   if (service === DetectorService) {
-    const detectorListAll: VDImageGet[] = await service.detectorSnapzoneList()
+    const detectorListAll: VDImage[] = await service.detectorSnapzoneList()
     for (let card of detectorListAll.slice(0, 9)) {
       cards.push({
         type: detectorTypeImage,
@@ -80,7 +80,7 @@ async function generateCards(service: any): Promise<any[]> {
     }
   }
   if (service === ClassifierService) {
-    const classifierListAll: VCImageGet[] = await service.classifierSnapzoneList()
+    const classifierListAll: VCImage[] = await service.classifierSnapzoneList()
     for (let card of classifierListAll.slice(0, 9)) {
       cards.push({
         type: classifierTypeImage,

@@ -2,8 +2,7 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { VDImageGet } from '../models/VDImageGet'
-import type { VDImagePost } from '../models/VDImagePost'
+import type { VDImage } from '../models/VDImage'
 import type { VDImagePostRequest } from '../models/VDImagePostRequest'
 import type { CancelablePromise } from '../core/CancelablePromise'
 import { OpenAPI } from '../core/OpenAPI'
@@ -12,10 +11,10 @@ export class DetectorService {
   /**
    * Retrieve an image by its code
    * @param code
-   * @returns VDImageGet The image has been retrieved successfully
+   * @returns VDImage The image has been retrieved successfully
    * @throws ApiError
    */
-  public static detectorSnapviewRetrieve(code: string): CancelablePromise<VDImageGet> {
+  public static detectorSnapviewRetrieve(code: string): CancelablePromise<VDImage> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/detector/snapview/{code}/',
@@ -49,10 +48,10 @@ export class DetectorService {
   }
   /**
    * List all images
-   * @returns VDImageGet The images has been listed successfully
+   * @returns VDImage The images has been listed successfully
    * @throws ApiError
    */
-  public static detectorSnapzoneList(): CancelablePromise<Array<VDImageGet>> {
+  public static detectorSnapzoneList(): CancelablePromise<Array<VDImage>> {
     return __request(OpenAPI, {
       method: 'GET',
       url: '/detector/snapzone/',
@@ -64,12 +63,10 @@ export class DetectorService {
   /**
    * Upload an image to detect vehicles
    * @param formData
-   * @returns VDImagePost The image has been uploaded successfully
+   * @returns VDImage The image has been uploaded successfully
    * @throws ApiError
    */
-  public static detectorSnapzoneCreate(
-    formData: VDImagePostRequest
-  ): CancelablePromise<VDImagePost> {
+  public static detectorSnapzoneCreate(formData: VDImagePostRequest): CancelablePromise<VDImage> {
     return __request(OpenAPI, {
       method: 'POST',
       url: '/detector/snapzone/',

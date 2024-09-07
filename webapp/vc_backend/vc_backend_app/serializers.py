@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import VDImage, VCImage
 
-class VDImageGetSerializer(serializers.ModelSerializer):
+class VDImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = VDImage
         fields = ['code', 'model', 'image', 'inf_time', 'label_count_dict']
@@ -22,7 +22,7 @@ class VDImagePostSerializer(serializers.ModelSerializer):
             'image': {'help_text': 'The image file to be uploaded'}
         }
 
-class VCImageGetSerializer(serializers.ModelSerializer):
+class VCImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = VCImage
         fields = ['code', 'model', 'image', 'inf_time', 'pred_class']

@@ -3,7 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { VCModelEnum } from './VCModelEnum'
-export type VCImagePost = {
+export type VCImage = {
+  /**
+   * The unique code for the image
+   */
+  code: string
   /**
    * The ML model for classifying vehicles
    *
@@ -12,7 +16,15 @@ export type VCImagePost = {
    */
   model?: VCModelEnum
   /**
-   * The image file to be uploaded
+   * The uploaded image
    */
   image: string
+  /**
+   * The inference time for the model
+   */
+  inf_time?: number
+  /**
+   * The predicted class for the image
+   */
+  pred_class?: string
 }

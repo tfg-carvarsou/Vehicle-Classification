@@ -1,20 +1,20 @@
 <template>
   <DialogRoot>
-    <DialogTrigger class="card-dialog-trigger button green">
-      <FontAwesomeIcon :icon="fas.faFileUpload" /> Upload now
+    <DialogTrigger class="image-dialog-trigger">
+      <img :src="image" alt="Open image" />
     </DialogTrigger>
     <DialogPortal>
-      <DialogOverlay class="card-dialog-overlay" />
-      <DialogContent class="card-dialog-content">
-        <div class="card-dialog-header">
-          <DialogTitle class="card-dialog-title">
+      <DialogOverlay class="image-dialog-overlay" />
+      <DialogContent class="image-dialog-content">
+        <div class="image-dialog-header">
+          <DialogTitle class="image-dialog-title">
             {{ filename }}
           </DialogTitle>
           <DialogClose class="close-button">
             <FontAwesomeIcon class="close-button-icon" :icon="fas.faClose" />
           </DialogClose>
         </div>
-        <div class="card-dialog-image">
+        <div class="image-dialog-image">
           <img :src="image" alt="Image preview" />
         </div>
       </DialogContent>
@@ -36,55 +36,36 @@ import {
 } from 'radix-vue'
 
 defineProps<{
-  type: string
   filename: string
-  model: string
   image: string
-  infTime: number | undefined
-  labelCountDict?: Record<string, number>
-  predClass?: string
 }>()
 </script>
 
 <style scoped>
-.card-dialog-trigger {
+.image-dialog-trigger {
   border: none;
 }
 
-.button {
-  padding: 4px 8px;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1;
-  color: #ffffff;
-  background-color: #ef4444;
-  border: none;
-  border-radius: 4px;
-  height: 32px;
+.image-dialog-trigger img {
   cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
 }
 
-.button.green {
-  background-color: #02af98;
-  color: #ffffff;
+.image-dialog-trigger img:hover {
+  transform: scale(1.1);
 }
 
-.button.green:hover {
-  background-color: #027666;
-  transform: translateY(-2px);
-}
-
-.card-dialog-overlay {
+.image-dialog-overlay {
   background-color: rgba(0, 0, 0, 0.6);
   position: fixed;
   inset: 0;
   animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.card-dialog-content {
+.image-dialog-content {
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -101,7 +82,7 @@ defineProps<{
   color: #083863;
 }
 
-.card-dialog-header {
+.image-dialog-header {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -109,7 +90,7 @@ defineProps<{
   margin-bottom: 16px;
 }
 
-.card-dialog-title {
+.image-dialog-title {
   font-size: 24px;
   font-weight: bold;
   color: #083863;
@@ -142,7 +123,7 @@ defineProps<{
   transition: color 0.3s ease;
 }
 
-.card-dialog-image {
+.image-dialog-image {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -151,7 +132,7 @@ defineProps<{
   overflow: hidden;
 }
 
-.card-dialog-image img {
+.image-dialog-image img {
   max-width: 100%;
   height: auto;
 }

@@ -8,7 +8,7 @@
       <AlertDialogContent class="alert-dialog-content">
         <AlertDialogTitle class="alert-dialog-title">Confirm uploading this image</AlertDialogTitle>
         <div class="alert-dialog-image">
-          <img :src="props.image || '@/assets/images/placeholder.png'" alt="Uploaded image" />
+          <img :src="props.image || 'https://via.placeholder.com/500'" alt="Uploaded image" />
         </div>
         <AlertDialogDescription class="alert-dialog-description">
           By clicking "Upload now", you agree to our
@@ -20,6 +20,21 @@
           <AlertDialogCancel class="button mauve">Cancel</AlertDialogCancel>
           <AlertDialogAction class="button green" @click="uploadImage">
             <FontAwesomeIcon :icon="fas.faFileUpload" /> Upload now
+            <CardDialog
+              v-if="isImageUploaded"
+              :type="props.modelType"
+              :filename="imageName"
+              :model="props.modelSeries"
+              :image="imageData.image"
+              :infTime="imageData.infTime"
+              v-bind="
+                props.modelType === 'detector'
+                  ? { labelCountDict: imageData.labelCountDict }
+                  : props.modelType === 'classifier'
+                    ? { predClass: imageData.predClass }
+                    : {}
+              "
+            />
           </AlertDialogAction>
         </div>
       </AlertDialogContent>
@@ -28,10 +43,12 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
-import { DetectorService, VDModelEnum, VCModelEnum } from '@/api/index'
-import type { VDImagePostRequest } from '@/api/index'
+import { DetectorService, ClassifierService, VDModelEnum, VCModelEnum } from '@/api/index'
+import type { VDImagePostRequest, VCImagePostRequest } from '@/api/index'
+import CardDialog from '@/components/molecules/CardDialog.vue'
 import {
   AlertDialogAction,
   AlertDialogCancel,
@@ -48,15 +65,31 @@ const props = defineProps<{
   modelType: string
   modelSeries: string
   image: string | null
+  imageName: string
 }>()
+
+interface ImageData {
+  image: string
+  infTime: number | undefined
+  labelCountDict?: Record<string, number>
+  predClass?: string
+}
+
+const isImageUploaded = ref(false)
+let imageData: ImageData = {
+  image: 'https://via.placeholder.com/500',
+  infTime: undefined,
+  labelCountDict: { undefined: 0 },
+  predClass: 'undefined'
+}
 
 async function getBlobImage(): Promise<Blob> {
   return await fetch(props.image as string).then((res) => res.blob())
 }
 
-async function uploadImage() {
-  let image: Blob = await getBlobImage()
-  const file = new File([image], 'upload.jpg', { type: image.type })
+async function uploadImage(): Promise<void> {
+  let blob: Blob = await getBlobImage()
+  const file = new File([blob], props.imageName, { type: blob.type })
 
   if (props.modelType === 'detector') {
     let model: VDModelEnum | undefined = undefined
@@ -70,36 +103,61 @@ async function uploadImage() {
       default:
         console.error('Invalid detection model series selected')
     }
-
     const formData: VDImagePostRequest = {
       model: model,
       image: file
     }
     DetectorService.detectorSnapzoneCreate(formData)
       .then((response) => {
-        console.log(response) //todel
+        imageData.image = response.image
+        imageData.infTime = response.inf_time
+        imageData.labelCountDict = response.label_count_dict
+        isImageUploaded.value = true
       })
       .catch((error) => {
-        console.error('Error handling the upload request:', error)
+        console.error('Error handling the detector upload request:', error)
       })
   } else if (props.modelType === 'classifier') {
-    let model: VCModelEnum
+    let model: VCModelEnum | undefined = undefined
     switch (props.modelSeries) {
       case 'effnet':
-        console.log('EfficientNetB1 model selected')
         model = VCModelEnum.EFFICIENT_NET_B1
         break
       case 'yolov8cls':
-        console.log('YOLOv8s-cls model selected')
         model = VCModelEnum.YOLOV8S_CLS
         break
       default:
         console.error('Invalid classification model series selected')
     }
+    const formData: VCImagePostRequest = {
+      model: model,
+      image: file
+    }
+    ClassifierService.classifierSnapzoneCreate(formData)
+      .then((response) => {
+        console.log(response)
+        imageData.image = response.image
+        imageData.infTime = response.inf_time
+        imageData.predClass = response.pred_class
+        isImageUploaded.value = true
+      })
+      .catch((error) => {
+        console.error('Error handling the classifier upload request:', error)
+      })
   } else {
     console.error('Invalid model type selected')
   }
 }
+
+watch(isImageUploaded, (newValue) => {
+  if (newValue) {
+    if (props.modelType === 'detector') {
+      console.log('Detector')
+    } else if (props.modelType === 'classifier') {
+      console.log('Classifier')
+    }
+  }
+})
 </script>
 
 <style scoped>

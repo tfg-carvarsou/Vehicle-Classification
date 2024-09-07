@@ -25,7 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VCImageGet'
+                $ref: '#/components/schemas/VCImage'
           description: The image has been retrieved successfully
         '400':
           description: There has been an incident when retrieving the image. Please
@@ -72,7 +72,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VCImageGet'
+                  $ref: '#/components/schemas/VCImage'
           description: The images has been listed successfully
         '400':
           description: There has been an incident when listing the images. Please
@@ -97,7 +97,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VCImagePost'
+                $ref: '#/components/schemas/VCImage'
           description: The image has been uploaded successfully
         '400':
           description: There has been an incident when uploading the image. Please
@@ -123,7 +123,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VDImageGet'
+                $ref: '#/components/schemas/VDImage'
           description: The image has been retrieved successfully
         '400':
           description: There has been an incident when retrieving the image. Please
@@ -170,7 +170,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/VDImageGet'
+                  $ref: '#/components/schemas/VDImage'
           description: The images has been listed successfully
         '400':
           description: There has been an incident when listing the images. Please
@@ -195,14 +195,14 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VDImagePost'
+                $ref: '#/components/schemas/VDImage'
           description: The image has been uploaded successfully
         '400':
           description: There has been an incident when uploading the image. Please
             try again
 components:
   schemas:
-    VCImageGet:
+    VCImage:
       type: object
       properties:
         code:
@@ -231,23 +231,6 @@ components:
       required:
       - code
       - image
-    VCImagePost:
-      type: object
-      properties:
-        model:
-          allOf:
-          - $ref: '#/components/schemas/VCModelEnum'
-          description: |-
-            The ML model for classifying vehicles
-
-            * `EfficientNetB1` - EFFNETB1
-            * `YOLOv8s-cls` - YOLOV8SCLS
-        image:
-          type: string
-          format: uri
-          description: The image file to be uploaded
-      required:
-      - image
     VCImagePostRequest:
       type: object
       properties:
@@ -273,7 +256,7 @@ components:
       description: |-
         * `EfficientNetB1` - EFFNETB1
         * `YOLOv8s-cls` - YOLOV8SCLS
-    VDImageGet:
+    VDImage:
       type: object
       properties:
         code:
@@ -300,23 +283,6 @@ components:
           description: The dictionary containing the count of each label
       required:
       - code
-      - image
-    VDImagePost:
-      type: object
-      properties:
-        model:
-          allOf:
-          - $ref: '#/components/schemas/VDModelEnum'
-          description: |-
-            The ML model for detecting vehicles
-
-            * `YOLOv5s` - YOLOV5S
-            * `YOLOv8s` - YOLOV8S
-        image:
-          type: string
-          format: uri
-          description: The image file to be uploaded
-      required:
       - image
     VDImagePostRequest:
       type: object
