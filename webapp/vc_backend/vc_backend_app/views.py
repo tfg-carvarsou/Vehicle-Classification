@@ -49,7 +49,6 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
         },
     )
     def create(self, request, *args, **kwargs):
-        
         form = VDImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             model = form.cleaned_data['model']
