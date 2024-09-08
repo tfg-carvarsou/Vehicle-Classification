@@ -9,11 +9,11 @@
         <div class="username">{{ username }}</div>
       </div>
       <div class="vccard-model">
-        <img :src="model" alt="Card model" />
+        <img :src="model" alt="Classification model series" />
       </div>
     </div>
     <div class="vccard-image">
-      <ImageDialog :filename="filename" :image="image" />
+      <ImageDialog :filename="filename" :image="image" alt="Classification inference image" />
     </div>
     <div class="vccard-footer">
       <div class="prediction label">

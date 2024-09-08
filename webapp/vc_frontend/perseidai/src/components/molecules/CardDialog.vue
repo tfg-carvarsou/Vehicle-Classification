@@ -1,59 +1,122 @@
 <template>
   <DialogRoot>
     <DialogTrigger class="card-dialog-trigger button green">
-      <FontAwesomeIcon :icon="fas.faFileUpload" /> Upload now
+      Check inference results
     </DialogTrigger>
     <DialogPortal>
       <DialogOverlay class="card-dialog-overlay" />
       <DialogContent class="card-dialog-content">
         <div class="card-dialog-header">
-          <DialogTitle class="card-dialog-title">
-            {{ filename }}
-          </DialogTitle>
+          <DialogTitle class="card-dialog-title">Inference Results</DialogTitle>
           <DialogClose class="close-button">
             <FontAwesomeIcon class="close-button-icon" :icon="fas.faClose" />
           </DialogClose>
         </div>
-        <div class="card-dialog-image">
-          <img :src="image" alt="Image preview" />
-        </div>
+        <DialogDescription class="card-dialog-description">
+          <div v-if="type === 'detector'">
+            <DetectorCard
+              :type="detectorTypeImage"
+              :filename="filename.slice(0, filename.lastIndexOf('.'))"
+              :username="'Anonymous'"
+              :model="model"
+              :image="responseVDImage.image"
+              :infTime="responseVDImage.inf_time ?? 0"
+              :labelCountDict="responseVDImage.label_count_dict ?? {}"
+            />
+          </div>
+          <div v-else-if="type === 'classifier'">
+            <ClassifierCard
+              :type="classifierTypeImage"
+              :filename="filename.slice(0, filename.lastIndexOf('.'))"
+              :username="'Anonymous'"
+              :model="model"
+              :image="responseVCImage.image"
+              :infTime="responseVCImage.inf_time ?? 0"
+              :predClass="responseVCImage.pred_class ?? ''"
+            />
+          </div>
+        </DialogDescription>
       </DialogContent>
     </DialogPortal>
   </DialogRoot>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
+import { DetectorService, ClassifierService } from '@/api/index'
+import type { VDImage, VCImage } from '@/api/index'
 import {
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogOverlay,
   DialogPortal,
   DialogRoot,
   DialogTitle,
   DialogTrigger
 } from 'radix-vue'
+import DetectorCard from '@/components/organisms/DetectorCard.vue'
+import ClassifierCard from '@/components/organisms/ClassifierCard.vue'
+import detectorTypeImage from '@/assets/icons/detector-type.webp'
+import classifierTypeImage from '@/assets/icons/classifier-type.webp'
+import yolov5ModelImage from '@/assets/images/yolov5.webp'
+import yolov8ModelImage from '@/assets/images/yolov8.webp'
+import effnetModelImage from '@/assets/images/effnet.webp'
 
-defineProps<{
+const props = defineProps<{
   type: string
   filename: string
-  model: string
-  image: string
-  infTime: number | undefined
-  labelCountDict?: Record<string, number>
-  predClass?: string
+  username: string
+  code: string
 }>()
+let model = ''
+
+let responseVDImage = ref<VDImage>({
+  code: '',
+  model: undefined,
+  image: '',
+  inf_time: 0,
+  label_count_dict: {}
+})
+
+let responseVCImage = ref<VCImage>({
+  code: '',
+  model: undefined,
+  image: '',
+  inf_time: 0,
+  pred_class: ''
+})
+
+async function getUploadedVDImage(): Promise<void> {
+  responseVDImage.value = await DetectorService.detectorSnapviewRetrieve(props.code)
+}
+
+async function getUploadedVCImage(): Promise<void> {
+  responseVCImage.value = await ClassifierService.classifierSnapviewRetrieve(props.code)
+}
+
+onMounted(() => {
+  if (props.type === 'detector') {
+    getUploadedVDImage()
+    model = responseVDImage.value.model === 'YOLOv5s' ? yolov5ModelImage : yolov8ModelImage
+  } else if (props.type === 'classifier') {
+    getUploadedVCImage()
+    model = responseVCImage.value.model === 'EfficientNetB1' ? effnetModelImage : yolov8ModelImage
+  }
+})
 </script>
 
 <style scoped>
 .card-dialog-trigger {
+  font: inherit;
   border: none;
 }
 
 .button {
   padding: 4px 8px;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   line-height: 1;
   color: #ffffff;
@@ -142,18 +205,10 @@ defineProps<{
   transition: color 0.3s ease;
 }
 
-.card-dialog-image {
+.card-dialog-description div {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
-  max-height: 100%;
-  overflow: hidden;
-}
-
-.card-dialog-image img {
-  max-width: 100%;
-  height: auto;
+  flex-direction: column;
+  width: 100%;
 }
 
 @keyframes overlayShow {

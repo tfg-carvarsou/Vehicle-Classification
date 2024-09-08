@@ -28,6 +28,7 @@
         >
           <UploadImageForm
             v-if="isModelSeriesSelected"
+            :selectedModelType="selectedModelType"
             :selectedModelSeries="selectedModelSeries"
           />
         </div>

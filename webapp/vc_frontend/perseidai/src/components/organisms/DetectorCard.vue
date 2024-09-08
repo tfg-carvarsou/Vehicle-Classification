@@ -9,11 +9,11 @@
         <div class="username">{{ username }}</div>
       </div>
       <div class="vdcard-model">
-        <img :src="model" />
+        <img :src="model" alt="Detection model series" />
       </div>
     </div>
     <div class="vdcard-image">
-      <ImageDialog :filename="filename" :image="image" />
+      <ImageDialog :filename="filename" :image="image" alt="Detection inference image" />
     </div>
     <div class="vdcard-footer">
       <div class="detections">

@@ -1,40 +1,45 @@
 <template>
-  <AlertDialogRoot>
-    <AlertDialogTrigger class="button green">
+  <AlertDialogRoot :open="isDialogOpen">
+    <AlertDialogTrigger class="button green" @click="openDialog">
       <FontAwesomeIcon :icon="fas.faFileUpload" /> Upload image
     </AlertDialogTrigger>
     <AlertDialogPortal>
       <AlertDialogOverlay class="alert-dialog-overlay" />
       <AlertDialogContent class="alert-dialog-content">
-        <AlertDialogTitle class="alert-dialog-title">Confirm uploading this image</AlertDialogTitle>
-        <div class="alert-dialog-image">
+        <AlertDialogTitle class="alert-dialog-title">
+          <div v-if="!isImageUploaded">
+            Confirm uploading this image
+          </div>
+          <div v-else>
+            <FontAwesomeIcon :icon="fas.faCheck" :style="{ color: 'green' }" />
+            Image uploaded successfully
+          </div>
+        </AlertDialogTitle>
+        <div class="alert-dialog-image" v-if="!isImageUploaded">
           <img :src="props.image || 'https://via.placeholder.com/500'" alt="Uploaded image" />
         </div>
-        <AlertDialogDescription class="alert-dialog-description">
+        <AlertDialogDescription class="alert-dialog-description" v-if="!isImageUploaded">
           By clicking "Upload now", you agree to our
           <router-link to="/terms-of-service" target="_blank" class="copyright-links">
             Terms of Service
           </router-link>
         </AlertDialogDescription>
+        <div v-if="showCardDialog">
+          <CardDialog 
+            :type="modelType"
+            :filename="imageName"
+            :username="'Anonymous'"
+            :code="imageCode" />
+        </div>
+        <div v-if="!showCardDialog">
+          <!-- Spinner -->
+        </div>
         <div class="alert-dialog-actions">
-          <AlertDialogCancel class="button mauve">Cancel</AlertDialogCancel>
-          <AlertDialogAction class="button green" @click="uploadImage">
+          <AlertDialogCancel class="button mauve" @click="closeDialog">
+            {{ isImageUploaded ? 'Close' : 'Cancel' }}
+          </AlertDialogCancel>
+          <AlertDialogAction v-if="!isImageUploaded" class="button green" @click="uploadImage">
             <FontAwesomeIcon :icon="fas.faFileUpload" /> Upload now
-            <CardDialog
-              v-if="isImageUploaded"
-              :type="props.modelType"
-              :filename="imageName"
-              :model="props.modelSeries"
-              :image="imageData.image"
-              :infTime="imageData.infTime"
-              v-bind="
-                props.modelType === 'detector'
-                  ? { labelCountDict: imageData.labelCountDict }
-                  : props.modelType === 'classifier'
-                    ? { predClass: imageData.predClass }
-                    : {}
-              "
-            />
           </AlertDialogAction>
         </div>
       </AlertDialogContent>
@@ -68,19 +73,20 @@ const props = defineProps<{
   imageName: string
 }>()
 
-interface ImageData {
-  image: string
-  infTime: number | undefined
-  labelCountDict?: Record<string, number>
-  predClass?: string
+const isDialogOpen = ref(false)
+const isImageUploaded = ref(false)
+const showCardDialog = ref(false)
+let imageCode = 'undefined'
+
+function openDialog() {
+  isDialogOpen.value = true
 }
 
-const isImageUploaded = ref(false)
-let imageData: ImageData = {
-  image: 'https://via.placeholder.com/500',
-  infTime: undefined,
-  labelCountDict: { undefined: 0 },
-  predClass: 'undefined'
+function closeDialog() {
+  isDialogOpen.value = false
+  isImageUploaded.value = false
+  showCardDialog.value = false
+  window.location.reload()
 }
 
 async function getBlobImage(): Promise<Blob> {
@@ -107,16 +113,13 @@ async function uploadImage(): Promise<void> {
       model: model,
       image: file
     }
-    DetectorService.detectorSnapzoneCreate(formData)
-      .then((response) => {
-        imageData.image = response.image
-        imageData.infTime = response.inf_time
-        imageData.labelCountDict = response.label_count_dict
-        isImageUploaded.value = true
-      })
-      .catch((error) => {
-        console.error('Error handling the detector upload request:', error)
-      })
+    try {
+      const response = await DetectorService.detectorSnapzoneCreate(formData)
+      imageCode = response.code
+      isImageUploaded.value = true
+    } catch (error) {
+      console.error('Error handling the detector upload request:', error)
+    }
   } else if (props.modelType === 'classifier') {
     let model: VCModelEnum | undefined = undefined
     switch (props.modelSeries) {
@@ -133,17 +136,13 @@ async function uploadImage(): Promise<void> {
       model: model,
       image: file
     }
-    ClassifierService.classifierSnapzoneCreate(formData)
-      .then((response) => {
-        console.log(response)
-        imageData.image = response.image
-        imageData.infTime = response.inf_time
-        imageData.predClass = response.pred_class
-        isImageUploaded.value = true
-      })
-      .catch((error) => {
-        console.error('Error handling the classifier upload request:', error)
-      })
+    try {
+      const response = await ClassifierService.classifierSnapzoneCreate(formData)
+      imageCode = response.code
+      isImageUploaded.value = true
+    } catch (error) {
+      console.error('Error handling the classifier upload request:', error)
+    }
   } else {
     console.error('Invalid model type selected')
   }
@@ -151,11 +150,9 @@ async function uploadImage(): Promise<void> {
 
 watch(isImageUploaded, (newValue) => {
   if (newValue) {
-    if (props.modelType === 'detector') {
-      console.log('Detector')
-    } else if (props.modelType === 'classifier') {
-      console.log('Classifier')
-    }
+    setTimeout(() => {
+      showCardDialog.value = true
+    }, 1000)
   }
 })
 </script>
