@@ -18,10 +18,7 @@
     <div class="vdcard-footer">
       <div class="detections">
         <div class="detection" v-for="(detection, index) in detections" :key="index">
-          <div
-            class="count"
-            :style="{ backgroundColor: detection.bgColor, color: detection.color }"
-          >
+          <div class="count">
             {{ detection.count }}
           </div>
           <div class="label">{{ detection.label }}</div>
@@ -46,27 +43,11 @@ const props = defineProps<{
 }>()
 
 let detections: any[] = []
-const colorList = ['#111f64', '#cced00', '#02f33f', '#c100ff']
 
-function isLightColor(color: string): boolean {
-  const hex = color.replace('#', '')
-  const r = parseInt(hex.slice(0, 2), 16)
-  const g = parseInt(hex.slice(2, 4), 16)
-  const b = parseInt(hex.slice(4, 6), 16)
-  const brightness = (r * 299 + g * 587 + b * 114) / 1000
-  return brightness > 128
-}
-function getTextColor(backgroundColor: string): string {
-  return isLightColor(backgroundColor) ? 'black' : 'white'
-}
-
-for (const [label, count] of Object.entries(props.labelCountDict)) {
-  const bgColor = colorList[detections.length % colorList.length]
+for (const [label, count] of Object.entries(props.labelCountDict).sort((a, b) => b[1] - a[1])) {
   detections.push({
     count,
-    label: label.split(';')[1],
-    bgColor,
-    color: getTextColor(bgColor)
+    label: label.split(';')[1]
   })
 }
 </script>
@@ -171,6 +152,9 @@ for (const [label, count] of Object.entries(props.labelCountDict)) {
   font-size: 14px;
   font-weight: bold;
   margin-right: 8px;
+  background-color: white;
+  color: black;
+  border: 2px solid black;
 }
 
 .label {

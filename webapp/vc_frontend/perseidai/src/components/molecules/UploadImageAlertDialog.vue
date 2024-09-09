@@ -7,9 +7,7 @@
       <AlertDialogOverlay class="alert-dialog-overlay" />
       <AlertDialogContent class="alert-dialog-content">
         <AlertDialogTitle class="alert-dialog-title">
-          <div v-if="!isImageUploaded">
-            Confirm uploading this image
-          </div>
+          <div v-if="!isImageUploaded">Confirm uploading this image</div>
           <div v-else>
             <FontAwesomeIcon :icon="fas.faCheck" :style="{ color: 'green' }" />
             Image uploaded successfully
@@ -25,11 +23,12 @@
           </router-link>
         </AlertDialogDescription>
         <div v-if="showCardDialog">
-          <CardDialog 
+          <CardDialog
             :type="modelType"
             :filename="imageName"
             :username="'Anonymous'"
-            :code="imageCode" />
+            :code="imageCode"
+          />
         </div>
         <div v-if="!showCardDialog && isImageUploaded">
           <img src="@/assets/preloaders/spinner.gif" class="load-spinner" alt="Loading..." />
