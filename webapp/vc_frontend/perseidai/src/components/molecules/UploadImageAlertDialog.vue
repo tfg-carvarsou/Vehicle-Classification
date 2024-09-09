@@ -31,16 +31,23 @@
             :username="'Anonymous'"
             :code="imageCode" />
         </div>
-        <div v-if="!showCardDialog">
-          <!-- Spinner -->
+        <div v-if="!showCardDialog && isImageUploaded">
+          <img src="@/assets/preloaders/spinner.gif" class="load-spinner" alt="Loading..." />
         </div>
         <div class="alert-dialog-actions">
-          <AlertDialogCancel class="button mauve" @click="closeDialog">
-            {{ isImageUploaded ? 'Close' : 'Cancel' }}
-          </AlertDialogCancel>
-          <AlertDialogAction v-if="!isImageUploaded" class="button green" @click="uploadImage">
-            <FontAwesomeIcon :icon="fas.faFileUpload" /> Upload now
-          </AlertDialogAction>
+          <div v-if="isImageUploaded">
+            <AlertDialogCancel class="button mauve" @click="closeRefreshDialog">
+              Close
+            </AlertDialogCancel>
+          </div>
+          <div v-else>
+            <AlertDialogCancel class="button mauve" @click="closeDialog">
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction class="button green" @click="uploadImage">
+              <FontAwesomeIcon :icon="fas.faFileUpload" /> Upload now
+            </AlertDialogAction>
+          </div>
         </div>
       </AlertDialogContent>
     </AlertDialogPortal>
@@ -86,7 +93,11 @@ function closeDialog() {
   isDialogOpen.value = false
   isImageUploaded.value = false
   showCardDialog.value = false
-  window.location.reload()
+}
+
+function closeRefreshDialog() {
+  closeDialog()
+  location.reload()
 }
 
 async function getBlobImage(): Promise<Blob> {
@@ -220,6 +231,12 @@ button {
   color: #083863;
 }
 
+.load-spinner {
+  width: 50px;
+  height: auto;
+  margin: 0 auto;
+}
+
 .button {
   padding: 4px 8px;
   font-size: 14px;
@@ -249,6 +266,7 @@ button {
 .button.mauve {
   background-color: #cccccc;
   color: #333333;
+  margin-right: 10px;
 }
 
 .button.mauve:hover {

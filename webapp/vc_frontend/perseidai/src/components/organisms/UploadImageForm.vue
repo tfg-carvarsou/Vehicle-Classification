@@ -57,12 +57,12 @@ const [state, send] = useMachine(
     },
     maxFiles: 1,
     maxFileSize: 1024 * 1024 * 10,
-    onFileChange(details) {
+    onFileAccept(details) {
       const reader = new FileReader()
       reader.onload = (event) => {
         imageLoaded.value = event.target ? event.target.result : null
       }
-      reader.readAsDataURL(details.acceptedFiles[0])
+      reader.readAsDataURL(details.files[0])
     }
   })
 )
