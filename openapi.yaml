@@ -86,7 +86,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/VCImageRequest'
+              $ref: '#/components/schemas/VCImagePostRequest'
         required: true
       security:
       - cookieAuth: []
@@ -184,7 +184,7 @@ paths:
         content:
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/VDImageRequest'
+              $ref: '#/components/schemas/VDImagePostRequest'
         required: true
       security:
       - cookieAuth: []
@@ -205,9 +205,13 @@ components:
     VCImage:
       type: object
       properties:
+        code:
+          type: string
+          description: The unique code for the image
+          maxLength: 12
         model:
           allOf:
-          - $ref: '#/components/schemas/VCImageModelEnum'
+          - $ref: '#/components/schemas/VCModelEnum'
           description: |-
             The ML model for classifying vehicles
 
@@ -216,10 +220,35 @@ components:
         image:
           type: string
           format: uri
+          description: The uploaded image
+        inf_time:
+          type: number
+          format: double
+          description: The inference time for the model
+        pred_class:
+          type: string
+          description: The predicted class for the image
+      required:
+      - code
+      - image
+    VCImagePostRequest:
+      type: object
+      properties:
+        model:
+          allOf:
+          - $ref: '#/components/schemas/VCModelEnum'
+          description: |-
+            The ML model for classifying vehicles
+
+            * `EfficientNetB1` - EFFNETB1
+            * `YOLOv8s-cls` - YOLOV8SCLS
+        image:
+          type: string
+          format: binary
           description: The image file to be uploaded
       required:
       - image
-    VCImageModelEnum:
+    VCModelEnum:
       enum:
       - EfficientNetB1
       - YOLOv8s-cls
@@ -227,29 +256,16 @@ components:
       description: |-
         * `EfficientNetB1` - EFFNETB1
         * `YOLOv8s-cls` - YOLOV8SCLS
-    VCImageRequest:
-      type: object
-      properties:
-        model:
-          allOf:
-          - $ref: '#/components/schemas/VCImageModelEnum'
-          description: |-
-            The ML model for classifying vehicles
-
-            * `EfficientNetB1` - EFFNETB1
-            * `YOLOv8s-cls` - YOLOV8SCLS
-        image:
-          type: string
-          format: binary
-          description: The image file to be uploaded
-      required:
-      - image
     VDImage:
       type: object
       properties:
+        code:
+          type: string
+          description: The unique code for the image
+          maxLength: 12
         model:
           allOf:
-          - $ref: '#/components/schemas/VDImageModelEnum'
+          - $ref: '#/components/schemas/VDModelEnum'
           description: |-
             The ML model for detecting vehicles
 
@@ -258,23 +274,22 @@ components:
         image:
           type: string
           format: uri
-          description: The image file to be uploaded
+          description: The uploaded image
+        inf_time:
+          type: number
+          format: double
+          description: The inference time for the model
+        label_count_dict:
+          description: The dictionary containing the count of each label
       required:
+      - code
       - image
-    VDImageModelEnum:
-      enum:
-      - YOLOv5s
-      - YOLOv8s
-      type: string
-      description: |-
-        * `YOLOv5s` - YOLOV5S
-        * `YOLOv8s` - YOLOV8S
-    VDImageRequest:
+    VDImagePostRequest:
       type: object
       properties:
         model:
           allOf:
-          - $ref: '#/components/schemas/VDImageModelEnum'
+          - $ref: '#/components/schemas/VDModelEnum'
           description: |-
             The ML model for detecting vehicles
 
@@ -286,6 +301,14 @@ components:
           description: The image file to be uploaded
       required:
       - image
+    VDModelEnum:
+      enum:
+      - YOLOv5s
+      - YOLOv8s
+      type: string
+      description: |-
+        * `YOLOv5s` - YOLOV5S
+        * `YOLOv8s` - YOLOV8S
   securitySchemes:
     basicAuth:
       type: http
@@ -294,3 +317,6 @@ components:
       type: apiKey
       in: cookie
       name: sessionid
+servers:
+- url: http://127.0.0.1:8000
+  description: Local server

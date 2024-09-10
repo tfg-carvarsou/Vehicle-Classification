@@ -1,6 +1,6 @@
 # Vehicle-Classification
 
-*Vehicle and license classification project (2024)*
+*Vehicle detection and classification project (2024)*
 
 ## Introduction
 
@@ -117,6 +117,7 @@ In this project, the aim is to train machine learning models for **detection and
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
     # download and install Node.js (you may need to restart the terminal)
     cd ~/.nvm && nvm install 22
+    npm install -g pnpm
     ```
 ## Usage
 
