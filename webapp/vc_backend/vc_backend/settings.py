@@ -19,7 +19,6 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
@@ -42,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'vc_backend_app'
+    'vc_backend_app',
+    'corsheaders'
 ]
 
 REST_FRAMEWORK = {
@@ -62,8 +62,16 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Vehicle Detector and Classifier API',
     'DESCRIPTION': 'Backend API for detecting and classifying vehicles in images',
     'VERSION': '4.0.0',
+    'SERVERS': [
+        {'url': 'http://127.0.0.1:8000',
+         'description': 'Local server'}
+    ],
     'SERVE_INCLUDE_SCHEMA': False,
-    'COMPONENT_SPLIT_REQUEST': True
+    'COMPONENT_SPLIT_REQUEST': True,
+    'ENUM_NAME_OVERRIDES': {
+        'VDModelEnum': 'vc_backend_app.enums.VDModel',
+        'VCModelEnum': 'vc_backend_app.enums.VCModel',
+    }
 }
 
 MIDDLEWARE = [
@@ -74,7 +82,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173'
+]
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'vc_backend.urls'
 

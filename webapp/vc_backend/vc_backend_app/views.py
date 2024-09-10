@@ -2,9 +2,8 @@ import sys, os, io, numpy as np
 sys.path.append(os.getcwd())
 from .forms import VDImageUploadForm, VCImageUploadForm
 from .models import VDImage, VCImage
-from .serializers import VDImageSerializer, VCImageSerializer
+from .serializers import VDImageSerializer, VDImagePostSerializer, VCImageSerializer, VCImagePostSerializer
 from .enums import VDLabel
-from PIL import Image
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema, OpenApiResponse
@@ -25,7 +24,6 @@ classify_yolov8s_model = load_trained_yolov8scls_model()
 class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = VDImage.objects.all()
     serializer_class = VDImageSerializer
-
     @extend_schema(
         summary='List all images',
         responses={
@@ -41,7 +39,7 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     @extend_schema(
         summary='Upload an image to detect vehicles',
         request={
-            'multipart/form-data': VDImageSerializer,
+            'multipart/form-data': VDImagePostSerializer,
         },
         responses={
             201: OpenApiResponse(response=VDImageSerializer, 
@@ -51,7 +49,6 @@ class VDImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
         },
     )
     def create(self, request, *args, **kwargs):
-        
         form = VDImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             model = form.cleaned_data['model']
@@ -140,7 +137,6 @@ class VDImageRetrieveDeleteView(mixins.RetrieveModelMixin, viewsets.GenericViewS
 class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = VCImage.objects.all()
     serializer_class = VCImageSerializer
-
     @extend_schema(
         summary='List all images',
         responses={
@@ -156,7 +152,7 @@ class VCImageListCreateView(mixins.ListModelMixin, viewsets.GenericViewSet):
     @extend_schema(
         summary='Upload an image to classify vehicles',
         request={
-            'multipart/form-data': VCImageSerializer,
+            'multipart/form-data': VCImagePostSerializer,
         },
         responses={
             201: OpenApiResponse(response=VCImageSerializer, 
