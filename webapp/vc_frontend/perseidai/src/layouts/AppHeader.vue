@@ -76,7 +76,7 @@ const toggleMenu = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 150px;
+  margin-right: 190px;
   flex-grow: 1;
 }
 

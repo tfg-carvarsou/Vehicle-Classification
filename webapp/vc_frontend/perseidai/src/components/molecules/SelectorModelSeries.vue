@@ -11,7 +11,7 @@
           @click="selectModelSeries('yolov5')"
         >
           <div class="ms-img ms-img-detector-yolov5">
-            <img src="@/assets/images/yolov5.webp" alt="YOLOV5 detector image" />
+            <img src="@/assets/images/yolov5.webp" alt="YOLOV5s detector image" />
           </div>
         </div>
         <div
@@ -21,7 +21,7 @@
           @click="selectModelSeries('yolov8')"
         >
           <div class="ms-img ms-img-detector-yolov8">
-            <img src="@/assets/images/yolov8.webp" alt="YOLOV8 detector image" />
+            <img src="@/assets/images/yolov8.webp" alt="YOLOV8s detector image" />
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@
           @click="selectModelSeries('effnet')"
         >
           <div class="ms-img ms-img-classifier-effnet">
-            <img src="@/assets/images/effnet.webp" alt="EfficientNet classifier image" />
+            <img src="@/assets/images/effnet.webp" alt="EfficientNetB1 classifier image" />
           </div>
         </div>
         <div
@@ -47,7 +47,7 @@
           @click="selectModelSeries('yolov8cls')"
         >
           <div class="ms-img ms-img-classifier-yolov8cls">
-            <img src="@/assets/images/yolov8.webp" alt="YOLOV8 classifier image" />
+            <img src="@/assets/images/yolov8.webp" alt="YOLOV8s-cls classifier image" />
           </div>
         </div>
       </div>

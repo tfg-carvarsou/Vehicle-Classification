@@ -85,7 +85,7 @@
 .nav-links {
   display: flex;
   align-items: center;
-  margin-right: 100px;
+  margin-right: 190px;
 }
 
 .nav-links ul {

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
+import ModelsView from '@/views/ModelsView.vue'
 import DetectorView from '@/views/DetectorView.vue'
 import ClassifierView from '@/views/ClassifierView.vue'
 
@@ -10,6 +11,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView
+    },
+    {
+      path: '/models',
+      name: 'models',
+      component: ModelsView
     },
     {
       path: '/detector/snapzone',

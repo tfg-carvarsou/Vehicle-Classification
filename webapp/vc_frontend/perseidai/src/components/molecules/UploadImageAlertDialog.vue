@@ -52,9 +52,10 @@
           </div>
         </div>
       </AlertDialogContent>
-      <DeleteAlertMessage v-if="isInferenceDeleted"
-          :showAlert="isInferenceDeleted"
-          :message="deleteAlertMessage" 
+      <DeleteAlertMessage
+        v-if="isInferenceDeleted"
+        :showAlert="isInferenceDeleted"
+        :message="deleteAlertMessage"
       />
     </AlertDialogPortal>
   </AlertDialogRoot>
