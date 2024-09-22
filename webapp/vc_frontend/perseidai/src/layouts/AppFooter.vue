@@ -25,8 +25,6 @@
         <li><router-link to="/detector/snapzone">Try Vehicle Detector</router-link></li>
         <span class="separator">⋆</span>
         <li><router-link to="/classifier/snapzone">Try Vehicle Classifier</router-link></li>
-        <span class="separator">⋆</span>
-        <li><router-link to="/faq">FAQ</router-link></li>
       </ul>
     </nav>
 
@@ -82,6 +80,12 @@
 .logo .logo-copyright {
   color: #ffffff;
   opacity: 0.8;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  margin-right: 100px;
 }
 
 .nav-links ul {
