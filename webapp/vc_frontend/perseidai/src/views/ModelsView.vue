@@ -7,7 +7,7 @@
           <img src="@/assets/images/yolov5.webp" class="mv-img" alt="YOLOV5s detector image" />
           <img src="@/assets/images/yolov8.webp" class="mv-img" alt="YOLOV8s detector image" />
         </div>
-        <span class="mv-text">
+        <p class="mv-text">
           Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem
           Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un
           impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de
@@ -17,7 +17,7 @@
           creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más
           recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual
           incluye versiones de Lorem Ipsum.
-        </span>
+        </p>
       </div>
       <div class="models-view-section">
         <HeaderClassifier />
@@ -29,7 +29,7 @@
           />
           <img src="@/assets/images/yolov8.webp" class="mv-img" alt="YOLOV8s-cls detector image" />
         </div>
-        <span class="mv-text">
+        <p class="mv-text">
           Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem
           Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un
           impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de
@@ -39,7 +39,7 @@
           creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más
           recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual
           incluye versiones de Lorem Ipsum.
-        </span>
+        </p>
       </div>
     </div>
   </Suspense>
@@ -85,7 +85,8 @@ import HeaderClassifier from '@/components/templates/HeaderClassifier.vue'
 }
 
 .mv-text {
-    font-size: 16px;
+    font-size: 1.3rem;
+    text-align: justify;
     color: #083863;
     margin-top: 3rem;
     margin-bottom: 10rem;
