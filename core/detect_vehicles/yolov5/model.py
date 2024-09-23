@@ -1,5 +1,8 @@
 import os, pwd
 import torch
+import warnings
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 def get_username():
     return pwd.getpwuid(os.getuid())[0]
