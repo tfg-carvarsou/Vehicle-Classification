@@ -3,7 +3,7 @@
     <h2 class="uff-title">Upload your image</h2>
     <div v-bind="api.getRootProps()">
       <div v-bind="api.getDropzoneProps()">
-        <input v-bind="api.getHiddenInputProps()" />
+        <input v-bind="api.getHiddenInputProps()" alt="Dropzone" />
         Drag and drop an image here, or
         <div class="browse">
           <FontAwesomeIcon :icon="fas.faSearch" />

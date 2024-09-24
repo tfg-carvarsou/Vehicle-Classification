@@ -52,9 +52,10 @@
           </div>
         </div>
       </AlertDialogContent>
-      <DeleteAlertMessage v-if="isInferenceDeleted"
-          :showAlert="isInferenceDeleted"
-          :message="deleteAlertMessage" 
+      <DeleteAlertMessage
+        v-if="isInferenceDeleted"
+        :showAlert="isInferenceDeleted"
+        :message="deleteAlertMessage"
       />
     </AlertDialogPortal>
   </AlertDialogRoot>
@@ -112,7 +113,6 @@ function closeRefreshDialog() {
 async function deleteInference(): Promise<void> {
   if (props.modelType === 'detector') {
     try {
-      console.log('Detector code: ', imageCode)
       await DetectorService.detectorSnapviewDestroy(imageCode)
       deleteAlertMessage.value = 'Detector inference deleted successfully'
     } catch (error) {
@@ -120,7 +120,6 @@ async function deleteInference(): Promise<void> {
     }
   } else if (props.modelType === 'classifier') {
     try {
-      console.log('Classifier code: ', imageCode)
       await ClassifierService.classifierSnapviewDestroy(imageCode)
       deleteAlertMessage.value = 'Classifier inference deleted successfully'
     } catch (error) {

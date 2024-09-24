@@ -10,47 +10,47 @@
 </template>
 
 <script setup lang="ts">
-  import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-  import { fas } from '@fortawesome/free-solid-svg-icons'
-  import { ref, onMounted, onUnmounted } from 'vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import { ref, onMounted, onUnmounted } from 'vue'
 
-  const props = defineProps<{
-    showAlert: boolean
-    message: string
-  }>()
+const props = defineProps<{
+  showAlert: boolean
+  message: string
+}>()
 
-  const showAlert = ref(props.showAlert)
-  const message = ref(props.message)
-  let timeout: ReturnType<typeof setTimeout> | null = null
-  
-  const showDeleteAlert = (msg: string = 'Deleted successfully') => {
-    message.value = msg
-    showAlert.value = true
-    if (timeout) {
-      clearTimeout(timeout)
-    }
-    timeout = setTimeout(() => {
-      showAlert.value = false
-    }, 3000)
+const showAlert = ref(props.showAlert)
+const message = ref(props.message)
+let timeout: ReturnType<typeof setTimeout> | null = null
+
+const showDeleteAlert = (msg: string = 'Deleted successfully') => {
+  message.value = msg
+  showAlert.value = true
+  if (timeout) {
+    clearTimeout(timeout)
   }
-
-  const closeAlert = () => {
+  timeout = setTimeout(() => {
     showAlert.value = false
-    if (timeout) {
-      clearTimeout(timeout)
-    }
+  }, 3000)
+}
+
+const closeAlert = () => {
+  showAlert.value = false
+  if (timeout) {
+    clearTimeout(timeout)
   }
+}
 
-  onMounted(() => {
-    showDeleteAlert(props.message)
-  });
+onMounted(() => {
+  showDeleteAlert(props.message)
+})
 
-  onUnmounted(() => {
-    showAlert.value = false;
-    if (timeout) {
-        clearTimeout(timeout)
-      }
-  });
+onUnmounted(() => {
+  showAlert.value = false
+  if (timeout) {
+    clearTimeout(timeout)
+  }
+})
 </script>
 
 <style scoped>
