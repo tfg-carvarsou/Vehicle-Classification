@@ -1,8 +1,6 @@
 <template>
   <DialogRoot>
-    <DialogTrigger class="card-dialog-trigger button green">
-      Check inference results
-    </DialogTrigger>
+    <DialogTrigger class="card-dialog-trigger button green"> Check results </DialogTrigger>
     <DialogPortal>
       <DialogOverlay class="card-dialog-overlay" />
       <DialogContent class="card-dialog-content">

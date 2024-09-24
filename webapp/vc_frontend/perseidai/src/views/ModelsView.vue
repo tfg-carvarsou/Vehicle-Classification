@@ -85,11 +85,11 @@ import HeaderClassifier from '@/components/templates/HeaderClassifier.vue'
 }
 
 .mv-text {
-    font-size: 1.3rem;
-    text-align: justify;
-    color: #083863;
-    margin-top: 3rem;
-    margin-bottom: 10rem;
+  font-size: 1.3rem;
+  text-align: justify;
+  color: #083863;
+  margin-top: 3rem;
+  margin-bottom: 10rem;
 }
 
 :deep(.header-detector-container),
