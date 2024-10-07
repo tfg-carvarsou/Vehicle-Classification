@@ -1,7 +1,7 @@
 
-from datasets import download_dataset, crop_dataset, get_ds_path
-from model import load_model
-from utils import get_train_results
+from core.classify_vehicles.yolov8.datasets import download_dataset, crop_dataset, get_ds_path
+from core.classify_vehicles.yolov8.model import load_model
+from core.classify_vehicles.yolov8.utils import get_train_results
 
 IMG_SIZE = 224
 BATCH_SIZE = 16
