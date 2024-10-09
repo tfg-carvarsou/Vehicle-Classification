@@ -31,7 +31,7 @@ def get_trained_weights_path():
     return os.path.join(pwd, 'models/classify_vehicles/efficientnet_b1/model.pth')
 
 def get_classes():
-    with open('./datasets/stanford/effnetb1/names.csv', 'r') as names:
+    with open('./core/classify_vehicles/efficientnet_b1/names/names.csv', 'r') as names:
         car_list = names.readlines()
     return car_list
 

@@ -11,7 +11,7 @@ In this project, the aim is to train machine learning models for **detection and
 2. **Data Preprocessing**: Clean and preprocess the dataset to prepare it for training the models.
 3. **Model Training**: Train computer vision models using state-of-the-art techniques and frameworks such as PyTorch.
 4. **Evaluation**: Evaluate the trained models on test datasets to measure their accuracy, precision, and other measures.
-5. **Deployment**: Integrate the trained models into an application for real-time vehicle detection and classification.
+5. **Integration**: Integrate the trained models into an application for real-time vehicle detection and classification.
 
 
 ## Installation in Windows/Linux
@@ -121,24 +121,36 @@ In this project, the aim is to train machine learning models for **detection and
     ```
 ## Usage
 
-### Running the webapp API locally
-- The app uses Swagger as the API framework.
-    ```bash
-    cd <path_to>/Vehicle-Classification/webapp/vc_backend
-    # Generates .env file for local settings
-    echo -e "DJANGO_KEY='$(python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')'\nDEBUG=True" > .env
-    # Runs SQLite server
-    ./manage.py makemigrations 
-    ./manage.py migrate
-    ./manage.py runserver
-    ```
-
-### Training the models
+### Training the models (optional)
 - Run the train file of each model in the core folder.
     ```bash
     python -m core.detect_vehicles.yolov5.train
     python -m core.detect_vehicles.yolov8.train
+    python -m core.classify_vehicles.efficientnet_b1.train
+    python -m core.classify_vehicles.yolov8.train
     ...
+    ```
+
+### Running the webapp API locally
+- The app uses Swagger as the API framework.
+    ```bash
+    cd <path_to>/Vehicle-Classification
+    # Generates .env file for local settings
+    echo -e "DJANGO_KEY='$(python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')'\nDEBUG=True" > .env
+    # Runs SQLite server
+    ./webapp/vc_backend/manage.py makemigrations 
+    ./webapp/vc_backend/manage.py migrate
+    ./webapp/vc_backend/manage.py runserver
+    ```
+
+### Running the application UI locally
+- The app uses Vue.js 3 + Vite as the frontend framework.
+
+  Open another terminal:
+    ```bash
+    cd <path_to>/Vehicle_Classification/webapp/vc_frontend/perseidai
+    pnpm up
+    pnpm dev
     ```
 
 ## License
@@ -147,12 +159,10 @@ This project is released under the Apache 2.0 License. For more information, che
 
 ## Contributors
 
-Carlos Varela Soult (carvarsou).
+Carlos Varela Soult (carvarsou)
 
 ## Acknowledgements
 
-**TODO**
+[Roboflow 100 Project](https://universe.roboflow.com/roboflow-100)
 
-[Roboflow 100 Project.](https://universe.roboflow.com/roboflow-100)
-
-[Stanford Car Dataset by J. Utrera.](https://www.kaggle.com/datasets/jutrera/stanford-car-dataset-by-classes-folder)
+[Stanford Car Dataset by J. Utrera](https://www.kaggle.com/datasets/jutrera/stanford-car-dataset-by-classes-folder)
