@@ -1,8 +1,8 @@
 import os
 import torch
 import subprocess
-from datasets import download_dataset, get_ds_path, configure_yaml
-from model import get_model_path, load_model
+from core.detect_vehicles.yolov5.datasets import download_dataset, get_ds_path, configure_yaml
+from core.detect_vehicles.yolov5.model import get_model_path, load_model
 from core.detect_vehicles.yolov5.utils import get_train_results
 
 IMG_SIZE = 256

@@ -31,7 +31,6 @@
 
 .header-detector-title {
   display: flex;
-  flex-wrap: wrap;
   line-height: 1.3;
   font-size: 2.8rem;
   font-weight: 500;

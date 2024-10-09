@@ -5,7 +5,7 @@
     </AlertDialogTrigger>
     <AlertDialogPortal>
       <AlertDialogOverlay class="alert-dialog-overlay" />
-      <AlertDialogContent class="alert-dialog-content">
+      <AlertDialogContent class="alert-dialog-content" v-if="!isInferenceDeleted">
         <AlertDialogTitle class="alert-dialog-title">
           <div v-if="!isImageUploaded">Confirm uploading this image</div>
           <div v-else>
@@ -35,6 +35,9 @@
         </div>
         <div class="alert-dialog-actions">
           <div v-if="isImageUploaded">
+            <button class="button red" @click="deleteInference">
+              <FontAwesomeIcon :icon="fas.faEraser" /> Delete inference
+            </button>
             <AlertDialogCancel class="button mauve" @click="closeRefreshDialog">
               Close
             </AlertDialogCancel>
@@ -49,6 +52,11 @@
           </div>
         </div>
       </AlertDialogContent>
+      <DeleteAlertMessage
+        v-if="isInferenceDeleted"
+        :showAlert="isInferenceDeleted"
+        :message="deleteAlertMessage"
+      />
     </AlertDialogPortal>
   </AlertDialogRoot>
 </template>
@@ -59,6 +67,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { DetectorService, ClassifierService, VDModelEnum, VCModelEnum } from '@/api/index'
 import type { VDImagePostRequest, VCImagePostRequest } from '@/api/index'
+import DeleteAlertMessage from '@/components/atoms/DeleteAlertMessage.vue'
 import CardDialog from '@/components/molecules/CardDialog.vue'
 import {
   AlertDialogAction,
@@ -82,6 +91,8 @@ const props = defineProps<{
 const isDialogOpen = ref(false)
 const isImageUploaded = ref(false)
 const showCardDialog = ref(false)
+const isInferenceDeleted = ref(false)
+let deleteAlertMessage = ref('Deleted successfully')
 let imageCode = 'undefined'
 
 function openDialog() {
@@ -97,6 +108,27 @@ function closeDialog() {
 function closeRefreshDialog() {
   closeDialog()
   location.reload()
+}
+
+async function deleteInference(): Promise<void> {
+  if (props.modelType === 'detector') {
+    try {
+      await DetectorService.detectorSnapviewDestroy(imageCode)
+      deleteAlertMessage.value = 'Detector inference deleted successfully'
+    } catch (error) {
+      console.error('Error handling the detector delete request:', error)
+    }
+  } else if (props.modelType === 'classifier') {
+    try {
+      await ClassifierService.classifierSnapviewDestroy(imageCode)
+      deleteAlertMessage.value = 'Classifier inference deleted successfully'
+    } catch (error) {
+      console.error('Error handling the classifier delete request:', error)
+    }
+  } else {
+    console.error('Invalid model type selected')
+  }
+  isInferenceDeleted.value = true
 }
 
 async function getBlobImage(): Promise<Blob> {
@@ -163,6 +195,14 @@ watch(isImageUploaded, (newValue) => {
     setTimeout(() => {
       showCardDialog.value = true
     }, 1000)
+  }
+})
+
+watch(isInferenceDeleted, (newValue) => {
+  if (newValue) {
+    setTimeout(() => {
+      closeRefreshDialog()
+    }, 3000)
   }
 })
 </script>
@@ -236,13 +276,26 @@ button {
   margin: 0 auto;
 }
 
+.alert-dialog-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.alert-dialog-actions > div {
+  display: flex;
+  gap: 15px;
+}
+
 .button {
   padding: 4px 8px;
   font-size: 14px;
   font-weight: 500;
   line-height: 1;
+  align-items: center;
+  justify-content: center;
   color: #ffffff;
-  background-color: #ef4444;
   border: none;
   border-radius: 4px;
   height: 32px;
@@ -250,6 +303,25 @@ button {
   transition:
     background-color 0.3s ease,
     transform 0.2s ease;
+}
+
+.button.red {
+  background-color: #ef4444;
+  margin-right: 256px;
+}
+
+.button.red:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+}
+
+.button.mauve {
+  background-color: #cccccc;
+  color: #333333;
+}
+
+.button.mauve:hover {
+  background-color: #bbbbbb;
 }
 
 .button.green {
@@ -260,23 +332,6 @@ button {
 .button.green:hover {
   background-color: #027666;
   transform: translateY(-2px);
-}
-
-.button.mauve {
-  background-color: #cccccc;
-  color: #333333;
-  margin-right: 10px;
-}
-
-.button.mauve:hover {
-  background-color: #bbbbbb;
-}
-
-.alert-dialog-actions {
-  display: flex;
-  gap: 15px;
-  justify-content: flex-end;
-  margin-top: 20px;
 }
 
 @keyframes overlayShow {

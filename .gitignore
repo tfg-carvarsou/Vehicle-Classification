@@ -130,6 +130,7 @@ venv.bak/
 
 # Datasets
 datasets/
+*.zip
 
 # Spyder project settings
 .spyderproject
@@ -165,10 +166,11 @@ cython_debug/
 # Files
 main.py
 
-# Models
-*.zip
-*.pt
-*.pth
+# Models pre-trained weights
+yolov5s.pt
+yolov8s-cls.pt
+yolov8s.pt
+last.pt
 
 # Database
 media

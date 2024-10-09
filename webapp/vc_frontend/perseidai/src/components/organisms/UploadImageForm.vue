@@ -3,7 +3,7 @@
     <h2 class="uff-title">Upload your image</h2>
     <div v-bind="api.getRootProps()">
       <div v-bind="api.getDropzoneProps()">
-        <input v-bind="api.getHiddenInputProps()" />
+        <input v-bind="api.getHiddenInputProps()" alt="Dropzone" />
         Drag and drop an image here, or
         <div class="browse">
           <FontAwesomeIcon :icon="fas.faSearch" />
@@ -23,11 +23,9 @@
             :image="imageToUpload"
             :imageName="file.name"
           />
-          <div class="delete-trigger">
-            <button v-bind="api.getItemDeleteTriggerProps({ file })">
-              <FontAwesomeIcon :icon="fas.faDeleteLeft" /> Delete
-            </button>
-          </div>
+          <button class="button red" v-bind="api.getItemDeleteTriggerProps({ file })">
+            <FontAwesomeIcon :icon="fas.faDeleteLeft" /> Delete
+          </button>
         </li>
       </ul>
     </div>
@@ -140,13 +138,16 @@ defineProps<{
 }
 
 button {
-  padding: 8px 16px;
+  all: unset;
   font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
   color: #ffffff;
-  background-color: #02af98;
   border: none;
-  height: 40px;
   border-radius: 4px;
+  height: 32px;
   cursor: pointer;
   transition:
     background-color 0.3s ease,

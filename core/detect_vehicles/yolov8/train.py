@@ -1,7 +1,7 @@
 import torch
-from datasets import download_dataset, get_ds_path, configure_yaml
-from model import load_model
-from utils import get_train_results
+from core.detect_vehicles.yolov8.datasets import download_dataset, get_ds_path, configure_yaml
+from core.detect_vehicles.yolov8.model import load_model
+from core.detect_vehicles.yolov8.utils import get_train_results
 
 IMG_SIZE = 256
 BATCH_SIZE = 8

@@ -4,9 +4,9 @@ import torch.nn as nn
 import torch.optim as optim
 import time
 from tqdm.auto import tqdm
-from model import get_model_path, load_model
-from datasets import download_dataset, crop_dataset, get_datasets, get_data_loaders
-from utils import save_model, save_plots
+from core.classify_vehicles.efficientnet_b1.model import get_model_path, load_model
+from core.classify_vehicles.efficientnet_b1.datasets import download_dataset, crop_dataset, get_datasets, get_data_loaders
+from core.classify_vehicles.efficientnet_b1.utils import save_model, save_plots
 
 DEVICE = ('cuda' if torch.cuda.is_available() else 'cpu')
 

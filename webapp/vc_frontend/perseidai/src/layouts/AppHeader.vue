@@ -18,24 +18,9 @@
           <li><router-link to="/models">Models</router-link></li>
           <li><router-link to="/detector/snapzone">Detector</router-link></li>
           <li><router-link to="/classifier/snapzone">Classifier</router-link></li>
-          <li><router-link to="/faq">FAQ</router-link></li>
-        </ul>
-      </nav>
-      <!-- Auth Links for mobile -->
-      <nav class="auth-links-mobile">
-        <ul>
-          <li><router-link to="/login" class="login-btn">Log in</router-link></li>
-          <li><router-link to="/signup" class="signup-btn">Sign up</router-link></li>
         </ul>
       </nav>
     </div>
-
-    <!-- Auth Links for desktop -->
-    <div class="auth-links-desktop">
-      <router-link to="/login" class="login-btn">Log in</router-link>
-      <router-link to="/signup" class="signup-btn">Sign up</router-link>
-    </div>
-
     <!-- Toggle Menu Button -->
     <div class="toggle-menu" @click="toggleMenu">☰</div>
   </header>
@@ -91,6 +76,7 @@ const toggleMenu = () => {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-right: 190px;
   flex-grow: 1;
 }
 
@@ -109,41 +95,6 @@ const toggleMenu = () => {
   text-decoration: none;
   color: #083863;
   font-weight: 500;
-}
-
-.auth-links-mobile ul {
-  display: none;
-}
-
-.auth-links-desktop {
-  display: flex;
-  align-items: center;
-}
-
-.auth-links-desktop a {
-  margin-left: 15px;
-  text-decoration: none;
-}
-
-.login-btn {
-  color: #083863;
-}
-
-.signup-btn {
-  padding: 5px 10px;
-  color: #ffffff;
-  background-color: #02af98;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    transform 0.2s ease;
-}
-
-.signup-btn:hover {
-  background-color: #027666;
-  transform: translateY(-2px);
 }
 
 .toggle-menu {

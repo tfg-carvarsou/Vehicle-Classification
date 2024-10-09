@@ -63,8 +63,9 @@ def classify_effnetb1_image(model, image_file):
     image_tensor = get_transforms()(image).unsqueeze(0)
     classes = get_classes()
     # forward pass through model
-    start = time.process_time()
+    start = time.time()
     outputs = model(image_tensor.to(DEVICE))
+    end = (time.time() - start) * 1000
     # get softmax probabilities
     probs = F.softmax(input=outputs, dim=1).data.squeeze()
     # get class indices of top k probabilities
@@ -73,5 +74,4 @@ def classify_effnetb1_image(model, image_file):
     weight_softmax = np.squeeze(params[-2].data.numpy())
     cams = generate_cams(features_blobs[0], weight_softmax, class_idx)
     predicted_image = get_cam_image(cams, width, height, image_file, pred_class)
-    end = time.process_time() - start
-    return Image.fromarray(predicted_image.astype('uint8')), round(end, 4), pred_class
+    return Image.fromarray(predicted_image.astype('uint8')), round(end, 1), pred_class
