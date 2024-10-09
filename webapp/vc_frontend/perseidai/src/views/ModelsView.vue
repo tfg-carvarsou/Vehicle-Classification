@@ -8,15 +8,13 @@
           <img src="@/assets/images/yolov8.webp" class="mv-img" alt="YOLOV8s detector image" />
         </div>
         <p class="mv-text">
-          Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem
-          Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un
-          impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de
-          textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo
-          sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos
-          electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la
-          creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más
-          recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual
-          incluye versiones de Lorem Ipsum.
+          Among the most prominent models for object detection is the You Only Look Once (YOLO) series, designed to provide real-time results with high accuracy and minimal processing time. Although there are more than a dozen versions of YOLO, this project uses YOLOv5 and YOLOv8 models to recognize the number and type of vehicles present in images.
+          <br>
+          <br>
+          <a href="https://github.com/ultralytics/yolov5">YOLOv5</a>, introduced in 2020 by Glenn Jocher, marked a significant advancement in performance, flexibility, and ease of use. Its rise in popularity was due to its modular design, allowing model customization and export to various formats such as ONNX, CoreML, and TFLite for deployment.
+          <br>
+          <br>
+          <a href="https://github.com/ultralytics/ultralytics">YOLOv8</a>, introduced in 2023, is the most advanced framework from Ultralytics (state-of-the-art, SOTA), designed to enhance the performance of real-time object detection with advanced functionalities.
         </p>
       </div>
       <div class="models-view-section">
@@ -30,15 +28,13 @@
           <img src="@/assets/images/yolov8.webp" class="mv-img" alt="YOLOV8s-cls detector image" />
         </div>
         <p class="mv-text">
-          Lorem Ipsum es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem
-          Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un
-          impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de
-          textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo
-          sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos
-          electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la
-          creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más
-          recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual
-          incluye versiones de Lorem Ipsum.
+          The <a href="https://research.google/blog/efficientnet-improving-accuracy-and-efficiency-through-automl-and-model-scaling/">EfficientNet</a> architecture is a series of convolutional neural network (CNN) models developed by Google AI, which stood out in the field of image classification for its ability to efficiently balance accuracy and computational efficiency. EfficientNet's innovative approach is based on a method called <strong>Compound Scaling</strong>, which simultaneously adjusts three key dimensions of the model: depth (number of layers), width (number of filters), and input resolution.
+          <br>
+          <br>
+            Unlike other scaling approaches that adjust only one dimension, EfficientNet proposes a balanced strategy, scaling these three dimensions together, resulting in significant improvements in accuracy without a disproportionate increase in computational requirements. In fact, EfficientNet has demonstrated superior performance in image classification benchmarks like ImageNet, outperforming larger models in terms of both efficiency and accuracy.
+          <br>
+          <br>
+            However, YOLOv8 also includes a variant focused on image classification called <strong>YOLOv8-cls</strong>. Although YOLO is primarily known for its speed and accuracy in object detection, YOLOv8-cls aims to bring those capabilities to the image classification domain. This version of YOLOv8-cls inherits the network architecture used in object detection, specifically optimizing it for classification tasks.
         </p>
       </div>
     </div>
